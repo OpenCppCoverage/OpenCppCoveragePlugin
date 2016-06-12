@@ -351,25 +351,12 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup>
-    <PreBuildEvent>echo "Copy Template files x64"
-set OpenCppCoverage=$(ProjectDir)OpenCppCoverage-x64
-if not exist "%25OpenCppCoverage%25\Template" mkdir "%25OpenCppCoverage%25\Template" &amp;&amp; xcopy /s /y "$(ProjectDir)\..\Exporter\Html\Template" "%25OpenCppCoverage%25\Template"
-
-echo "Update UnmanagedDll x64" 
-xcopy /y /F "$(SolutionDir)x64\Release\CppCoverage.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)x64\Release\Exporter.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)x64\Release\Tools.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)x64\Release\OpenCppCoverage.exe" "%25OpenCppCoverage%25"
-
-echo "Copy Template files x86"
-set OpenCppCoverage=$(ProjectDir)OpenCppCoverage-x86
-if not exist "%25OpenCppCoverage%25\Template" mkdir "%25OpenCppCoverage%25\Template" &amp;&amp; xcopy /s /y "$(ProjectDir)\..\Exporter\Html\Template" "%25OpenCppCoverage%25\Template"
-
-echo "Update UnmanagedDll x86" 
-xcopy /y /F "$(SolutionDir)\Release\CppCoverage.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)\Release\Exporter.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)\Release\Tools.dll" "%25OpenCppCoverage%25"
-xcopy /y /F "$(SolutionDir)\Release\OpenCppCoverage.exe" "%25OpenCppCoverage%25"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

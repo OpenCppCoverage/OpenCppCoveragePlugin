@@ -107,7 +107,7 @@
     <None Include="Key.snk" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VSPackage.csproj">
+    <ProjectReference Include="..\VSPackage\VSPackage.csproj">
       <Project>{DF742CAB-0446-4867-A437-719390CC028A}</Project>
       <Name>VSPackage</Name>
     </ProjectReference>

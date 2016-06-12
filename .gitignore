@@ -1,0 +1,10 @@
+packages/
+TestResults/
+*/bin
+*/obj
+.vs/
+*.user
+
+# Template files / OpenCppCoverage binaries
+VSPackage/OpenCppCoverage-x64
+VSPackage/OpenCppCoverage-x86
