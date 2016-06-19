@@ -11,3 +11,6 @@ TestResults/
 # Template files / OpenCppCoverage binaries
 VSPackage/OpenCppCoverage-x64
 VSPackage/OpenCppCoverage-x86
+
+# ProtBuff file
+VSPackage/CoverageData/CoverageData.cs

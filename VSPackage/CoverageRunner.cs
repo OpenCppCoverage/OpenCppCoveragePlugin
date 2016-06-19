@@ -97,7 +97,7 @@ namespace OpenCppCoverage.VSPackage
                         var openCppCoverage = new OpenCppCoverage(outputWindowWriter_);
                         var coveragePath = openCppCoverage.RunCodeCoverage(settings);
 
-                        outputWindowWriter_.WriteLine("Report was generating at " + indexPath.DirectoryName);
+                        outputWindowWriter_.WriteLine("Report was generating at " + coveragePath.DirectoryName);
                     }
                 });
         }
