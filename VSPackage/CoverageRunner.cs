@@ -95,10 +95,9 @@ namespace OpenCppCoverage.VSPackage
                         CheckSettings(settings);
 
                         var openCppCoverage = new OpenCppCoverage(outputWindowWriter_);
-                        var indexPath = openCppCoverage.RunCodeCoverage(settings);
+                        var coveragePath = openCppCoverage.RunCodeCoverage(settings);
 
                         outputWindowWriter_.WriteLine("Report was generating at " + indexPath.DirectoryName);
-                        ShowCoverage(indexPath.ToString());
                     }
                 });
         }
@@ -124,18 +123,6 @@ namespace OpenCppCoverage.VSPackage
         {            
             public _dispBuildEvents_OnBuildProjConfigDoneEventHandler OnBuildDone { get; set; }
             public Settings Settings { get; set; }
-        }
-
-        //---------------------------------------------------------------------
-        void ShowCoverage(string url)
-        {            
-            IVsWindowFrame pFrame = null;
-
-            if (Microsoft.VisualStudio.ErrorHandler.Failed(
-                webBrowsingService_.Navigate(url, (uint)__VSWBNAVIGATEFLAGS.VSNWB_ForceNew, out pFrame)))
-            {
-                throw new Exception("Cannot open code coverage results: " + url);
-            }
         }
 
         //---------------------------------------------------------------------

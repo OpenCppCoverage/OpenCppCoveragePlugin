@@ -33,12 +33,12 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public FileInfo RunCodeCoverage(Settings settings)
         {                                
-            var outputFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            var outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
             using (var process = new Process())
             {
                 process.StartInfo.FileName = GetOpenCppCoveragePath(settings.Command);
-                process.StartInfo.Arguments = BuildArguments(settings, outputFolder);
+                process.StartInfo.Arguments = BuildArguments(settings, outputFile);
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = false;
 
@@ -50,11 +50,7 @@ namespace OpenCppCoverage.VSPackage
                 process.WaitForExit();
             }
 
-            var expectedPath = new FileInfo(Path.Combine(outputFolder, "index.html"));
-
-            if (!expectedPath.Exists)
-                throw new VSPackageException("Cannot generate coverage. See output pane for more information.");
-            return expectedPath;
+            return new FileInfo(outputFile);
         }
 
         //---------------------------------------------------------------------
@@ -72,7 +68,7 @@ namespace OpenCppCoverage.VSPackage
         {
             var builder = new StringBuilder();
 
-            AppendArgument(builder, "--export_type", "html:" + outputFolder);
+            AppendArgument(builder, "--export_type", "binary:" + outputFolder);
             foreach (var modulePath in settings.ModulePaths)
                 AppendArgument(builder, "--module", modulePath);
             foreach (var sourcePath in settings.SourcePaths)

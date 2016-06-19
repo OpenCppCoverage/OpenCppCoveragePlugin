@@ -2,8 +2,11 @@ packages/
 TestResults/
 */bin
 */obj
+**/Debug/
 .vs/
 *.user
+*.sdf
+*.db
 
 # Template files / OpenCppCoverage binaries
 VSPackage/OpenCppCoverage-x64
