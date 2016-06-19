@@ -17,7 +17,7 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 
 ### Compilation
 
-Visual Studio 2015 Update 2 is required.
+Visual Studio 2015 Update 2 and Visual Studio 2013 are required.
 
 You should install the latest version of [OpenCppCoverage](https://opencppcoverage.codeplex.com/releases):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
