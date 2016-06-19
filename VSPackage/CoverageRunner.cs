@@ -16,10 +16,11 @@
 
 using EnvDTE;
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using OpenCppCoverage.VSPackage.CoverageTree;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace OpenCppCoverage.VSPackage
@@ -39,13 +40,15 @@ namespace OpenCppCoverage.VSPackage
             IVsWebBrowsingService webBrowsingService,
             SettingsBuilder settingsBuilder,
             ErrorHandler errorHandler,
-            OutputWindowWriter outputWindowWriter)
+            OutputWindowWriter outputWindowWriter,
+            Package package)
         {
             dte_ = dte;
             webBrowsingService_ = webBrowsingService;
             settingsBuilder_ = settingsBuilder;
             errorHandler_ = errorHandler;
             outputWindowWriter_ = outputWindowWriter;
+            package_ = package;
         }
 
         //---------------------------------------------------------------------
@@ -97,9 +100,21 @@ namespace OpenCppCoverage.VSPackage
                         var openCppCoverage = new OpenCppCoverage(outputWindowWriter_);
                         var coveragePath = openCppCoverage.RunCodeCoverage(settings);
 
-                        outputWindowWriter_.WriteLine("Report was generating at " + coveragePath.DirectoryName);
+                        outputWindowWriter_.WriteLine("Coverage written in " + coveragePath);
+                        ShowTreeCoverage(coveragePath);
                     }
                 });
+        }
+
+        //---------------------------------------------------------------------        
+        void ShowTreeCoverage(FileInfo coveragePath)
+        {
+            var window = package_.FindToolWindow(typeof(CoverageTreeToolWindow), 0, true);
+            if (window == null || window.Frame == null)
+                throw new NotSupportedException("Cannot create tool window");
+
+            var frame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }
 
         //---------------------------------------------------------------------        
@@ -149,5 +164,6 @@ namespace OpenCppCoverage.VSPackage
         readonly OutputWindowWriter outputWindowWriter_;
         readonly ErrorHandler errorHandler_;
         readonly IVsWebBrowsingService webBrowsingService_;
+        readonly Package package_;
     }
 }

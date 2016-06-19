@@ -57,13 +57,17 @@
     <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <COMReference Include="EnvDTE">
@@ -109,6 +113,10 @@
     <Compile Include="CoverageData\CoverageDataDeserializer.cs" />
     <Compile Include="CoverageData\CoverageResult.cs" />
     <Compile Include="CoverageRunner.cs" />
+    <Compile Include="CoverageTree\CoverageTreeControl.xaml.cs">
+      <DependentUpon>CoverageTreeControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CoverageTree\CoverageTreeToolWindow.cs" />
     <Compile Include="DynamicVCConfiguration.cs" />
     <Compile Include="DynamicVCDebugSettings.cs" />
     <Compile Include="DynamicVCFile.cs" />
@@ -352,6 +360,12 @@
     <Content Include="OpenCppCoverage-x86\Tools.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="CoverageTree\CoverageTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

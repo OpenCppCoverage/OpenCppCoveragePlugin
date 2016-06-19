@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using OpenCppCoverage.VSPackage.CoverageTree;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
@@ -28,6 +29,11 @@ namespace OpenCppCoverage.VSPackage
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
+    [ProvideToolWindow(typeof(CoverageTreeToolWindow),
+        Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
+        MultiInstances = false,
+        Transient = false,
+        Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
     [Guid(GuidList.guidVSPackagePkgString)]
     public sealed class VSPackagePackage : Package
     {
@@ -90,7 +96,8 @@ namespace OpenCppCoverage.VSPackage
                 var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(IVsWebBrowsingService));
                 var settingsBuilder = new SettingsBuilder((Solution2)dte.Solution);
 
-                var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService, settingsBuilder, errorHandler, outputWriter);
+                var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService, 
+                    settingsBuilder, errorHandler, outputWriter, this);
 
                 CheckVCRedistInstalled();
                 openCppCoverageRunner.RunCoverageOnStartupProject();
