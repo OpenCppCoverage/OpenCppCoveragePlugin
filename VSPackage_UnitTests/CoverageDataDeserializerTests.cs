@@ -1,4 +1,20 @@
-﻿using Google.ProtocolBuffers;
+﻿// OpenCppCoverage is an open source code coverage for C++.
+// Copyright (C) 2014 OpenCppCoverage
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+using Google.ProtocolBuffers;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageData.ProtoBuff;
@@ -11,6 +27,7 @@ namespace VSPackage_UnitTests
     public class CoverageDataDeserializerTests
     {
         //---------------------------------------------------------------------
+        static readonly string coverageName = "coverageName";
         static readonly ulong moduleCount = 1;
         static readonly int exitCode = 42;
         static readonly string modulePath = "modulePath";
@@ -29,7 +46,8 @@ namespace VSPackage_UnitTests
                 var deserializer = new CoverageDataDeserializer();
                 var coverageResult = deserializer.Deserialize(stream);
 
-                Assert.AreEqual(exitCode, coverageResult.ExitCode);
+                Assert.AreEqual(coverageName, coverageResult.CoverageData.Name);
+                Assert.AreEqual(exitCode, coverageResult.CoverageData.ExitCode);
 
                 var module = coverageResult.Modules.First();
                 Assert.AreEqual(modulePath, module.Path);
@@ -61,7 +79,7 @@ namespace VSPackage_UnitTests
         {
             var coverageData = CoverageData.CreateBuilder();
 
-            coverageData.SetName("NotUsed");
+            coverageData.SetName(coverageName);
             coverageData.SetModuleCount(moduleCount);
             coverageData.SetExitCode(exitCode);
             WriteMessage(outputStream, coverageData.Build());

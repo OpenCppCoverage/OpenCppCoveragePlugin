@@ -112,7 +112,9 @@
     <Compile Include="CoverageData\CoverageData.cs" />
     <Compile Include="CoverageData\CoverageDataDeserializer.cs" />
     <Compile Include="CoverageData\CoverageResult.cs" />
+    <Compile Include="CoverageRateBuilder\CoverageRate.cs" />
     <Compile Include="CoverageRunner.cs" />
+    <Compile Include="CoverageRateBuilder\CoverageRateBuilder.cs" />
     <Compile Include="CoverageTree\CoverageTreeControl.xaml.cs">
       <DependentUpon>CoverageTreeControl.xaml</DependentUpon>
     </Compile>
