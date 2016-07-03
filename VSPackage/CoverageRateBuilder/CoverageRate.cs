@@ -77,16 +77,16 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
     class FileCoverage : BaseCoverage
     {
         //---------------------------------------------------------------------
-        public FileCoverage(string name, List<LineCoverage> lineCoverages )
+        public FileCoverage(string path, List<LineCoverage> lineCoverages )
         {
             this.CoverLineCount = lineCoverages.Where(l => l.HasBeenExecuted).Count();
             this.TotalLineCount = lineCoverages.Count;
-            this.Name = name;
+            this.Path = path;
             this.LineCoverages = lineCoverages;
         }
 
         //---------------------------------------------------------------------
-        public string Name { get; private set; }
+        public string Path { get; private set; }
 
         //---------------------------------------------------------------------
         public IEnumerable<LineCoverage> LineCoverages { get; private set; }

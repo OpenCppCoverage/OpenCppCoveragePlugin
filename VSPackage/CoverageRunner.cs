@@ -18,6 +18,7 @@ using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using System;
 using System.Collections.Generic;
@@ -41,14 +42,14 @@ namespace OpenCppCoverage.VSPackage
             SettingsBuilder settingsBuilder,
             ErrorHandler errorHandler,
             OutputWindowWriter outputWindowWriter,
-            Package package)
+            CoverageTreeManager coverageTreeManager)
         {
             dte_ = dte;
             webBrowsingService_ = webBrowsingService;
             settingsBuilder_ = settingsBuilder;
             errorHandler_ = errorHandler;
             outputWindowWriter_ = outputWindowWriter;
-            package_ = package;
+            coverageTreeManager_ = coverageTreeManager;
         }
 
         //---------------------------------------------------------------------
@@ -101,20 +102,9 @@ namespace OpenCppCoverage.VSPackage
                         var coveragePath = openCppCoverage.RunCodeCoverage(settings);
 
                         outputWindowWriter_.WriteLine("Coverage written in " + coveragePath);
-                        ShowTreeCoverage(coveragePath);
+                        coverageTreeManager_.ShowTreeCoverage(coveragePath);
                     }
                 });
-        }
-
-        //---------------------------------------------------------------------        
-        void ShowTreeCoverage(FileInfo coveragePath)
-        {
-            var window = package_.FindToolWindow(typeof(CoverageTreeToolWindow), 0, true);
-            if (window == null || window.Frame == null)
-                throw new NotSupportedException("Cannot create tool window");
-
-            var frame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }
 
         //---------------------------------------------------------------------        
@@ -164,6 +154,6 @@ namespace OpenCppCoverage.VSPackage
         readonly OutputWindowWriter outputWindowWriter_;
         readonly ErrorHandler errorHandler_;
         readonly IVsWebBrowsingService webBrowsingService_;
-        readonly Package package_;
+        readonly CoverageTreeManager coverageTreeManager_;
     }
 }

@@ -35,6 +35,7 @@ namespace OpenCppCoverage.VSPackage
         Transient = false,
         Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
     [Guid(GuidList.guidVSPackagePkgString)]
+    [ProvideBindingPath]
     public sealed class VSPackagePackage : Package
     {
         /// <summary>
@@ -95,9 +96,10 @@ namespace OpenCppCoverage.VSPackage
                 errorHandler.OutputWriter = outputWriter;
                 var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(IVsWebBrowsingService));
                 var settingsBuilder = new SettingsBuilder((Solution2)dte.Solution);
+                var coverageTreeManager = new CoverageTreeManager(this);
 
                 var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService, 
-                    settingsBuilder, errorHandler, outputWriter, this);
+                    settingsBuilder, errorHandler, outputWriter, coverageTreeManager);
 
                 CheckVCRedistInstalled();
                 openCppCoverageRunner.RunCoverageOnStartupProject();

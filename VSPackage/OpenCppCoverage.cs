@@ -31,7 +31,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public FileInfo RunCodeCoverage(Settings settings)
+        public string RunCodeCoverage(Settings settings)
         {                                
             var outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
@@ -50,7 +50,7 @@ namespace OpenCppCoverage.VSPackage
                 process.WaitForExit();
             }
 
-            return new FileInfo(outputFile);
+            return outputFile;
         }
 
         //---------------------------------------------------------------------

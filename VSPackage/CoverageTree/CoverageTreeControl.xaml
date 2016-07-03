@@ -3,9 +3,68 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:sd="http://icsharpcode.net/sharpdevelop/treeview"
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.CoverageTree"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.Resources>
+            <local:DoubleMultiplyConverter x:Key="MultiplyConverter"/>
+            <sys:Double x:Key="CoverageRectangleRate">50.0</sys:Double>
+        </Grid.Resources>
+
+        <sd:SharpTreeView 
+                SelectedItem="{Binding Current, Mode=OneWayToSource}"
+                ShowAlternation="True"
+                Grid.Column="1"
+                Root="{Binding Root}"
+                Margin="10 0 0 0">
+            <ListView.View>
+                <sd:SharpGridView>
+                    <GridView.Columns>
+                        <GridViewColumn>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <sd:SharpTreeNodeView/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Coverage">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Rectangle Width="{Binding Path=CoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" Fill="Green" Margin="3 3 0 3"/>
+                                        <Rectangle Width="{Binding Path=UncoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" Fill="Red" Margin="0 3 10 3"/>
+                                        <TextBlock Text="{Binding CoverageRate, StringFormat=p0}" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Covered line">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding CoveredLineCount}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Uncovered line">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding UncoveredLineCount}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Total line">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding TotalLineCount}" />
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView.Columns>
+                </sd:SharpGridView>
+            </ListView.View>
+        </sd:SharpTreeView>
     </Grid>
 </UserControl>

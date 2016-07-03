@@ -48,6 +48,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.TreeView, Version=0.0.0.0, Culture=neutral, PublicKeyToken=f829da5c02be14ee, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.TreeView.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.CommandBars, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -115,14 +119,21 @@
     <Compile Include="CoverageRateBuilder\CoverageRate.cs" />
     <Compile Include="CoverageRunner.cs" />
     <Compile Include="CoverageRateBuilder\CoverageRateBuilder.cs" />
+    <Compile Include="CoverageTree\BasicCoverageTreeNode.cs" />
     <Compile Include="CoverageTree\CoverageTreeControl.xaml.cs">
       <DependentUpon>CoverageTreeControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CoverageTree\CoverageTreeController.cs" />
+    <Compile Include="CoverageTree\CoverageTreeManager.cs" />
     <Compile Include="CoverageTree\CoverageTreeToolWindow.cs" />
+    <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
+    <Compile Include="CoverageTree\PropertyChangedNotifier.cs" />
+    <Compile Include="CoverageTree\RootCoverageTreeNode.cs" />
     <Compile Include="DynamicVCConfiguration.cs" />
     <Compile Include="DynamicVCDebugSettings.cs" />
     <Compile Include="DynamicVCFile.cs" />
     <Compile Include="DynamicVCProject.cs" />
+    <Compile Include="Editor\EditorHighlighter.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="ExtendedProject.cs" />
     <Compile Include="Guids.cs" />
@@ -165,6 +176,7 @@
   <ItemGroup>
     <VSCTCompile Include="VSPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
+      <SubType>Designer</SubType>
     </VSCTCompile>
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +186,15 @@
     <Content Include="gpl-3.0.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="CoverageTree\Images\48px-Gnome-application-x-executable.svg.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CoverageTree\Images\48px-Gnome-folder.svg.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="CoverageTree\Images\48px-Gnome-text-x-generic.svg.png">
+      <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x64\boost_chrono-vc140-mt-1_59.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -369,7 +390,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>
   </PropertyGroup>
