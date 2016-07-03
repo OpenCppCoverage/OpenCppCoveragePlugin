@@ -17,7 +17,7 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 
 ### Compilation
 
-Visual Studio 2015 Update 2 and Visual Studio 2013 are required.
+Visual Studio 2015 Update 2 is required. If Visual Studio 2013 is not also installed, you must run *VS2015-only.bat* before loading the solution.
 
 You should install the latest version of [OpenCppCoverage](https://opencppcoverage.codeplex.com/releases):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
@@ -42,7 +42,7 @@ If you have an issue when running the plugin, you can try to reset Visual Studio
 ### Run unit tests
 
 You can run the tests with *Test Explorer window*.
-To run *VSPackage_IntegrationTests* you need to expand *Solution items* in *Solution Explorer* and set *Active Load and Web Test Settings* for *IntegrationTests.testsettings*.
+To run *VSPackage_IntegrationTests* you need to expand *Solution items* in *Solution Explorer* and set *Active Load and Web Test Settings* for *IntegrationTests.testsettings*. If you have a COM error when running tests, you can select *IntegrationTests.testsettings* file from Visual Studio menu: Test/Test Settings/Select Test Settings File.
 For *VSPackage_UnitTests* you need to do the same but with *UnitTests.testsettings*.
 
 If a test failed, you can try to run it again. You can also reset Visual Studio Experimental instance.
