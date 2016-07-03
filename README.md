@@ -26,7 +26,7 @@ You should install the latest version of [OpenCppCoverage](https://opencppcovera
 You can also copy past the binaries from an existing installation into these folders.
 Binaries inside *VSPackage\OpenCppCoverage-x86* can be the same as *VSPackage\OpenCppCoverage-x64* (The opposite is not true).  
 
-You probably need to restore NuGet packages: Right click on the solution then *Restore NuGet Packages*.
+You also need to compile [SharpTreeView](https://github.com/icsharpcode/SharpDevelop/tree/master/src/Libraries/SharpTreeView) and copy *ICSharpCode.TreeView.dll* into *OpenCppCoveragePlugin\packages* folder.
 
 ### Run the plugin
 
