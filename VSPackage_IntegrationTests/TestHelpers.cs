@@ -91,20 +91,8 @@ namespace VSPackage_IntegrationTests
         {
             TestHelpers.ExecuteOpenCppCoverage();
             TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(7));
-            TestHelpers.WaitForActiveDocument(applicationName, TimeSpan.FromSeconds(10));
 
             return TestHelpers.GetOpenCppCoverageOutput();
-        }
-
-        //---------------------------------------------------------------------
-        public static void WaitForActiveDocument(string documentCaption, TimeSpan timeout)
-        {                     
-            Wait(timeout, "Cannot get document:" + documentCaption, () =>
-                {
-                    var actionWindows = VsIdeTestHostContext.Dte.ActiveWindow;
-
-                    return actionWindows != null && actionWindows.Caption == documentCaption;
-                });
         }
 
         //---------------------------------------------------------------------

@@ -139,7 +139,7 @@ namespace VSPackage_IntegrationTests
             CheckOutput(output, CoverageRunner.SelectedFolderTag, GetProjectFolder(TestHelpers.CppConsoleApplication2));
             CheckOutput(output, CoverageRunner.SelectedModuleTag, TestHelpers.ApplicationName);
             CheckOutput(output, CoverageRunner.SelectedModuleTag, TestHelpers.ApplicationName2);
-            CheckOutput(output, "Report was generating at", "");
+            CheckOutput(output, "Coverage written in", "");
         }
         
         //---------------------------------------------------------------------
