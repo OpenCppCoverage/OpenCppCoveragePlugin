@@ -122,12 +122,15 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
-        protected void AddChildrenNode<T>(
+        protected IEnumerable<TreeNode> AddChildrenNode<T, TreeNode>(
             IEnumerable<T> children,
-            Func<T, BasicCoverageTreeNode> nodeFactory)
+            Func<T, TreeNode> nodeFactory) where TreeNode: BasicCoverageTreeNode
         {
             var childrenNode = children.Select(nodeFactory);
-            this.Children.AddRange(childrenNode.OrderBy(c => c.CoverageRate));
+            var sortedChildrenNode = childrenNode.OrderBy(c => c.CoverageRate);
+            this.Children.AddRange(sortedChildrenNode);
+
+            return sortedChildrenNode;
         }
 
         //-----------------------------------------------------------------------

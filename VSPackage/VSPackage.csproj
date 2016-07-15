@@ -135,6 +135,7 @@
     <Compile Include="DynamicVCFile.cs" />
     <Compile Include="DynamicVCProject.cs" />
     <Compile Include="Editor\EditorHighlighter.cs" />
+    <Compile Include="Editor\IEditorHighlighter.cs" />
     <Compile Include="ErrorHandler.cs" />
     <Compile Include="ExtendedProject.cs" />
     <Compile Include="Guids.cs" />
@@ -190,12 +191,15 @@
     </Content>
     <Content Include="CoverageTree\Images\48px-Gnome-application-x-executable.svg.png">
       <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CoverageTree\Images\48px-Gnome-folder.svg.png">
       <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="CoverageTree\Images\48px-Gnome-text-x-generic.svg.png">
       <IncludeInVSIX>true</IncludeInVSIX>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="OpenCppCoverage-x64\boost_chrono-vc140-mt-1_59.dll">
       <IncludeInVSIX>true</IncludeInVSIX>

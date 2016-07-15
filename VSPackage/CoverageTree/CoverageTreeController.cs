@@ -24,10 +24,10 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     {
         RootCoverageTreeNode rootNode;
         FileCoverage currentFileCoverage;
-        readonly EditorHighlighter editorHighlighter;
+        readonly IEditorHighlighter editorHighlighter;
 
         //-----------------------------------------------------------------------
-        public CoverageTreeController(EditorHighlighter editorHighlighter)
+        public CoverageTreeController(IEditorHighlighter editorHighlighter)
         {
             this.editorHighlighter = editorHighlighter;
         }

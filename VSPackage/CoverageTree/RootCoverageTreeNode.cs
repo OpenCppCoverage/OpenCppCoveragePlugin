@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
+using System.Collections.Generic;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
@@ -22,10 +23,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     class RootCoverageTreeNode : BasicCoverageTreeNode
     {
         readonly CoverageRate coverage;
+        
+        //-----------------------------------------------------------------------
+        public static readonly string IconFilename = "48px-Gnome-folder.svg.png";
 
         //-----------------------------------------------------------------------
         public RootCoverageTreeNode(CoverageRate coverage)
-            : base(coverage.Name, coverage, "48px-Gnome-folder.svg.png", false)
+            : base(coverage.Name, coverage, IconFilename, false)
         {
             this.coverage = coverage;
         }
@@ -33,8 +37,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //-----------------------------------------------------------------------
         protected override void LoadChildren()
         {
-            this.AddChildrenNode(this.coverage.Children, c => new ModuleTreeNode(c));
+            this.Modules = this.AddChildrenNode(this.coverage.Children, c => new ModuleTreeNode(c));
         }
+
+        //-----------------------------------------------------------------------
+        public IEnumerable<ModuleTreeNode> Modules { get; private set; }
     }
 
     //-----------------------------------------------------------------------
@@ -50,9 +57,12 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
+        public IEnumerable<FileTreeNode> Files { get; private set; }
+
+        //-----------------------------------------------------------------------
         protected override void LoadChildren()
         {
-            this.AddChildrenNode(this.coverage.Children, c => new FileTreeNode(c.Path, c));
+            this.Files = this.AddChildrenNode(this.coverage.Children, c => new FileTreeNode(c.Path, c));
         }
     }
 

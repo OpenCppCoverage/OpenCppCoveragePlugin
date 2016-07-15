@@ -18,18 +18,9 @@ using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 
 namespace OpenCppCoverage.VSPackage.Editor
 {
-    class EditorHighlighter: IEditorHighlighter
+    interface IEditorHighlighter
     {
-        //-----------------------------------------------------------------------
-        public void DisplayCoverage(FileCoverage fileCoverage)
-        {
-            // TODO
-        }
-
-        //-----------------------------------------------------------------------
-        public void RemoveCoverage(FileCoverage fileCoverage)
-        {
-            // TODO
-        }
+        void DisplayCoverage(FileCoverage fileCoverage);
+        void RemoveCoverage(FileCoverage fileCoverage);
     }
 }
