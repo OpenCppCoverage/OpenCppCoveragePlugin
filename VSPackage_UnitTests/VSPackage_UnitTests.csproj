@@ -87,6 +87,7 @@
     <Compile Include="DteMockBuilder.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="SettingsBuilderTests.cs" />
+    <Compile Include="TreeNodeVisibilityManagerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>

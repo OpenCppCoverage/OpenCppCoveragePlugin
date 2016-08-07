@@ -6,20 +6,31 @@
              xmlns:sd="http://icsharpcode.net/sharpdevelop/treeview"
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.CoverageTree"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300">
+             mc:Ignorable="d">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <Grid.Resources>
             <local:DoubleMultiplyConverter x:Key="MultiplyConverter"/>
             <sys:Double x:Key="CoverageRectangleRate">50.0</sys:Double>
         </Grid.Resources>
-
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <Label Content="Filter:"  Margin="5"/>
+            <TextBox 
+                Width="200" 
+                Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" 
+                Margin="0 8 5 8"
+                VerticalContentAlignment="Center"/>
+        </StackPanel>
         <sd:SharpTreeView 
                 SelectedItem="{Binding Current, Mode=OneWayToSource}"
                 ShowAlternation="True"
                 Grid.Column="1"
+                Grid.Row="1"
                 Root="{Binding Root}"
-                Margin="10 0 0 0">
+                Margin="5 0 5 5">
             <ListView.View>
                 <sd:SharpGridView>
                     <GridView.Columns>

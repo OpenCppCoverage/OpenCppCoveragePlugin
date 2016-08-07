@@ -24,12 +24,15 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     {
         RootCoverageTreeNode rootNode;
         FileCoverage currentFileCoverage;
+        string filter;
         readonly IEditorHighlighter editorHighlighter;
+        readonly TreeNodeVisibilityManager visibilityManager;
 
         //-----------------------------------------------------------------------
         public CoverageTreeController(IEditorHighlighter editorHighlighter)
         {
             this.editorHighlighter = editorHighlighter;
+            this.visibilityManager = new TreeNodeVisibilityManager();
         }
 
         //-----------------------------------------------------------------------
@@ -38,6 +41,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             set
             {
                 this.Root = new RootCoverageTreeNode(value);
+                this.Filter = "";
             }
         }
 
@@ -75,6 +79,29 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 {
                     this.rootNode = value;
                     NotifyPropertyChanged("Root");
+                }
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        public string Filter
+        {
+            get
+            {
+                return this.filter;
+            }
+
+            set
+            {
+                if (this.filter != value)
+                {
+                    if (this.Root != null && value != null)
+                    {
+                        this.visibilityManager.UpdateVisibility(this.Root, value);
+                        NotifyPropertyChanged("Root");
+                    }
+                    this.filter = value;
+                    NotifyPropertyChanged("Filter");
                 }
             }
         }

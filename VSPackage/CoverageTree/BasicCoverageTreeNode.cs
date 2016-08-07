@@ -127,7 +127,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             Func<T, TreeNode> nodeFactory) where TreeNode: BasicCoverageTreeNode
         {
             var childrenNode = children.Select(nodeFactory);
-            var sortedChildrenNode = childrenNode.OrderBy(c => c.CoverageRate);
+
+            // ToList is required to avoid calling Select during the second iteration
+            // and so create new objects.
+            var sortedChildrenNode = childrenNode.OrderBy(c => c.CoverageRate).ToList();
+            this.Children.Clear();
             this.Children.AddRange(sortedChildrenNode);
 
             return sortedChildrenNode;

@@ -20,6 +20,7 @@ using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Editor;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace VSPackage_UnitTests
 {
@@ -45,9 +46,11 @@ namespace VSPackage_UnitTests
             bool propertyChangedCalled = false;
             controller.PropertyChanged += (s, e) => propertyChangedCalled = true;
 
+            controller.Filter = "Filter";
             controller.CoverageRate = new CoverageRate(name, 0);
             Assert.IsTrue(propertyChangedCalled);
             Assert.AreEqual(name, controller.Root.Text);
+            Assert.AreEqual("", controller.Filter);
         }
 
         //---------------------------------------------------------------------
@@ -78,6 +81,24 @@ namespace VSPackage_UnitTests
             controller.Current = new RootCoverageTreeNode(new CoverageRate("", 0));
 
             editorHighlighter.VerifyAll();
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void Filter()
+        {
+            this.controller.CoverageRate = new CoverageRate("", 0);
+            this.controller.Filter = "filter";
+
+            bool rootChanged = false;
+            controller.PropertyChanged += (s, e) =>
+            {
+                if (e.PropertyName == "Root")
+                    rootChanged = true;
+            };
+
+            controller.Filter = string.Empty;
+            Assert.IsTrue(rootChanged);
         }
     }
 }   
