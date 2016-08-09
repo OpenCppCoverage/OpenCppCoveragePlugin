@@ -10,13 +10,21 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
             <local:DoubleMultiplyConverter x:Key="MultiplyConverter"/>
+            <local:NullCollapsedConverter x:Key="NullCollapsedConverter"/>
             <sys:Double x:Key="CoverageRectangleRate">50.0</sys:Double>
         </Grid.Resources>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
+        <TextBlock 
+            Text="{Binding Warning}" 
+            Visibility="{Binding Warning, Converter={StaticResource NullCollapsedConverter}}" 
+            Margin="5 0 5 0" 
+            Grid.Row="0"
+            Foreground="Red"/>
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
             <Label Content="Filter:"  Margin="5"/>
             <TextBox 
                 Width="200" 
@@ -28,7 +36,7 @@
                 SelectedItem="{Binding Current, Mode=OneWayToSource}"
                 ShowAlternation="True"
                 Grid.Column="1"
-                Grid.Row="1"
+                Grid.Row="2"
                 Root="{Binding Root}"
                 Margin="5 0 5 5">
             <ListView.View>

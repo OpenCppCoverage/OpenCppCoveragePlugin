@@ -20,7 +20,6 @@ using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Editor;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace VSPackage_UnitTests
 {
@@ -56,18 +55,18 @@ namespace VSPackage_UnitTests
         //---------------------------------------------------------------------
         [TestMethod]
         public void CurrentFileTreeNode()
-        {            
+        {
             var node1 = new FileTreeNode("", new FileCoverage("", new List<LineCoverage>()));
             var node2 = new FileTreeNode("", new FileCoverage("", new List<LineCoverage>()));
 
             controller.Current = node1;
             editorHighlighter.Verify(e => e.DisplayCoverage(node1.Coverage), Times.Once);
             editorHighlighter.Verify(e => e.RemoveCoverage(null), Times.Never);
-            
+
             controller.Current = node2;
             editorHighlighter.Verify(e => e.DisplayCoverage(node2.Coverage), Times.Once);
             editorHighlighter.Verify(e => e.RemoveCoverage(node1.Coverage), Times.Once);
-            
+
             editorHighlighter.VerifyAll();
         }
 
@@ -99,6 +98,18 @@ namespace VSPackage_UnitTests
 
             controller.Filter = string.Empty;
             Assert.IsTrue(rootChanged);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void Warning()
+        {
+            Assert.IsNull(this.controller.Warning);
+            this.controller.CoverageRate = new CoverageRate("", 0);
+            Assert.IsNull(this.controller.Warning);
+
+            this.controller.CoverageRate = new CoverageRate("", 42);
+            Assert.IsNotNull(this.controller.Warning);
         }
     }
 }   

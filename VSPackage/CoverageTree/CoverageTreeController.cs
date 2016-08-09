@@ -24,7 +24,10 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     {
         RootCoverageTreeNode rootNode;
         FileCoverage currentFileCoverage;
+
         string filter;
+        string warning;
+
         readonly IEditorHighlighter editorHighlighter;
         readonly TreeNodeVisibilityManager visibilityManager;
 
@@ -42,6 +45,14 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             {
                 this.Root = new RootCoverageTreeNode(value);
                 this.Filter = "";
+
+                if (value.ExitCode == 0)
+                    this.Warning = null;
+                else
+                {
+                    this.Warning = "Warning: Your program has exited with error code: "
+                                        + value.ExitCode;
+                }
             }
         }
 
@@ -102,6 +113,24 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                     }
                     this.filter = value;
                     NotifyPropertyChanged("Filter");
+                }
+            }
+        }
+
+        //-----------------------------------------------------------------------
+        public string Warning
+        {
+            get
+            {
+                return this.warning;
+            }
+
+            set
+            {
+                if (this.warning != value)
+                {
+                    this.warning = value;
+                    NotifyPropertyChanged("Warning");
                 }
             }
         }
