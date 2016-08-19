@@ -52,7 +52,7 @@ namespace OpenCppCoverage.VSPackage
         Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
     [Guid(GuidList.guidVSPackagePkgString)]
     [ProvideBindingPath]
-    public sealed class VSPackagePackage : Package
+    public sealed class OpenCppCoveragePackage : Package
     {
         /// <summary>
         /// Default constructor of the package.
@@ -61,7 +61,7 @@ namespace OpenCppCoverage.VSPackage
         /// not sited yet inside Visual Studio environment. The place to do all the other 
         /// initialization is the Initialize method.
         /// </summary>
-        public VSPackagePackage()
+        public OpenCppCoveragePackage()
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
