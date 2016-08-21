@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using OpenCppCoverage.VSPackage.CoverageTree;
+using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
@@ -50,6 +51,10 @@ namespace OpenCppCoverage.VSPackage
         MultiInstances = false,
         Transient = false,
         Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
+    [ProvideToolWindow(typeof(SettingToolWindow),
+        Style = Microsoft.VisualStudio.Shell.VsDockStyle.Float,
+        MultiInstances = false,
+        Transient = false)]
     [Guid(GuidList.guidVSPackagePkgString)]
     [ProvideBindingPath]
     public sealed class OpenCppCoveragePackage : Package
