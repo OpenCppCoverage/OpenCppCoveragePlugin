@@ -149,7 +149,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Settings.cs" />
+    <Compile Include="SettingValue.cs" />
     <Compile Include="SettingsBuilder.cs" />
     <Compile Include="VSPackageException.cs" />
     <Compile Include="OpenCppCoveragePackage.cs" />

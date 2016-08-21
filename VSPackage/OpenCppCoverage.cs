@@ -31,7 +31,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public string RunCodeCoverage(Settings settings)
+        public string RunCodeCoverage(SettingValue settings)
         {                                
             var outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
@@ -64,7 +64,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        static string BuildArguments(Settings settings, string outputFolder)
+        static string BuildArguments(SettingValue settings, string outputFolder)
         {
             var builder = new StringBuilder();
 

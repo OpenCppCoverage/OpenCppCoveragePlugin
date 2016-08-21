@@ -108,7 +108,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------        
-        void CheckSettings(Settings settings)
+        void CheckSettings(SettingValue settings)
         {
             if (!File.Exists(settings.Command))
             {
@@ -127,11 +127,11 @@ namespace OpenCppCoverage.VSPackage
         class BuildContext
         {            
             public _dispBuildEvents_OnBuildProjConfigDoneEventHandler OnBuildDone { get; set; }
-            public Settings Settings { get; set; }
+            public SettingValue Settings { get; set; }
         }
 
         //---------------------------------------------------------------------
-        void LogSettings(Settings settings)
+        void LogSettings(SettingValue settings)
         {                     
             outputWindowWriter_.WriteLine("Current Configuration: ");
             outputWindowWriter_.WriteLine(ProjectNameTag + settings.ProjectName);

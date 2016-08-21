@@ -18,7 +18,7 @@ using System.Collections.Generic;
 
 namespace OpenCppCoverage.VSPackage
 {
-    class Settings
+    class SettingValue
     {
         public string WorkingDir { get; set; }
         public string Arguments { get; set; }
