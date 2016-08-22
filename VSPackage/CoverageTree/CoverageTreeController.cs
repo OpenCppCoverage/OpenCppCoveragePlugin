@@ -17,6 +17,7 @@
 using ICSharpCode.TreeView;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.Editor;
+using OpenCppCoverage.VSPackage.Helper;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
@@ -79,40 +80,23 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //-----------------------------------------------------------------------
         public RootCoverageTreeNode Root
         {
-            get
-            {
-                return this.rootNode;
-            }
-
-            private set
-            {
-                if (this.rootNode != value)
-                {
-                    this.rootNode = value;
-                    NotifyPropertyChanged("Root");
-                }
-            }
+            get { return this.rootNode; }
+            private set { SetField(ref this.rootNode, value); }
         }
 
         //-----------------------------------------------------------------------
         public string Filter
         {
-            get
+            get { return this.filter; }
+            set 
             {
-                return this.filter;
-            }
-
-            set
-            {
-                if (this.filter != value)
+                if (SetField(ref this.filter, value))
                 {
                     if (this.Root != null && value != null)
                     {
                         this.visibilityManager.UpdateVisibility(this.Root, value);
                         NotifyPropertyChanged("Root");
                     }
-                    this.filter = value;
-                    NotifyPropertyChanged("Filter");
                 }
             }
         }
@@ -120,19 +104,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //-----------------------------------------------------------------------
         public string Warning
         {
-            get
-            {
-                return this.warning;
-            }
-
-            set
-            {
-                if (this.warning != value)
-                {
-                    this.warning = value;
-                    NotifyPropertyChanged("Warning");
-                }
-            }
+            get { return this.warning; }
+            set { SetField(ref this.warning, value); }
         }
     }
 }

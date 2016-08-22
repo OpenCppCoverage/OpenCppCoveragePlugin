@@ -149,7 +149,7 @@
     <Compile Include="CoverageTree\CoverageTreeToolWindow.cs" />
     <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
     <Compile Include="CoverageTree\NullCollapsedConverter.cs" />
-    <Compile Include="CoverageTree\PropertyChangedNotifier.cs" />
+    <Compile Include="Helper\PropertyChangedNotifier.cs" />
     <Compile Include="CoverageTree\RootCoverageTreeNode.cs" />
     <Compile Include="CoverageTree\TreeNodeVisibilityManager.cs" />
     <Compile Include="DynamicVCConfiguration.cs" />

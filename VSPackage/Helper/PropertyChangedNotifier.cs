@@ -14,20 +14,34 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
-namespace OpenCppCoverage.VSPackage.CoverageTree
+namespace OpenCppCoverage.VSPackage.Helper
 {
-    class PropertyChangedNotifier : INotifyPropertyChanged
+    public class PropertyChangedNotifier : INotifyPropertyChanged
     {
         //-----------------------------------------------------------------------
         public event PropertyChangedEventHandler PropertyChanged;
 
         //-----------------------------------------------------------------------
-        protected void NotifyPropertyChanged(string name)
+        protected bool SetField<T>(ref T field, T value, [CallerMemberName] string propertyName = null)
         {
-            if (this.PropertyChanged != null)
-                this.PropertyChanged(this, new PropertyChangedEventArgs(name));
+            if (!EqualityComparer<T>.Default.Equals(field, value))
+            {
+                field = value;
+                NotifyPropertyChanged(propertyName);
+                return true;
+            }
+
+            return false;
+        }
+
+        //-----------------------------------------------------------------------
+        protected void NotifyPropertyChanged(string propertyName)
+        {
+            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
