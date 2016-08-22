@@ -12,6 +12,9 @@
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" Margin="10 10 10 0">
+            <TabItem Header="Basic">
+                <local:BasicSettingControl DataContext="{Binding BasicSettingController}" Margin = "10 10 10 10"/>
+            </TabItem>
             <TabItem Header="Command line">
                 <Grid>
                     <Grid.RowDefinitions>

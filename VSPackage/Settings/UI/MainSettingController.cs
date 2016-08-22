@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using GalaSoft.MvvmLight.Command;
+using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Windows.Input;
 
@@ -22,15 +23,17 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     class MainSettingController
     {
-        public MainSettingController()
+        public MainSettingController(IFileSystemDialog fileSystemDialog)
         {
             this.RunCoverageCommand = new RelayCommand(() => { });
             this.CancelCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(() => { });
+            this.BasicSettingController = new BasicSettingController(fileSystemDialog);
         }
 
+        public BasicSettingController BasicSettingController { get; private set; }
         public EventHandler CloseWindowEvent;
 
         public string CommandLineText { get; private set; }

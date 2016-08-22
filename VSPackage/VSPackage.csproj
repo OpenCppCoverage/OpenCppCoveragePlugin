@@ -149,6 +149,8 @@
     <Compile Include="CoverageTree\CoverageTreeToolWindow.cs" />
     <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
     <Compile Include="CoverageTree\NullCollapsedConverter.cs" />
+    <Compile Include="Helper\FileSystemDialog.cs" />
+    <Compile Include="Helper\IFileSystemDialog.cs" />
     <Compile Include="Helper\PropertyChangedNotifier.cs" />
     <Compile Include="CoverageTree\RootCoverageTreeNode.cs" />
     <Compile Include="CoverageTree\TreeNodeVisibilityManager.cs" />
@@ -169,6 +171,10 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Settings\UI\BasicSettingControl.xaml.cs">
+      <DependentUpon>BasicSettingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\UI\BasicSettingController.cs" />
     <Compile Include="Settings\UI\MainSettingControl.xaml.cs">
       <DependentUpon>MainSettingControl.xaml</DependentUpon>
     </Compile>
@@ -418,6 +424,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoverageTree\CoverageTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\UI\BasicSettingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

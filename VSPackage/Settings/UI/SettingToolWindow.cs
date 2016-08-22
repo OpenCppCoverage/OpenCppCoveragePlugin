@@ -16,6 +16,7 @@
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Runtime.InteropServices;
 
@@ -29,7 +30,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             this.Caption = "Setting";
             var control = new MainSettingControl();
-            var controller = new MainSettingController();
+            var controller = new MainSettingController(new FileSystemDialog());
             control.DataContext = controller;
             controller.CloseWindowEvent += (o, e) => Close();
 
