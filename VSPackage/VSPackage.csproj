@@ -175,6 +175,7 @@
       <DependentUpon>BasicSettingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\UI\BasicSettingController.cs" />
+    <Compile Include="Settings\UI\BindableString.cs" />
     <Compile Include="Settings\UI\FilterSettingControl.xaml.cs">
       <DependentUpon>FilterSettingControl.xaml</DependentUpon>
     </Compile>

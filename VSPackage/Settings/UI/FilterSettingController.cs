@@ -25,13 +25,6 @@ using System.Windows.Input;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    // String cannot be used directly inside a datagrid.
-    class Pattern
-    {
-        public string Value { get; set; }
-    }
-
-    //-------------------------------------------------------------------------
     class UnifiedDiffs : PropertyChangedNotifier
     {
         string unifiedDiffPath;
@@ -61,10 +54,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public FilterSettingController(IFileSystemDialog fileSystemDialog)
         {
             this.fileSystemDialog = fileSystemDialog;
-            this.SourcePatterns = new ObservableCollection<Pattern>();
-            this.ExcludedSourcePatterns = new ObservableCollection<Pattern>();
-            this.ModulePatterns = new ObservableCollection<Pattern>();
-            this.ExcludedModulePatterns = new ObservableCollection<Pattern>();
+            this.SourcePatterns = new ObservableCollection<BindableString>();
+            this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();
+            this.ModulePatterns = new ObservableCollection<BindableString>();
+            this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
             this.UnifiedDiffs = new ObservableCollection<UnifiedDiffs>();            
             this.UnifiedDiffCommand = new RelayCommand(OnUnifiedDiffCommand);
         }
@@ -120,10 +113,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
         public DataGridCellInfo CurrentUnifiedDiffCellInfo { get; set; }
         public ICommand UnifiedDiffCommand { get; private set; }
-        public ObservableCollection<Pattern> SourcePatterns { get; private set; }
-        public ObservableCollection<Pattern> ExcludedSourcePatterns { get; private set; }
-        public ObservableCollection<Pattern> ModulePatterns { get; private set; }
-        public ObservableCollection<Pattern> ExcludedModulePatterns { get; private set; }
+        public ObservableCollection<BindableString> SourcePatterns { get; private set; }
+        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }
+        public ObservableCollection<BindableString> ModulePatterns { get; private set; }
+        public ObservableCollection<BindableString> ExcludedModulePatterns { get; private set; }
         public ObservableCollection<UnifiedDiffs> UnifiedDiffs { get; private set; }
     }
 }
