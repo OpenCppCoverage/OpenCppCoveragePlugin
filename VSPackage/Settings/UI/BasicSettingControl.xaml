@@ -89,7 +89,7 @@
             </TextBox>
 
             <Label Content="Compile before running:" Grid.Row="4"/>
-            <CheckBox VerticalAlignment="Center" Grid.Row="4" Grid.Column="1"/>
+            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1"/>
         </Grid>
 
     </Grid>
