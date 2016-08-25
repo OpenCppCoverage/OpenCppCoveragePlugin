@@ -15,6 +15,9 @@
             <TabItem Header="Basic">
                 <local:BasicSettingControl DataContext="{Binding BasicSettingController}" Margin = "10 10 10 10"/>
             </TabItem>
+            <TabItem Header="Filter">
+                <local:FilterSettingControl DataContext="{Binding FilterSettingController}" Margin = "10 10 10 10"/>
+            </TabItem>
             <TabItem Header="Command line">
                 <Grid>
                     <Grid.RowDefinitions>

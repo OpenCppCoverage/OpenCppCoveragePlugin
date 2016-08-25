@@ -14,13 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
+using System.Windows.Controls;
 
-namespace OpenCppCoverage.VSPackage.Helper
+namespace OpenCppCoverage.VSPackage.Settings.UI
 {
-    interface IFileSystemDialog
+    /// <summary>
+    /// Interaction logic for FilterSettingControl.xaml
+    /// </summary>
+    public partial class FilterSettingControl : UserControl
     {
-        bool SelectFile(string filter, Action<string> onSeletedFilename);
-        bool SelectFolder(Action<string> onSeletedPath);
+        public FilterSettingControl()
+        {
+            InitializeComponent();
+        }
     }
 }

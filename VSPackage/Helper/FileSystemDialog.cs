@@ -22,24 +22,34 @@ namespace OpenCppCoverage.VSPackage.Helper
     class FileSystemDialog: IFileSystemDialog
     {
         //---------------------------------------------------------------------
-        public void SelectFile(string filter, Action<string> onSelectedFilename)
+        public bool SelectFile(string filter, Action<string> onSelectedFilename)
         {
             var dialog = new OpenFileDialog();
             dialog.Filter = filter;
             bool? userClickedOK = dialog.ShowDialog();
 
             if (userClickedOK != null && userClickedOK.Value)
+            {
                 onSelectedFilename(dialog.FileName);
+                return true;
+            }
+
+            return false;
         }
 
         //---------------------------------------------------------------------
-        public void SelectFolder(Action<string> onSeletedPath)
+        public bool SelectFolder(Action<string> onSeletedPath)
         {
             var dialog = new System.Windows.Forms.FolderBrowserDialog();
             var result = dialog.ShowDialog();
-            
+
             if (result == System.Windows.Forms.DialogResult.OK)
+            {
                 onSeletedPath(dialog.SelectedPath);
+                return true;
+            }
+
+            return false;
         }
     }
 }

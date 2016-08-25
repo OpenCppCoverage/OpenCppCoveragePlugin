@@ -31,9 +31,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             });
             this.ResetToDefaultCommand = new RelayCommand(() => { });
             this.BasicSettingController = new BasicSettingController(fileSystemDialog);
+            this.FilterSettingController = new FilterSettingController(fileSystemDialog);
         }
 
         public BasicSettingController BasicSettingController { get; private set; }
+        public FilterSettingController FilterSettingController { get; private set; }
+
         public EventHandler CloseWindowEvent;
 
         public string CommandLineText { get; private set; }
