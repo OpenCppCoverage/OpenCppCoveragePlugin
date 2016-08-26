@@ -180,6 +180,11 @@
       <DependentUpon>FilterSettingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\UI\FilterSettingController.cs" />
+    <Compile Include="Settings\UI\DataGridHelper.cs" />
+    <Compile Include="Settings\UI\ImportExportSettingControl.xaml.cs">
+      <DependentUpon>ImportExportSettingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\UI\ImportExportSettingController.cs" />
     <Compile Include="Settings\UI\MainSettingControl.xaml.cs">
       <DependentUpon>MainSettingControl.xaml</DependentUpon>
     </Compile>
@@ -437,6 +442,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\UI\FilterSettingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\UI\ImportExportSettingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

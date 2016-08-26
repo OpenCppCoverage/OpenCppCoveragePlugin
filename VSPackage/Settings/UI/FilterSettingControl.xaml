@@ -57,8 +57,8 @@
                           ItemsSource="{Binding UnifiedDiffs}" 
                           Grid.Row="2" Grid.ColumnSpan="2">
                     <DataGrid.InputBindings>
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCommand}" MouseAction="LeftClick" />
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCommand}" MouseAction="LeftDoubleClick" />
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCellClickCommand}" MouseAction="LeftClick" />
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCellClickCommand}" MouseAction="LeftDoubleClick" />
                     </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridTextColumn IsReadOnly="True" Header="Unified Diff Path" Binding="{Binding UnifiedDiffPath}" Width="*">

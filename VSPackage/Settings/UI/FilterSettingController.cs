@@ -59,60 +59,31 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.ModulePatterns = new ObservableCollection<BindableString>();
             this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
             this.UnifiedDiffs = new ObservableCollection<UnifiedDiffs>();            
-            this.UnifiedDiffCommand = new RelayCommand(OnUnifiedDiffCommand);
-        }
-
-        //-----------------------------------------------------------------
-        static void CellClickHandle<T>(
-            DataGridCellInfo cellInfo,             
-            ObservableCollection<T> collection,
-            Func<T, string, bool> action) where T: class, new()
-        {            
-            if (cellInfo.IsValid)
-            {
-                var item = cellInfo.Item as T;
-                bool newItemCreated = false;
-
-                if (item == null && cellInfo.Item == CollectionView.NewItemPlaceholder)
-                {
-                    item = new T();
-                    newItemCreated = true;
-                }
-
-                if (item == null)
-                    throw new InvalidOperationException("Error in CellClickHandle");
-
-                var column = (DataGridBoundColumn)cellInfo.Column;
-                var binding = (Binding)column.Binding;
-                var propertyPath = binding.Path;
-
-                if (action(item, propertyPath.Path) && newItemCreated)
-                    collection.Add(item);
-            }
+            this.UnifiedDiffCellClickCommand = new RelayCommand(OnUnifiedDiffCellClickCommand);
         }
 
         //---------------------------------------------------------------------
-        void OnUnifiedDiffCommand()
+        void OnUnifiedDiffCellClickCommand()
         {
-            CellClickHandle(this.CurrentUnifiedDiffCellInfo, this.UnifiedDiffs,
+            DataGridHelper.HandleCellClick(this.CurrentUnifiedDiffCellInfo, this.UnifiedDiffs,
                 (item, bindingPath) =>
                 {
                     switch (bindingPath)
                     {
                         case nameof(item.UnifiedDiffPath):
                             return fileSystemDialog.SelectFile(
-                                "Diff Files (.diff)|*.diff|All Files (*.*)|*.*",
+                                "Diff Files (*.diff)|*.diff|All Files (*.*)|*.*",
                                 path => item.UnifiedDiffPath = path);
                         case nameof(item.OptionalRootFolder):
                             return fileSystemDialog.SelectFolder(path => item.OptionalRootFolder = path);
                         default:
-                            throw new InvalidOperationException("Invalid Value for DisplayIndex");
+                            throw new InvalidOperationException("Invalid Value for BindingPath: " + bindingPath);
                     };
                 });
         }
 
         public DataGridCellInfo CurrentUnifiedDiffCellInfo { get; set; }
-        public ICommand UnifiedDiffCommand { get; private set; }
+        public ICommand UnifiedDiffCellClickCommand { get; private set; }
         public ObservableCollection<BindableString> SourcePatterns { get; private set; }
         public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }
         public ObservableCollection<BindableString> ModulePatterns { get; private set; }

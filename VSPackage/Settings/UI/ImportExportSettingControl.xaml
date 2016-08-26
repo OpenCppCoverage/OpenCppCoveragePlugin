@@ -1,0 +1,85 @@
+﻿<UserControl x:Class="OpenCppCoverage.VSPackage.Settings.UI.ImportExportSettingControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Settings.UI"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type DataGrid}">
+                <Setter Property="AlternationCount" Value="2"/>
+                <Setter Property="AlternatingRowBackground" Value="AliceBlue"/>
+                <Setter Property="AutoGenerateColumns" Value="False"/>
+                <Setter Property="HeadersVisibility" Value="Column"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+        </Grid.Resources>
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+
+                <DataGrid 
+                    CurrentCell="{Binding CurrentExport, Mode=OneWayToSource}"                     
+                    ItemsSource="{Binding Exports}" Grid.Row="0" Grid.ColumnSpan="2">
+                    <DataGrid.Resources>
+                        <!-- We need this line because DataGridComboBoxColumn bind to the underlying type and not controller-->
+                        <CollectionViewSource x:Key="ExportTypeValues" Source="{Binding ExportTypeValues}"/>
+                    </DataGrid.Resources>
+                    <DataGrid.InputBindings>
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=ExportCellClickCommand}" MouseAction="LeftClick" />
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=ExportCellClickCommand}" MouseAction="LeftDoubleClick" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridComboBoxColumn 
+                            ItemsSource="{Binding Source={StaticResource ExportTypeValues}}"
+                            SelectedValueBinding="{Binding Type}"
+                            Header="Export Type"/>
+                        <DataGridTextColumn IsReadOnly="True" Header="Path" Binding="{Binding Path}" Width="*">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="{Binding Path}" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <DataGrid CurrentCell="{Binding CurrentInput, Mode=OneWayToSource}" 
+                          ItemsSource="{Binding InputCoverages}" 
+                          Grid.Row="1" Grid.ColumnSpan="2">
+                    <DataGrid.InputBindings>
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=InputCoverageCellClickCommand}" MouseAction="LeftClick" />
+                        <MouseBinding Command="{Binding Mode=OneWay, Path=InputCoverageCellClickCommand}" MouseAction="LeftDoubleClick" />
+                    </DataGrid.InputBindings>
+                    <DataGrid.Columns>
+                        <DataGridTextColumn IsReadOnly="True" Header="Input Coverage" Binding="{Binding Value}" Width="*">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="{Binding Value}" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+
+                <Label Content="Cover children processes:" Grid.Row="2" Grid.Column="0"/>
+                <CheckBox IsChecked="{Binding CoverChildrenProcesses}" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"/>
+
+                <Label Content="Aggregate by file" Grid.Row="3" Grid.Column="0"/>
+                <CheckBox IsChecked="{Binding AggregateByFile}"  VerticalAlignment="Center" Grid.Row="3" Grid.Column="1"/>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</UserControl>
