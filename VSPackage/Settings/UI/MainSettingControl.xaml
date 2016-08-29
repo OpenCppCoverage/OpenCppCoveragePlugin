@@ -13,13 +13,16 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" Margin="10 10 10 0">
             <TabItem Header="Basic">
-                <local:BasicSettingControl DataContext="{Binding BasicSettingController}" Margin = "10 10 10 10"/>
+                <local:BasicSettingControl DataContext="{Binding BasicSettingController}" Margin = "10"/>
             </TabItem>
             <TabItem Header="Filter">
-                <local:FilterSettingControl DataContext="{Binding FilterSettingController}" Margin = "10 10 10 10"/>
+                <local:FilterSettingControl DataContext="{Binding FilterSettingController}" Margin = "10"/>
             </TabItem>
             <TabItem Header="Import / Export">
-                <local:ImportExportSettingControl DataContext="{Binding ImportExportSettingController}" Margin = "10 10 10 10"/>
+                <local:ImportExportSettingControl DataContext="{Binding ImportExportSettingController}" Margin = "10"/>
+            </TabItem>
+            <TabItem Header="Miscellaneous">
+                <local:MiscellaneousSettingControl DataContext="{Binding MiscellaneousSettingController}" Margin = "10"/>
             </TabItem>
             <TabItem Header="Command line">
                 <Grid>

@@ -33,11 +33,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.BasicSettingController = new BasicSettingController(fileSystemDialog);
             this.FilterSettingController = new FilterSettingController(fileSystemDialog);
             this.ImportExportSettingController = new ImportExportSettingController(fileSystemDialog);
+            this.MiscellaneousSettingController = new MiscellaneousSettingController(fileSystemDialog);            
         }
 
         public BasicSettingController BasicSettingController { get; private set; }
         public FilterSettingController FilterSettingController { get; private set; }
         public ImportExportSettingController ImportExportSettingController { get; private set; }
+        public MiscellaneousSettingController MiscellaneousSettingController { get; private set; }
 
         public EventHandler CloseWindowEvent;
 

@@ -189,6 +189,10 @@
       <DependentUpon>MainSettingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\UI\MainSettingController.cs" />
+    <Compile Include="Settings\UI\MiscellaneousSettingControl.xaml.cs">
+      <DependentUpon>MiscellaneousSettingControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Settings\UI\MiscellaneousSettingController.cs" />
     <Compile Include="Settings\UI\SettingToolWindow.cs" />
     <Compile Include="SettingValue.cs" />
     <Compile Include="SettingsBuilder.cs" />
@@ -450,6 +454,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Settings\UI\MainSettingControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Settings\UI\MiscellaneousSettingControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
