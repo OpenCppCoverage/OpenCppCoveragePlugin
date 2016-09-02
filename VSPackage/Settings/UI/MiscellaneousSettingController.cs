@@ -14,12 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using GalaSoft.MvvmLight.Command;
 using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
@@ -34,27 +32,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public MiscellaneousSettingController(IFileSystemDialog fileSystemDialog)
+        public MiscellaneousSettingController()
         {
             this.LogTypeValues = Enum.GetValues(typeof(LogType)).Cast<LogType>();
-            this.ConfigFileCommand = new RelayCommand(
-            () => {
-                fileSystemDialog.SelectFile(
-                    "Config Files (*.*)|*.*",
-                    filename => ConfigFile = filename);
-            });
         }
 
-        //---------------------------------------------------------------------
-        string configFile;
-        public string ConfigFile
-        {
-            get { return this.configFile; }
-            set { SetField(ref this.configFile, value); }
-        }
-
-        //---------------------------------------------------------------------
-        public ICommand ConfigFileCommand { get; private set; }
+        public string ConfigFile { get; set; }
         public LogType LogTypeValue { get; set; }
         public IEnumerable<LogType> LogTypeValues { get; private set; }
         public bool ContinueAfterCppExceptions { get; set; }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Settings.UI"
+             xmlns:helper="clr-namespace:OpenCppCoverage.VSPackage.Helper"                          
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -23,19 +24,13 @@
             Grid.Row="0" Grid.Column="1"/>
 
         <Label Content="Config file" Grid.Row="1" Grid.Column="0"/>
-        <TextBox 
-                Text="{Binding ConfigFile}" 
+        <helper:FileSystemSelectionControl 
+                Mode="FileSelection"
+                FileFilter="Config Files (*.*)|*.*"
+                SelectedPath="{Binding ConfigFile}" 
                 Grid.Row="1"
-                Grid.Column="1"
-                IsReadOnly="True"
-                Margin="0 5 0 5"
-                ToolTip="{Binding ConfigFile}">
-            <TextBox.InputBindings>
-                <MouseBinding 
-                        Command="{Binding Mode=OneWay, Path=ConfigFileCommand}" 
-                        MouseAction="LeftClick" />
-            </TextBox.InputBindings>
-        </TextBox>
+                Grid.Column="1"                
+                Margin="0 5 0 5"/>
 
         <Label Content="Continue after C++ exceptions" Grid.Row="2" Grid.Column="0"/>
         <CheckBox 

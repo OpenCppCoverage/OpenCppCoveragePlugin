@@ -4,15 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Settings.UI"
+             xmlns:helper="clr-namespace:OpenCppCoverage.VSPackage.Helper"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.Resources>
-            <Style TargetType="{x:Type TextBox}">
+            <Style TargetType="{x:Type helper:FileSystemSelectionControl}">
                 <Setter Property="Grid.Column" Value="1"/>
                 <Setter Property="Margin" Value="0 5 0 5"/>
-                <Setter Property="VerticalContentAlignment" Value="Center"/>
             </Style>
+
             <Style TargetType="{x:Type Label}">
                 <Setter Property="Grid.Column" Value="0"/>
                 <Setter Property="Margin" Value="0 5 0 5"/>
@@ -57,36 +58,25 @@
             </DataGrid>
 
             <Label Content="Program to run:" Grid.Row="1"/>
-            <TextBox 
-                Text="{Binding ProgramToRun}" 
-                Grid.Row="1"
-                IsReadOnly="True"
-                ToolTip="{Binding ProgramToRun}">
-                <TextBox.InputBindings>
-                    <MouseBinding 
-                        Command="{Binding Mode=OneWay, Path=ProgramToRunCommand}" 
-                        MouseAction="LeftClick" />
-                </TextBox.InputBindings>
-            </TextBox>
+            <helper:FileSystemSelectionControl
+                Mode="FileSelection"
+                FileFilter="Executable Files (*.exe)|*.exe"
+                SelectedPath="{Binding ProgramToRun}" 
+                Grid.Row="1"/>
 
             <Label Content="Arguments:" Grid.Row="2"/>
             <TextBox 
                 Text="{Binding Arguments}" 
-                Grid.Row="2" 
-                ToolTip="{Binding Arguments}"/>
+                Grid.Row="2" Grid.Column="1" 
+                ToolTip="{Binding Arguments}"
+                Margin="0 5 0 5"
+                VerticalContentAlignment="Center"/>
 
             <Label Content="Working Directory:" Grid.Row="3"/>
-            <TextBox 
-                Text="{Binding WorkingDirectory}" 
-                Grid.Row="3"
-                IsReadOnly="True"                 
-                ToolTip="{Binding WorkingDirectory}">
-                <TextBox.InputBindings>
-                    <MouseBinding 
-                        Command="{Binding Mode=OneWay, Path=WorkingDirectoryCommand}" 
-                        MouseAction="LeftClick" />
-                </TextBox.InputBindings>
-            </TextBox>
+            <helper:FileSystemSelectionControl
+                Mode="FolderSelection"
+                SelectedPath="{Binding WorkingDirectory}" 
+                Grid.Row="3"/>
 
             <Label Content="Compile before running:" Grid.Row="4"/>
             <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1"/>

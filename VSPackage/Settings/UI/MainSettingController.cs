@@ -30,10 +30,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(() => { });
-            this.BasicSettingController = new BasicSettingController(fileSystemDialog);
+            this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController(fileSystemDialog);
             this.ImportExportSettingController = new ImportExportSettingController(fileSystemDialog);
-            this.MiscellaneousSettingController = new MiscellaneousSettingController(fileSystemDialog);            
+            this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
 
         public BasicSettingController BasicSettingController { get; private set; }

@@ -14,11 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using GalaSoft.MvvmLight.Command;
 using OpenCppCoverage.VSPackage.Helper;
 using System.Collections.Generic;
 using System.IO;
-using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
@@ -40,52 +38,17 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     //-------------------------------------------------------------------------
     class BasicSettingController: PropertyChangedNotifier
     {
-        readonly IFileSystemDialog fileSystemDialog;
-        string programToRun;
-        string workingDirectory;
-
         //---------------------------------------------------------------------
-        public BasicSettingController(IFileSystemDialog fileSystemDialog)
+        public BasicSettingController()
         {
-            this.fileSystemDialog = fileSystemDialog;
             this.SelectableProjects = new List<SelectableProject>();
-
-            this.ProgramToRunCommand = new RelayCommand(
-                () => { this.fileSystemDialog.SelectFile(
-                            "Executable Files (.exe)|*.exe", 
-                            filename => ProgramToRun = filename); });
-            this.WorkingDirectoryCommand = new RelayCommand(
-                () => { this.fileSystemDialog.SelectFolder(path => WorkingDirectory = path); });
             this.CompileBeforeRunning = true;
         }
 
-        //---------------------------------------------------------------------
         public IEnumerable<SelectableProject> SelectableProjects { get; private set; }
-        
-        //---------------------------------------------------------------------
-        public string ProgramToRun
-        {
-            get { return programToRun; }
-            private set { SetField(ref programToRun, value); }
-        }
-
-        //---------------------------------------------------------------------
-        public ICommand ProgramToRunCommand { get; set; }
-        
-        //---------------------------------------------------------------------
-        public string WorkingDirectory
-        {
-            get { return workingDirectory; }
-            private set { SetField(ref workingDirectory, value); }
-        }
-
-        //---------------------------------------------------------------------
-        public ICommand WorkingDirectoryCommand { get; private set; }
-
-        //---------------------------------------------------------------------
+        public string ProgramToRun { get; set; }
+        public string WorkingDirectory { get; set; }
         public string Arguments { get; set; }
-
-        //---------------------------------------------------------------------
         public bool CompileBeforeRunning { get; set; }
     }
 }

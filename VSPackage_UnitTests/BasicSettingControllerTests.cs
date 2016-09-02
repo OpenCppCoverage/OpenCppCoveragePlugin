@@ -25,36 +25,5 @@ namespace VSPackage_UnitTests
     [TestClass()]
     public class BasicSettingControllerTests
     {
-        //---------------------------------------------------------------------
-        [TestMethod]
-        public void ProgramToRunCommand()
-        {
-            var fileSystemDialog = new Mock<IFileSystemDialog>();
-            var controller = new BasicSettingController(fileSystemDialog.Object);
-            var file = "file";
-
-            fileSystemDialog.Setup(
-                f => f.SelectFile(It.IsAny<string>(), It.IsAny<Action<string>>()))
-                .Callback<string, Action<string>>(
-                    (filter, onSeletedFilename) => onSeletedFilename(file));
-            controller.ProgramToRunCommand.Execute(null);
-            Assert.AreEqual(file, controller.ProgramToRun);
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        public void WorkingDirectoryCommand()
-        {
-            var fileSystemDialog = new Mock<IFileSystemDialog>();
-            var controller = new BasicSettingController(fileSystemDialog.Object);
-            var path = "path";
-
-            fileSystemDialog.Setup(
-                f => f.SelectFolder(It.IsAny<Action<string>>()))
-                    .Callback<Action<string>>(
-                        (onSeletedPath) => onSeletedPath(path));
-            controller.WorkingDirectoryCommand.Execute(null);
-            Assert.AreEqual(path, controller.WorkingDirectory);
-        }        
     }
 }

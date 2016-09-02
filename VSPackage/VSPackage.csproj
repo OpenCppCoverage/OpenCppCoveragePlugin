@@ -150,6 +150,9 @@
     <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
     <Compile Include="CoverageTree\NullCollapsedConverter.cs" />
     <Compile Include="Helper\FileSystemDialog.cs" />
+    <Compile Include="Helper\FileSystemSelectionControl.xaml.cs">
+      <DependentUpon>FileSystemSelectionControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helper\IFileSystemDialog.cs" />
     <Compile Include="Helper\PropertyChangedNotifier.cs" />
     <Compile Include="CoverageTree\RootCoverageTreeNode.cs" />
@@ -438,6 +441,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoverageTree\CoverageTreeControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Helper\FileSystemSelectionControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
