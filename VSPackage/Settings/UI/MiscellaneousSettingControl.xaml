@@ -8,6 +8,12 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type Label}">
+                <Setter Property="Grid.Column" Value="0"/>
+                <Setter Property="Margin" Value="0 5 0 5"/>
+            </Style>
+        </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
@@ -17,13 +23,14 @@
             <RowDefinition Height="auto"/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <Label Content="Log verbosity" Grid.Row="0" Grid.Column="0"/>
+        <Label Content="Log verbosity" Grid.Row="0"/>
         <ComboBox 
             ItemsSource="{Binding LogTypeValues}" 
             SelectedValue="{Binding LogTypeValue}"
-            Grid.Row="0" Grid.Column="1"/>
+            Grid.Row="0" Grid.Column="1"
+            Margin="0 5 0 5"/>
 
-        <Label Content="Config file" Grid.Row="1" Grid.Column="0"/>
+        <Label Content="Config file" Grid.Row="1"/>
         <helper:FileSystemSelectionControl 
                 Mode="FileSelection"
                 FileFilter="Config Files (*.*)|*.*"
@@ -32,10 +39,11 @@
                 Grid.Column="1"                
                 Margin="0 5 0 5"/>
 
-        <Label Content="Continue after C++ exceptions" Grid.Row="2" Grid.Column="0"/>
+        <Label Content="Continue after C++ exceptions" Grid.Row="2"/>
         <CheckBox 
             IsChecked="{Binding ContinueAfterCppExceptions}" 
             VerticalAlignment="Center" 
-            Grid.Row="2" Grid.Column="1"/>
+            Grid.Row="2" Grid.Column="1"
+            Margin="0 5 0 5"/>
     </Grid>
 </UserControl>
