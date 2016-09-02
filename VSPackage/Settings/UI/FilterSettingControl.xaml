@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Settings.UI"
+             xmlns:helper="clr-namespace:OpenCppCoverage.VSPackage.Helper"             
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
@@ -53,29 +54,22 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid CurrentCell="{Binding CurrentUnifiedDiffCellInfo, Mode=OneWayToSource}" 
-                          ItemsSource="{Binding UnifiedDiffs}" 
-                          Grid.Row="2" Grid.ColumnSpan="2">
-                    <DataGrid.InputBindings>
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCellClickCommand}" MouseAction="LeftClick" />
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=UnifiedDiffCellClickCommand}" MouseAction="LeftDoubleClick" />
-                    </DataGrid.InputBindings>
+                <DataGrid 
+                        ItemsSource="{Binding UnifiedDiffs}" 
+                        Grid.Row="2" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn IsReadOnly="True" Header="Unified Diff Path" Binding="{Binding UnifiedDiffPath}" Width="*">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding UnifiedDiffPath}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
+                        <helper:DataGridFileSystemSelectionColumn 
+                            Mode="FileSelection"
+                            FileFilter="Diff Files (*.diff)|*.diff|All Files (*.*)|*.*"
+                            Header="Unified Diff Path" 
+                            Binding="{Binding UnifiedDiffPath}" 
+                            Width="*"/>
 
-                        <DataGridTextColumn IsReadOnly="True" Header="Optional Root Folder" Binding="{Binding OptionalRootFolder}" Width="*">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding OptionalRootFolder}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
+                        <helper:DataGridFileSystemSelectionColumn 
+                            Mode="FolderSelection"
+                            Header="Optional Root Folder" 
+                            Binding="{Binding OptionalRootFolder}" 
+                            Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
             </Grid>

@@ -14,76 +14,30 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using GalaSoft.MvvmLight.Command;
-using OpenCppCoverage.VSPackage.Helper;
-using System;
 using System.Collections.ObjectModel;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class UnifiedDiffs : PropertyChangedNotifier
+    class UnifiedDiffs
     {
-        string unifiedDiffPath;
-        string optionalRootFolder;
-
-        //---------------------------------------------------------------------
-        public string UnifiedDiffPath
-        {
-            get { return this.unifiedDiffPath; }
-            set { SetField(ref this.unifiedDiffPath, value); }
-        }
-
-        //---------------------------------------------------------------------
-        public string OptionalRootFolder
-        {
-            get { return this.optionalRootFolder; }
-            set { SetField(ref this.optionalRootFolder, value); }
-        }
+        public string UnifiedDiffPath { get; set; }
+        public string OptionalRootFolder { get; set; }
     }
 
     //-------------------------------------------------------------------------
     class FilterSettingController
     {
-        readonly IFileSystemDialog fileSystemDialog;
-
         //---------------------------------------------------------------------
-        public FilterSettingController(IFileSystemDialog fileSystemDialog)
+        public FilterSettingController()
         {
-            this.fileSystemDialog = fileSystemDialog;
             this.SourcePatterns = new ObservableCollection<BindableString>();
             this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();
             this.ModulePatterns = new ObservableCollection<BindableString>();
             this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
             this.UnifiedDiffs = new ObservableCollection<UnifiedDiffs>();            
-            this.UnifiedDiffCellClickCommand = new RelayCommand(OnUnifiedDiffCellClickCommand);
         }
 
-        //---------------------------------------------------------------------
-        void OnUnifiedDiffCellClickCommand()
-        {
-            DataGridHelper.HandleCellClick(this.CurrentUnifiedDiffCellInfo, this.UnifiedDiffs,
-                (item, bindingPath) =>
-                {
-                    switch (bindingPath)
-                    {
-                        case nameof(item.UnifiedDiffPath):
-                            return fileSystemDialog.SelectFile(
-                                "Diff Files (*.diff)|*.diff|All Files (*.*)|*.*",
-                                path => item.UnifiedDiffPath = path);
-                        case nameof(item.OptionalRootFolder):
-                            return fileSystemDialog.SelectFolder(path => item.OptionalRootFolder = path);
-                        default:
-                            throw new InvalidOperationException("Invalid Value for BindingPath: " + bindingPath);
-                    };
-                });
-        }
-
-        public DataGridCellInfo CurrentUnifiedDiffCellInfo { get; set; }
-        public ICommand UnifiedDiffCellClickCommand { get; private set; }
         public ObservableCollection<BindableString> SourcePatterns { get; private set; }
         public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }
         public ObservableCollection<BindableString> ModulePatterns { get; private set; }

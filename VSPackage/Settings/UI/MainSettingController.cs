@@ -31,7 +31,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             });
             this.ResetToDefaultCommand = new RelayCommand(() => { });
             this.BasicSettingController = new BasicSettingController();
-            this.FilterSettingController = new FilterSettingController(fileSystemDialog);
+            this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController(fileSystemDialog);
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
