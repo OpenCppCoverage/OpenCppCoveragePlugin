@@ -14,18 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-using GalaSoft.MvvmLight.Command;
 using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
+    //-------------------------------------------------------------------------
     class ImportExportSettingController
     {
         //---------------------------------------------------------------------
@@ -39,25 +36,45 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public class Export : PropertyChangedNotifier
         {
-            ExportType? optionalType;
+            ExportType type;
             string path;
-                                   
+
             //-----------------------------------------------------------------
             public ExportType Type
             {
-                get { return this.optionalType ?? default(ExportType); }
+                get { return this.type; }
                 set
                 {
                     // Reset path because it can be either a file or a folder.
-                    if (SetField(ref this.optionalType, value))
+                    if (SetField(ref this.type, value))
                         this.Path = null;
                 }
             }
 
             //-----------------------------------------------------------------
-            public ExportType? OptionalType
+            public FileSystemSelectionControl.SelectionMode SelectionMode
             {
-                get { return this.optionalType; }
+                get
+                {
+                    return (this.Type == ImportExportSettingController.ExportType.Html) 
+                        ? FileSystemSelectionControl.SelectionMode.FolderSelection 
+                        : FileSystemSelectionControl.SelectionMode.FileSelection;
+                }
+            }
+
+            //-----------------------------------------------------------------
+            public string FileFilter
+            {
+                get
+                {
+                    switch (this.type)
+                    {
+                        case ExportType.Binary: return "Coverage Files (*.cov)|*.cov";
+                        case ExportType.Cobertura: return "Coverage Files (*.xml)|*.xml";
+                        case ExportType.Html: return string.Empty;
+                    }
+                    throw new NotSupportedException();
+                }
             }
 
             //-----------------------------------------------------------------
@@ -68,16 +85,11 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
         }
 
-        readonly IFileSystemDialog fileSystemDialog;
-
         //---------------------------------------------------------------------
-        public ImportExportSettingController(IFileSystemDialog fileSystemDialog)
+        public ImportExportSettingController()
         {
-            this.fileSystemDialog = fileSystemDialog;
             this.ExportTypeValues = Enum.GetValues(typeof(ExportType)).Cast<ExportType>();
             this.Exports = new ObservableCollection<Export>();
-            this.ExportCellClickCommand = new RelayCommand(OnExportCellClickCommand);
-            this.InputCoverageCellClickCommand = new RelayCommand(OnInputCoverageCellClickCommand);
             this.InputCoverages = new ObservableCollection<BindableString>();
             this.AggregateByFile = true;
         }
@@ -85,61 +97,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public IEnumerable<ExportType> ExportTypeValues { get; private set; }
         public ObservableCollection<Export> Exports { get; private set; }
-        public DataGridCellInfo CurrentExport { get; set; }
-        public ICommand ExportCellClickCommand { get; private set; }
-
-        //---------------------------------------------------------------------
-        public ObservableCollection<BindableString> InputCoverages { get; private set; }
-        public DataGridCellInfo CurrentInput { get; set; }
-        public ICommand InputCoverageCellClickCommand { get; private set; }
-
-        //---------------------------------------------------------------------
+        public ObservableCollection<BindableString> InputCoverages { get; private set; }        
         public bool CoverChildrenProcesses { get; set; }
         public bool AggregateByFile { get; set; }
-
-        //---------------------------------------------------------------------
-        void OnInputCoverageCellClickCommand()
-        {
-            DataGridHelper.HandleCellClick(this.CurrentInput, this.InputCoverages,
-                (item, bindingPath) =>
-                {
-                    if (bindingPath == nameof(item.Value))
-                    {
-                        return fileSystemDialog.SelectFile(
-                            "Coverage Files (*.cov)|*.cov",
-                            path => item.Value = path);
-                    }
-
-                    return false;
-                });
-        }
-
-        //---------------------------------------------------------------------
-        void OnExportCellClickCommand()
-        {
-            DataGridHelper.HandleCellClick(this.CurrentExport, this.Exports,
-                (item, bindingPath) =>
-                {
-                    // If the item is a placeHolder, item.Type is set to the first value and not to the selected value.
-                    // So we force the user to validate before entering the path.
-                    if (item.OptionalType != null && bindingPath == nameof(item.Path))
-                    {
-                        switch (item.OptionalType.Value)
-                        {
-                            case ExportType.Html:
-                                return fileSystemDialog.SelectFolder(path => item.Path = path);
-                            case ExportType.Cobertura:
-                                return fileSystemDialog.SelectFile(
-                                        "Coverage Files (*.xml)|*.xml",
-                                        path => item.Path = path);
-                            case ExportType.Binary:
-                                return fileSystemDialog.SelectFile(
-                                    "Coverage Files (*.cov)|*.cov",
-                                    path => item.Path = path);
-                        }
-                    }
-                    return false;
-                });
-        }
     }
 }

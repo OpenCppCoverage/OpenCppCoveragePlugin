@@ -23,7 +23,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     class MainSettingController
     {
-        public MainSettingController(IFileSystemDialog fileSystemDialog)
+        public MainSettingController()
         {
             this.RunCoverageCommand = new RelayCommand(() => { });
             this.CancelCommand = new RelayCommand(() => {
@@ -32,7 +32,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.ResetToDefaultCommand = new RelayCommand(() => { });
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
-            this.ImportExportSettingController = new ImportExportSettingController(fileSystemDialog);
+            this.ImportExportSettingController = new ImportExportSettingController();
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
 

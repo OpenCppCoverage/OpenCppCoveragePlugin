@@ -16,12 +16,16 @@
 
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 
 namespace OpenCppCoverage.VSPackage.Helper
 {
-    class DataGridFileSystemSelectionColumn: DataGridBoundColumn
-    {    
+    class DataGridFileSystemSelectionColumn : DataGridBoundColumn
+    {
+        public BindingBase FileFilterBinding { get; set; }
         public string FileFilter { get; set; }
+
+        public BindingBase ModeBinding { get; set; }
         public FileSystemSelectionControl.SelectionMode Mode { get; set; }
 
         //-----------------------------------------------------------------------   
@@ -30,9 +34,19 @@ namespace OpenCppCoverage.VSPackage.Helper
             object dataItem)
         {
             var fileSystemSelectionControl = new FileSystemSelectionControl();
-            fileSystemSelectionControl.Mode = this.Mode;
-            fileSystemSelectionControl.FileFilter = this.FileFilter;
 
+            if (!BindIfNotNull(
+                    fileSystemSelectionControl, 
+                    FileSystemSelectionControl.FileFilterProperty, 
+                    this.FileFilterBinding))
+                fileSystemSelectionControl.FileFilter = this.FileFilter;
+
+            if (!BindIfNotNull(
+                    fileSystemSelectionControl, 
+                    FileSystemSelectionControl.ModeProperty, 
+                    this.ModeBinding))
+                fileSystemSelectionControl.Mode = this.Mode;
+            
             fileSystemSelectionControl.SetBinding(
                 FileSystemSelectionControl.SelectedPathProperty, 
                 this.Binding);
@@ -50,6 +64,21 @@ namespace OpenCppCoverage.VSPackage.Helper
             currentTextBlock.SetBinding(TextBlock.TextProperty, this.Binding);
 
             return currentTextBlock;
+        }
+
+        //-----------------------------------------------------------------------   
+        bool BindIfNotNull(
+            FrameworkElement element, 
+            DependencyProperty property, 
+            BindingBase binding)
+        {
+            if (binding != null)
+            {
+                element.SetBinding(property, binding);
+                return true;
+            }
+
+            return false;
         }
     }
 }

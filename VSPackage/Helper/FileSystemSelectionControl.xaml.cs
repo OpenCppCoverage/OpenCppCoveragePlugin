@@ -56,8 +56,29 @@ namespace OpenCppCoverage.VSPackage.Helper
         }
 
         //-----------------------------------------------------------------------
-        public string FileFilter { get; set; }
-        public SelectionMode Mode { get; set; }
+        public static readonly DependencyProperty FileFilterProperty =
+            DependencyProperty.Register(nameof(FileFilter), typeof(string), typeof(FileSystemSelectionControl),
+                new FrameworkPropertyMetadata(null));
+
+        //-----------------------------------------------------------------------
+        public string FileFilter
+        {
+            get { return (string)GetValue(FileFilterProperty); }
+            set { SetValue(FileFilterProperty, value); }
+        }
+
+
+        //-----------------------------------------------------------------------
+        public static readonly DependencyProperty ModeProperty =
+            DependencyProperty.Register(nameof(Mode), typeof(SelectionMode), typeof(FileSystemSelectionControl),
+                new FrameworkPropertyMetadata(SelectionMode.FileSelection));
+
+        //-----------------------------------------------------------------------
+        public SelectionMode Mode
+        {
+            get { return (SelectionMode)GetValue(ModeProperty); }
+            set { SetValue(ModeProperty, value); }
+        }
 
         //-----------------------------------------------------------------------
         public enum SelectionMode

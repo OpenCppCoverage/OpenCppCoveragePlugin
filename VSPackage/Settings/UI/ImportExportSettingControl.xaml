@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:helper="clr-namespace:OpenCppCoverage.VSPackage.Helper"             
              xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Settings.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -31,46 +32,34 @@
                 </Grid.ColumnDefinitions>
 
                 <DataGrid 
-                    CurrentCell="{Binding CurrentExport, Mode=OneWayToSource}"                     
                     ItemsSource="{Binding Exports}" Grid.Row="0" Grid.ColumnSpan="2">
                     <DataGrid.Resources>
                         <!-- We need this line because DataGridComboBoxColumn bind to the underlying type and not controller-->
                         <CollectionViewSource x:Key="ExportTypeValues" Source="{Binding ExportTypeValues}"/>
                     </DataGrid.Resources>
-                    <DataGrid.InputBindings>
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=ExportCellClickCommand}" MouseAction="LeftClick" />
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=ExportCellClickCommand}" MouseAction="LeftDoubleClick" />
-                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
                         <DataGridComboBoxColumn 
                             ItemsSource="{Binding Source={StaticResource ExportTypeValues}}"
-                            SelectedValueBinding="{Binding Type}"
+                            SelectedValueBinding="{Binding Type, UpdateSourceTrigger=LostFocus}"
                             Header="Export Type"/>
-                        <DataGridTextColumn IsReadOnly="True" Header="Path" Binding="{Binding Path}" Width="*">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding Path}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
+                        <helper:DataGridFileSystemSelectionColumn 
+                            Header="Path" 
+                            Binding="{Binding Path, UpdateSourceTrigger=LostFocus}" 
+                            FileFilterBinding="{Binding FileFilter}"
+                            ModeBinding="{Binding SelectionMode}"
+                            Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid CurrentCell="{Binding CurrentInput, Mode=OneWayToSource}" 
-                          ItemsSource="{Binding InputCoverages}" 
+                <DataGrid ItemsSource="{Binding InputCoverages}" 
                           Grid.Row="1" Grid.ColumnSpan="2">
-                    <DataGrid.InputBindings>
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=InputCoverageCellClickCommand}" MouseAction="LeftClick" />
-                        <MouseBinding Command="{Binding Mode=OneWay, Path=InputCoverageCellClickCommand}" MouseAction="LeftDoubleClick" />
-                    </DataGrid.InputBindings>
                     <DataGrid.Columns>
-                        <DataGridTextColumn IsReadOnly="True" Header="Input Coverage" Binding="{Binding Value}" Width="*">
-                            <DataGridTextColumn.CellStyle>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="ToolTip" Value="{Binding Value}" />
-                                </Style>
-                            </DataGridTextColumn.CellStyle>
-                        </DataGridTextColumn>
+                        <helper:DataGridFileSystemSelectionColumn
+                            Mode="FileSelection"
+                            FileFilter="Coverage Files (*.cov)|*.cov"
+                            Header="Input Coverage" 
+                            Binding="{Binding Value}" 
+                            Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
