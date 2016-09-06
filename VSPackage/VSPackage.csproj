@@ -182,7 +182,6 @@
       <DependentUpon>FilterSettingControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Settings\UI\FilterSettingController.cs" />
-    <Compile Include="Settings\UI\DataGridHelper.cs" />
     <Compile Include="Settings\UI\ImportExportSettingControl.xaml.cs">
       <DependentUpon>ImportExportSettingControl.xaml</DependentUpon>
     </Compile>
