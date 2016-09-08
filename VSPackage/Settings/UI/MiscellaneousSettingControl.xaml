@@ -16,6 +16,7 @@
         </Grid.Resources>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -27,17 +28,22 @@
         <ComboBox 
             ItemsSource="{Binding LogTypeValues}" 
             SelectedValue="{Binding LogTypeValue}"
-            Grid.Row="0" Grid.Column="1"
+            Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
             Margin="0 5 0 5"/>
 
         <Label Content="Config file" Grid.Row="1"/>
+        <CheckBox 
+            IsChecked="{Binding HasConfigFile}"             
+            VerticalAlignment="Center" 
+            Grid.Row="1" Grid.Column="1" 
+            Margin="0 0 5 0"/>
         <helper:FileSystemSelectionControl 
-                Mode="FileSelection"
-                FileFilter="Config Files (*.*)|*.*"
-                SelectedPath="{Binding ConfigFile}" 
-                Grid.Row="1"
-                Grid.Column="1"                
-                Margin="0 5 0 5"/>
+            IsEnabled="{Binding HasConfigFile}"
+            Mode="FileSelection"
+            FileFilter="Config Files (*.*)|*.*"
+            SelectedPath="{Binding OptionalConfigFile}"                                 
+            Grid.Row="1" Grid.Column="2"
+            Margin="0 5 0 5"/>
 
         <Label Content="Continue after C++ exceptions" Grid.Row="2"/>
         <CheckBox 

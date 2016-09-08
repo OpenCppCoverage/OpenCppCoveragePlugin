@@ -22,7 +22,7 @@ using System.Linq;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class MiscellaneousSettingController : PropertyChangedNotifier
+    class MiscellaneousSettingController: PropertyChangedNotifier
     {
         public enum LogType
         {
@@ -37,7 +37,27 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.LogTypeValues = Enum.GetValues(typeof(LogType)).Cast<LogType>();
         }
 
-        public string ConfigFile { get; set; }
+        //---------------------------------------------------------------------
+        bool hasConfigFile;
+        public bool HasConfigFile
+        {
+            get { return this.hasConfigFile; }
+            set
+            {
+                if (this.SetField(ref this.hasConfigFile, value) && !value)
+                    this.OptionalConfigFile = null;
+            }
+        }
+
+        //---------------------------------------------------------------------
+        string optionalConfigFile;
+        public string OptionalConfigFile
+        {
+            get { return this.optionalConfigFile; }
+            set { this.SetField(ref this.optionalConfigFile, value); }
+        }
+
+        //---------------------------------------------------------------------
         public LogType LogTypeValue { get; set; }
         public IEnumerable<LogType> LogTypeValues { get; private set; }
         public bool ContinueAfterCppExceptions { get; set; }
