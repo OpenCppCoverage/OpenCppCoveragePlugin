@@ -28,9 +28,12 @@ namespace OpenCppCoverage.VSPackage.Settings
     class StartUpProjectSettingsBuilder
     {
         //---------------------------------------------------------------------
-        public StartUpProjectSettingsBuilder(Solution2 solution)
+        public StartUpProjectSettingsBuilder(
+            Solution2 solution, 
+            IConfigurationManager configurationManager)
         {
             solution_ = solution;
+            configurationManager_ = configurationManager;
         }
 
         //---------------------------------------------------------------------
@@ -38,22 +41,20 @@ namespace OpenCppCoverage.VSPackage.Settings
         {
             var projects = GetProjects();
             var startupProject = GetStartupProject(projects);
-            var configurationManager = CreateConfigurationManager();
-            var startupConfiguration = configurationManager.GetConfiguration(startupProject);
+            var startupConfiguration = configurationManager_.GetConfiguration(startupProject);
             var debugSettings = new DynamicVCDebugSettings(startupConfiguration.DebugSettings);
 
             if (debugSettings == null)
                 throw new Exception("DebugSettings is null");
             var settings = new StartUpProjectSettings
-            {            
+            {
                 WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory),
                 Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments),
                 Command = startupConfiguration.Evaluate(debugSettings.Command),
-                SolutionConfigurationName = configurationManager.GetSolutionConfigurationName(),
-                ProjectName = startupProject.UniqueName,                
+                SolutionConfigurationName = configurationManager_.GetSolutionConfigurationName(),
+                ProjectName = startupProject.UniqueName,
+                CppProjects = BuildCppProject(configurationManager_, projects)
             };
-
-            SetFilters(configurationManager, projects, settings);
             
             return settings;                                                 
         }
@@ -138,38 +139,33 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        ConfigurationManager CreateConfigurationManager()
+        static IEnumerable<StartUpProjectSettings.CppProject> BuildCppProject(
+            IConfigurationManager configurationManager,
+            List<ExtendedProject> projects)
         {
-            var solutionBuild = (SolutionBuild2)solution_.SolutionBuild;
-            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
-            return new ConfigurationManager(activeConfiguration);
-        }
-
-        //---------------------------------------------------------------------
-        static void SetFilters(
-            ConfigurationManager configurationManager,
-            List<ExtendedProject> projects,             
-            StartUpProjectSettings settings)
-        {
-            var projectFilePaths = new List<string>();
-            var modulePaths = new List<string>();
+            var cppProjects = new List<StartUpProjectSettings.CppProject>();
 
             foreach (var project in projects)
-            {                
-                foreach (var file in project.Files)
-                    projectFilePaths.Add(file.FullPath);
+            {
                 var configuration = configurationManager.FindConfiguration(project);
 
                 if (configuration != null)
-                    modulePaths.Add(configuration.PrimaryOutput);
+                {
+                    var cppProject = new StartUpProjectSettings.CppProject()
+                    {
+                        ModulePath = configuration.PrimaryOutput,
+                        SourcePaths = ComputeCommonFolders(project.Files.Select(f => f.FullPath)),
+                        Name = project.UniqueName
+                    };
+                    cppProjects.Add(cppProject);
+                }
             }
 
-            settings.ModulePaths = modulePaths;
-            settings.SourcePaths = ComputeCommonFolders(projectFilePaths);
+            return cppProjects;
         }
 
         //---------------------------------------------------------------------       
-        static IEnumerable<string> ComputeCommonFolders(List<string> projectFilePaths)
+        static IEnumerable<string> ComputeCommonFolders(IEnumerable<string> projectFilePaths)
         {
             var commonFolders = new List<string>();
 
@@ -195,6 +191,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             return commonFolders;
         }
 
-        Solution2 solution_;
+        readonly Solution2 solution_;
+        readonly IConfigurationManager configurationManager_;
     }
 }

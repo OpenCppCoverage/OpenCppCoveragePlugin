@@ -16,12 +16,10 @@
 
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
-using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.IO;
 
@@ -139,8 +137,11 @@ namespace OpenCppCoverage.VSPackage
             outputWindowWriter_.WriteLine(CommandTag + settings.Command);
             outputWindowWriter_.WriteLine(ArgumentTag + settings.Arguments);
             outputWindowWriter_.WriteLine(WorkingDirTag + settings.WorkingDir);
-            LogCollection(SelectedFolderTag, settings.SourcePaths);
-            LogCollection(SelectedModuleTag, settings.ModulePaths);
+
+            var sourcePaths = settings.CppProjects.SelectMany(p => p.SourcePaths);
+            var modulePaths = settings.CppProjects.Select(p => p.ModulePath);
+            LogCollection(SelectedFolderTag, sourcePaths);
+            LogCollection(SelectedModuleTag, modulePaths);
         }
 
         //---------------------------------------------------------------------

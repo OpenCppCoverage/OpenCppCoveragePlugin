@@ -22,11 +22,14 @@ using System.Text;
 
 namespace OpenCppCoverage.VSPackage
 {
-    class ConfigurationManager
+    class ConfigurationManager: IConfigurationManager
     {
         //---------------------------------------------------------------------
-        public ConfigurationManager(SolutionConfiguration2 activeConfiguration)
+        public ConfigurationManager(Solution2 solution)
         {
+            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
+            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
+
             if (activeConfiguration == null)
                 throw new Exception("SolutionConfiguration is null");
              activeConfiguration_ = activeConfiguration;

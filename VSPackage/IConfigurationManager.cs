@@ -1,5 +1,5 @@
 ﻿// OpenCppCoverage is an open source code coverage for C++.
-// Copyright (C) 2014 OpenCppCoverage
+// Copyright (C) 2016 OpenCppCoverage
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -14,25 +14,12 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-
-namespace OpenCppCoverage.VSPackage.Settings
+namespace OpenCppCoverage.VSPackage
 {
-    class StartUpProjectSettings
+    interface IConfigurationManager
     {
-        public class CppProject
-        {
-            public string ModulePath { get; set; }
-            public IEnumerable<string> SourcePaths { get; set; }
-            public string Name { get; set; }
-
-        }
-
-        public string WorkingDir { get; set; }
-        public string Arguments { get; set; }
-        public string Command { get; set; }
-        public IEnumerable<CppProject> CppProjects { get; set; }
-        public string SolutionConfigurationName { get; set; }
-        public string ProjectName { get; set; }
+        DynamicVCConfiguration GetConfiguration(ExtendedProject project);
+        DynamicVCConfiguration FindConfiguration(ExtendedProject project);
+        string GetSolutionConfigurationName();
     }
 }

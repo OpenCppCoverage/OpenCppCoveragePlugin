@@ -18,6 +18,7 @@ using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -68,11 +69,13 @@ namespace OpenCppCoverage.VSPackage
         static string BuildArguments(StartUpProjectSettings settings, string outputFolder)
         {
             var builder = new StringBuilder();
+            var sourcePaths = settings.CppProjects.SelectMany(p => p.SourcePaths);
+            var modulePaths = settings.CppProjects.Select(p => p.ModulePath);
 
             AppendArgument(builder, "--export_type", "binary:" + outputFolder);
-            foreach (var modulePath in settings.ModulePaths)
+            foreach (var modulePath in modulePaths)
                 AppendArgument(builder, "--module", modulePath);
-            foreach (var sourcePath in settings.SourcePaths)
+            foreach (var sourcePath in sourcePaths)
                 AppendArgument(builder, "--sources", sourcePath);
 
             builder.Append(" --plugin ");

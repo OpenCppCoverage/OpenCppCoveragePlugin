@@ -117,7 +117,9 @@ namespace OpenCppCoverage.VSPackage
 
                 errorHandler.OutputWriter = outputWriter;
                 var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(IVsWebBrowsingService));
-                var settingsBuilder = new StartUpProjectSettingsBuilder((Solution2)dte.Solution);
+                var solution = (Solution2)dte.Solution;
+                var configurationManager = new ConfigurationManager(solution);
+                var settingsBuilder = new StartUpProjectSettingsBuilder(solution, configurationManager);
                 var coverageTreeManager = new CoverageTreeManager(this);
 
                 var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService, 

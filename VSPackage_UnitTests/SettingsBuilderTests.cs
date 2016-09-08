@@ -38,6 +38,20 @@ namespace VSPackage_IntegrationTests
             return file.Object;
         }
 
+        public class ConfigurationMock
+        {
+            public class DebugSettingsMock
+            {
+                public string Command { get; set; }
+                public string CommandArguments { get; set; }
+                public string WorkingDirectory { get; set; }
+            }
+
+            public string PrimaryOutput { get; set; }
+            public DebugSettingsMock DebugSettings { get; set; } = new DebugSettingsMock();
+            public string Evaluate(string str) { return str; }
+        }
+
         //---------------------------------------------------------------------
         [TestMethod]
         public void TestComputeCommonFolders()
@@ -56,14 +70,25 @@ namespace VSPackage_IntegrationTests
             };
               
             var solution = builder.BuildSolutionMock();
+            var configurationManager = new Mock<IConfigurationManager>();
+            string output = "output";
+            var configuration = new ConfigurationMock { PrimaryOutput = output };
+            configurationManager.Setup(c => c.FindConfiguration(It.IsAny<ExtendedProject>()))
+                .Returns(new DynamicVCConfiguration(configuration));
+            configurationManager.Setup(c => c.GetConfiguration(It.IsAny<ExtendedProject>()))
+                .Returns(new DynamicVCConfiguration(configuration));
 
-            var settingsBuilder = new StartUpProjectSettingsBuilder(solution.Object);
+            var settingsBuilder = new StartUpProjectSettingsBuilder(
+                solution.Object, 
+                configurationManager.Object);
             var settings = settingsBuilder.ComputeSettings();
 
             var expectedFolders = new List<string> { 
                 Path.GetDirectoryName(file4) + Path.DirectorySeparatorChar, 
                 Path.GetDirectoryName(file2) + Path.DirectorySeparatorChar };
-            CollectionAssert.AreEqual(expectedFolders, settings.SourcePaths.ToList());
+            var project = settings.CppProjects.Single();
+            CollectionAssert.AreEqual(expectedFolders, project.SourcePaths.ToList());
+            Assert.AreEqual(output, project.ModulePath);
         }
     }
 }
