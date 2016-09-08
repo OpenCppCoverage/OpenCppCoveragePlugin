@@ -23,7 +23,7 @@ using System.Linq;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class ImportExportSettingController
+    class ImportExportSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
         public enum ExportType
@@ -91,14 +91,36 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.ExportTypeValues = Enum.GetValues(typeof(ExportType)).Cast<ExportType>();
             this.Exports = new ObservableCollection<Export>();
             this.InputCoverages = new ObservableCollection<BindableString>();
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateStartUpProject()
+        {
+            this.Exports.Clear();
+            this.InputCoverages.Clear();
+            this.CoverChildrenProcesses = false;
             this.AggregateByFile = true;
         }
 
         //---------------------------------------------------------------------
         public IEnumerable<ExportType> ExportTypeValues { get; private set; }
         public ObservableCollection<Export> Exports { get; private set; }
-        public ObservableCollection<BindableString> InputCoverages { get; private set; }        
-        public bool CoverChildrenProcesses { get; set; }
-        public bool AggregateByFile { get; set; }
+        public ObservableCollection<BindableString> InputCoverages { get; private set; }
+
+        //-----------------------------------------------------------------
+        bool coverChildrenProcesses;
+        public bool CoverChildrenProcesses
+        {
+            get { return this.coverChildrenProcesses; }
+            set { SetField(ref this.coverChildrenProcesses, value); }
+        }
+
+        //-----------------------------------------------------------------
+        bool aggregateByFile;
+        public bool AggregateByFile
+        {
+            get { return this.aggregateByFile; }
+            set { SetField(ref this.aggregateByFile, value); }
+        }
     }
 }

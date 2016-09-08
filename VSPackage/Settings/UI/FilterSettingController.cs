@@ -14,7 +14,10 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using OpenCppCoverage.VSPackage.Helper;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
@@ -26,21 +29,51 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     }
 
     //-------------------------------------------------------------------------
-    class FilterSettingController
+    class FilterSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
         public FilterSettingController()
         {
-            this.SourcePatterns = new ObservableCollection<BindableString>();
-            this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();
-            this.ModulePatterns = new ObservableCollection<BindableString>();
+            this.SourcePatterns = new List<BindableString>();
+            this.ModulePatterns = new List<BindableString>();
+            this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();            
             this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
             this.UnifiedDiffs = new ObservableCollection<UnifiedDiffs>();            
         }
 
-        public ObservableCollection<BindableString> SourcePatterns { get; private set; }
-        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }
-        public ObservableCollection<BindableString> ModulePatterns { get; private set; }
+        //---------------------------------------------------------------------
+        public void UpdateStartUpProject(StartUpProjectSettings settings)
+        {
+            this.SourcePatterns = settings.CppProjects
+                .SelectMany(project => project.SourcePaths)
+                .Select(path => new BindableString(path))
+                .ToList();
+
+            this.ModulePatterns = settings.CppProjects
+                .Select(project => new BindableString(project.ModulePath))                
+                .ToList();
+            this.ExcludedSourcePatterns.Clear();
+            this.ExcludedModulePatterns.Clear();
+            this.UnifiedDiffs.Clear();
+        }
+
+        //---------------------------------------------------------------------
+        List<BindableString> sourcePatterns;
+        public List<BindableString> SourcePatterns
+        {
+            get { return this.sourcePatterns; }
+            private set { this.SetField(ref this.sourcePatterns, value); }
+        }
+
+        //---------------------------------------------------------------------
+        List<BindableString> modulePatterns;
+        public List<BindableString> ModulePatterns
+        {
+            get { return this.modulePatterns; }
+            private set { this.SetField(ref this.modulePatterns, value); }
+        }
+        
+        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }        
         public ObservableCollection<BindableString> ExcludedModulePatterns { get; private set; }
         public ObservableCollection<UnifiedDiffs> UnifiedDiffs { get; private set; }
     }

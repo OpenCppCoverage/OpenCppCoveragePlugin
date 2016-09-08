@@ -17,6 +17,7 @@
 using OpenCppCoverage.VSPackage.Helper;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
@@ -36,19 +37,63 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     }
 
     //-------------------------------------------------------------------------
-    class BasicSettingController
+    class BasicSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
         public BasicSettingController()
         {
             this.SelectableProjects = new List<SelectableProject>();
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateStartUpProject(StartUpProjectSettings settings)
+        {
+            this.SelectableProjects = settings.CppProjects.Select(
+                project => new SelectableProject(project.Name)).ToList();
+            this.ProgramToRun = settings.Command;
+            this.WorkingDirectory = settings.WorkingDir;
+            this.Arguments = settings.Arguments;
             this.CompileBeforeRunning = true;
         }
 
-        public IEnumerable<SelectableProject> SelectableProjects { get; private set; }
-        public string ProgramToRun { get; set; }
-        public string WorkingDirectory { get; set; }
-        public string Arguments { get; set; }
-        public bool CompileBeforeRunning { get; set; }
+        //---------------------------------------------------------------------
+        List<SelectableProject> selectableProjects;
+        public List<SelectableProject> SelectableProjects
+        {
+            get { return this.selectableProjects; }
+            private set { this.SetField(ref this.selectableProjects, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string programToRun;
+        public string ProgramToRun
+        {
+            get { return this.programToRun; }
+            private set { this.SetField(ref this.programToRun, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string workingDirectory;
+        public string WorkingDirectory
+        {
+            get { return this.workingDirectory; }
+            private set { this.SetField(ref this.workingDirectory, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string arguments;
+        public string Arguments
+        {
+            get { return this.arguments; }
+            private set { this.SetField(ref this.arguments, value); }
+        }
+
+        //---------------------------------------------------------------------
+        bool compileBeforeRunning;
+        public bool CompileBeforeRunning
+        {
+            get { return this.compileBeforeRunning; }
+            private set { this.SetField(ref this.compileBeforeRunning, value); }
+        }
     }
 }

@@ -21,6 +21,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     /// </summary>
     class BindableString
     {
+        public BindableString() { }
+        public BindableString(string value)
+        {
+            this.Value = value;
+        }
+
         public string Value { get; set; }
     }
 }

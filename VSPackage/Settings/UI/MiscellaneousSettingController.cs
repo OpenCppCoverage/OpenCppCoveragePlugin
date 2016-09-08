@@ -38,6 +38,14 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        public void UpdateStartUpProject()
+        {
+            this.HasConfigFile = false;
+            this.LogTypeValue = LogType.Normal;
+            this.ContinueAfterCppExceptions = false;
+        }
+
+        //---------------------------------------------------------------------
         bool hasConfigFile;
         public bool HasConfigFile
         {
@@ -58,8 +66,22 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public LogType LogTypeValue { get; set; }
-        public IEnumerable<LogType> LogTypeValues { get; private set; }
-        public bool ContinueAfterCppExceptions { get; set; }
+        LogType logTypeValue;
+        public LogType LogTypeValue
+        {
+            get { return this.logTypeValue; }
+            set { this.SetField(ref this.logTypeValue, value); }
+        }
+
+        //---------------------------------------------------------------------
+        bool continueAfterCppExceptions;
+        public bool ContinueAfterCppExceptions
+        {
+            get { return this.continueAfterCppExceptions; }
+            set { this.SetField(ref this.continueAfterCppExceptions, value); }
+        }
+        
+        //---------------------------------------------------------------------        
+        public IEnumerable<LogType> LogTypeValues { get; private set; }        
     }
 }
