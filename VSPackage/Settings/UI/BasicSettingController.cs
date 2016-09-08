@@ -36,7 +36,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     }
 
     //-------------------------------------------------------------------------
-    class BasicSettingController: PropertyChangedNotifier
+    class BasicSettingController
     {
         //---------------------------------------------------------------------
         public BasicSettingController()

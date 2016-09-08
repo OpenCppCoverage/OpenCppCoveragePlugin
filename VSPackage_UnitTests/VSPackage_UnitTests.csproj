@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicCoverageTreeNodeTests.cs" />
-    <Compile Include="BasicSettingControllerTests.cs" />
     <Compile Include="CoverageDataDeserializerTests.cs" />
     <Compile Include="CoverageTreeControllerTests.cs" />
     <Compile Include="CoverageRateBuilderTests.cs" />
