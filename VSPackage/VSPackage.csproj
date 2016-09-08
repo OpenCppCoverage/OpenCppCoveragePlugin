@@ -195,8 +195,8 @@
     </Compile>
     <Compile Include="Settings\UI\MiscellaneousSettingController.cs" />
     <Compile Include="Settings\UI\SettingToolWindow.cs" />
-    <Compile Include="SettingValue.cs" />
-    <Compile Include="SettingsBuilder.cs" />
+    <Compile Include="Settings\StartUpProjectSettings.cs" />
+    <Compile Include="Settings\StartUpProjectSettingsBuilder.cs" />
     <Compile Include="VSPackageException.cs" />
     <Compile Include="OpenCppCoveragePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

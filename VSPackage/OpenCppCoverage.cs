@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -31,7 +32,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public string RunCodeCoverage(SettingValue settings)
+        public string RunCodeCoverage(StartUpProjectSettings settings)
         {                                
             var outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
@@ -64,7 +65,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        static string BuildArguments(SettingValue settings, string outputFolder)
+        static string BuildArguments(StartUpProjectSettings settings, string outputFolder)
         {
             var builder = new StringBuilder();
 

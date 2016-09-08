@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.VCProjectEngine;
 using Moq;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.Settings;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,7 +57,7 @@ namespace VSPackage_IntegrationTests
               
             var solution = builder.BuildSolutionMock();
 
-            var settingsBuilder = new SettingsBuilder(solution.Object);
+            var settingsBuilder = new StartUpProjectSettingsBuilder(solution.Object);
             var settings = settingsBuilder.ComputeSettings();
 
             var expectedFolders = new List<string> { 

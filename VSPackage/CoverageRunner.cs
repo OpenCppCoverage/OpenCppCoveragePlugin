@@ -20,6 +20,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
+using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -39,7 +40,7 @@ namespace OpenCppCoverage.VSPackage
         public CoverageRunner(
             DTE2 dte,
             IVsWebBrowsingService webBrowsingService,
-            SettingsBuilder settingsBuilder,
+            StartUpProjectSettingsBuilder settingsBuilder,
             ErrorHandler errorHandler,
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager)
@@ -108,7 +109,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------        
-        void CheckSettings(SettingValue settings)
+        void CheckSettings(StartUpProjectSettings settings)
         {
             if (!File.Exists(settings.Command))
             {
@@ -127,11 +128,11 @@ namespace OpenCppCoverage.VSPackage
         class BuildContext
         {            
             public _dispBuildEvents_OnBuildProjConfigDoneEventHandler OnBuildDone { get; set; }
-            public SettingValue Settings { get; set; }
+            public StartUpProjectSettings Settings { get; set; }
         }
 
         //---------------------------------------------------------------------
-        void LogSettings(SettingValue settings)
+        void LogSettings(StartUpProjectSettings settings)
         {                     
             outputWindowWriter_.WriteLine("Current Configuration: ");
             outputWindowWriter_.WriteLine(ProjectNameTag + settings.ProjectName);
@@ -149,7 +150,7 @@ namespace OpenCppCoverage.VSPackage
                 outputWindowWriter_.WriteLine(name + v); 
         }
 
-        readonly SettingsBuilder settingsBuilder_;
+        readonly StartUpProjectSettingsBuilder settingsBuilder_;
         readonly DTE2 dte_;
         readonly OutputWindowWriter outputWindowWriter_;
         readonly ErrorHandler errorHandler_;

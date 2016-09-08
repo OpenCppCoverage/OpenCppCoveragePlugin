@@ -16,9 +16,9 @@
 
 using System.Collections.Generic;
 
-namespace OpenCppCoverage.VSPackage
+namespace OpenCppCoverage.VSPackage.Settings
 {
-    class SettingValue
+    class StartUpProjectSettings
     {
         public string WorkingDir { get; set; }
         public string Arguments { get; set; }

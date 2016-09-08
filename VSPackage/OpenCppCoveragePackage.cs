@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using OpenCppCoverage.VSPackage.CoverageTree;
+using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.ComponentModel.Design;
@@ -116,7 +117,7 @@ namespace OpenCppCoverage.VSPackage
 
                 errorHandler.OutputWriter = outputWriter;
                 var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(IVsWebBrowsingService));
-                var settingsBuilder = new SettingsBuilder((Solution2)dte.Solution);
+                var settingsBuilder = new StartUpProjectSettingsBuilder((Solution2)dte.Solution);
                 var coverageTreeManager = new CoverageTreeManager(this);
 
                 var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService, 

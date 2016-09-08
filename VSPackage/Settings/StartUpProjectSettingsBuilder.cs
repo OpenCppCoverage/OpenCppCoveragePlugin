@@ -23,18 +23,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace OpenCppCoverage.VSPackage
+namespace OpenCppCoverage.VSPackage.Settings
 {
-    class SettingsBuilder
+    class StartUpProjectSettingsBuilder
     {
         //---------------------------------------------------------------------
-        public SettingsBuilder(Solution2 solution)
+        public StartUpProjectSettingsBuilder(Solution2 solution)
         {
             solution_ = solution;
         }
 
         //---------------------------------------------------------------------
-        public SettingValue ComputeSettings()
+        public StartUpProjectSettings ComputeSettings()
         {
             var projects = GetProjects();
             var startupProject = GetStartupProject(projects);
@@ -44,7 +44,7 @@ namespace OpenCppCoverage.VSPackage
 
             if (debugSettings == null)
                 throw new Exception("DebugSettings is null");
-            var settings = new SettingValue
+            var settings = new StartUpProjectSettings
             {            
                 WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory),
                 Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments),
@@ -149,7 +149,7 @@ namespace OpenCppCoverage.VSPackage
         static void SetFilters(
             ConfigurationManager configurationManager,
             List<ExtendedProject> projects,             
-            SettingValue settings)
+            StartUpProjectSettings settings)
         {
             var projectFilePaths = new List<string>();
             var modulePaths = new List<string>();
