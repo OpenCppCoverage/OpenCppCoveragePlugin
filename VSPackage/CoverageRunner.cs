@@ -38,14 +38,14 @@ namespace OpenCppCoverage.VSPackage
         public CoverageRunner(
             DTE2 dte,
             IVsWebBrowsingService webBrowsingService,
-            StartUpProjectSettingsBuilder settingsBuilder,
+            MainSettingsManager mainSettingsManager,
             ErrorHandler errorHandler,
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager)
         {
             dte_ = dte;
             webBrowsingService_ = webBrowsingService;
-            settingsBuilder_ = settingsBuilder;
+            mainSettingsManager_ = mainSettingsManager;
             errorHandler_ = errorHandler;
             outputWindowWriter_ = outputWindowWriter;
             coverageTreeManager_ = coverageTreeManager;
@@ -60,7 +60,7 @@ namespace OpenCppCoverage.VSPackage
                     => OnBuildProjConfigDone(project, projectConfig, platform, solutionConfig, success, buildContext);
 
             buildContext.OnBuildDone = onBuildDone;
-            var settings = settingsBuilder_.ComputeSettings();
+            var settings = mainSettingsManager_.ComputeSettings();
             buildContext.Settings = settings;
             
             dte_.Events.BuildEvents.OnBuildProjConfigDone += onBuildDone;
@@ -151,7 +151,7 @@ namespace OpenCppCoverage.VSPackage
                 outputWindowWriter_.WriteLine(name + v); 
         }
 
-        readonly StartUpProjectSettingsBuilder settingsBuilder_;
+        readonly MainSettingsManager mainSettingsManager_;
         readonly DTE2 dte_;
         readonly OutputWindowWriter outputWindowWriter_;
         readonly ErrorHandler errorHandler_;

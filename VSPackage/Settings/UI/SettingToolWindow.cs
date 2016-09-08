@@ -30,9 +30,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             this.Caption = "Setting";
             var control = new MainSettingControl();
-            var controller = new MainSettingController();
-            control.DataContext = controller;
-            controller.CloseWindowEvent += (o, e) => Close();
+            this.Controller = new MainSettingController();
+            control.DataContext = this.Controller;
+            this.Controller.CloseWindowEvent += (o, e) => Close();
 
             // This is the user control hosted by the tool window; 
             // Note that, even if this class implements IDisposable,
@@ -41,6 +41,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             // the object returned by the Content property.            
             this.Content = control;
         }
+
+        //---------------------------------------------------------------------
+        public MainSettingController Controller { get; private set; }
 
         //---------------------------------------------------------------------
         void Close()

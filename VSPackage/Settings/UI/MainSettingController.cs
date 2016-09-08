@@ -15,14 +15,17 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using GalaSoft.MvvmLight.Command;
-using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
+    //-------------------------------------------------------------------------
     class MainSettingController
     {
+        StartUpProjectSettings settings;
+
+        //---------------------------------------------------------------------
         public MainSettingController()
         {
             this.RunCoverageCommand = new RelayCommand(() => { });
@@ -36,6 +39,19 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
 
+        //---------------------------------------------------------------------
+        public void UpdateStartUpProject(StartUpProjectSettings settings)
+        {
+            this.settings = settings;
+        }
+
+        //---------------------------------------------------------------------
+        public StartUpProjectSettings GetSettings()
+        {
+            return this.settings;
+        }
+
+        //---------------------------------------------------------------------
         public BasicSettingController BasicSettingController { get; private set; }
         public FilterSettingController FilterSettingController { get; private set; }
         public ImportExportSettingController ImportExportSettingController { get; private set; }
