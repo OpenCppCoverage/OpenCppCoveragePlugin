@@ -43,7 +43,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public void UpdateStartUpProject(StartUpProjectSettings settings)
         {
             this.BasicSettingController.UpdateStartUpProject(settings);
-            this.FilterSettingController.UpdateStartUpProject(settings);
+            this.FilterSettingController.UpdateStartUpProject();
             this.ImportExportSettingController.UpdateStartUpProject();
             this.MiscellaneousSettingController.UpdateStartUpProject();
 

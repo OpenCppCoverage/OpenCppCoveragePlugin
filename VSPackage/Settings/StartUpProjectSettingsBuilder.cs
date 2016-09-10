@@ -155,7 +155,7 @@ namespace OpenCppCoverage.VSPackage.Settings
                     {
                         ModulePath = configuration.PrimaryOutput,
                         SourcePaths = ComputeCommonFolders(project.Files.Select(f => f.FullPath)),
-                        Name = project.UniqueName
+                        Path = project.UniqueName
                     };
                     cppProjects.Add(cppProject);
                 }

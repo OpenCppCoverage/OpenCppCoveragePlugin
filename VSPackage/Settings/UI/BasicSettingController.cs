@@ -25,14 +25,16 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class SelectableProject
     {
         //---------------------------------------------------------------------
-        public SelectableProject(string fullName)
+        public SelectableProject(StartUpProjectSettings.CppProject project)
         {
+            this.Name = Path.GetFileNameWithoutExtension(project.Path);
+            this.FullName = project.Path;
+            this.Project = project;
             this.IsSelected = true;
-            this.Name = Path.GetFileNameWithoutExtension(fullName);
-            this.FullName = fullName;
         }
         public string Name { get; private set; }
         public string FullName { get; private set; }
+        public StartUpProjectSettings.CppProject Project { get; private set; }
         public bool IsSelected { get; set; }
     }
 
@@ -49,7 +51,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public void UpdateStartUpProject(StartUpProjectSettings settings)
         {
             this.SelectableProjects = settings.CppProjects.Select(
-                project => new SelectableProject(project.Name)).ToList();
+                project => new SelectableProject(project)).ToList();
             this.ProgramToRun = settings.Command;
             this.WorkingDirectory = settings.WorkingDir;
             this.Arguments = settings.Arguments;
@@ -59,8 +61,14 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public BasicSettings GetSettings()
         {
+            var selectedProjects = this.SelectableProjects
+                .Where(p => p.IsSelected)
+                .Select(p => p.Project)
+                .ToList();
             return new BasicSettings
             {
+                ModulePaths = selectedProjects.Select(project => project.ModulePath),
+                SourcePaths = selectedProjects.SelectMany(project => project.SourcePaths),
                 Arguments = this.Arguments,
                 ProgramToRun = this.ProgramToRun,
                 CompileBeforeRunning = this.CompileBeforeRunning,

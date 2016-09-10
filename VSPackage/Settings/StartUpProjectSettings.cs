@@ -24,8 +24,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         {
             public string ModulePath { get; set; }
             public IEnumerable<string> SourcePaths { get; set; }
-            public string Name { get; set; }
-
+            public string Path { get; set; }
         }
 
         public string WorkingDir { get; set; }

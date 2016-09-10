@@ -32,6 +32,8 @@ namespace OpenCppCoverage.VSPackage.Settings
     //---------------------------------------------------------------------------
     class BasicSettings
     {
+        public IEnumerable<string> ModulePaths { get; set; }
+        public IEnumerable<string> SourcePaths { get; set; }
         public string WorkingDirectory { get; set; }
         public string Arguments { get; set; }
         public string ProgramToRun { get; set; }
@@ -41,8 +43,8 @@ namespace OpenCppCoverage.VSPackage.Settings
     //---------------------------------------------------------------------------
     class FilterSettings
     {
-        public IEnumerable<string> ModulePaths { get; set; }
-        public IEnumerable<string> SourcePaths { get; set; }
+        public IEnumerable<string> AdditionalModulePaths { get; set; }
+        public IEnumerable<string> AdditionalSourcePaths { get; set; }
         public IEnumerable<string> ExcludedModulePaths { get; set; }
         public IEnumerable<string> ExcludedSourcePaths { get; set; }
     }

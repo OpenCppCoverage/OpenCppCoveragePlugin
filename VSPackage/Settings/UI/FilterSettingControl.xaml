@@ -30,15 +30,15 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
 
-                <DataGrid ItemsSource="{Binding SourcePatterns}" Grid.Row="0" Grid.Column="0">
+                <DataGrid ItemsSource="{Binding AdditionalSourcePatterns}" Grid.Row="0" Grid.Column="0">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Source Pattern" Binding="{Binding Value}" Width="*"/>
+                        <DataGridTextColumn Header="Additional Source Pattern" Binding="{Binding Value}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid ItemsSource="{Binding ModulePatterns}" Grid.Row="0" Grid.Column="1">
+                <DataGrid ItemsSource="{Binding AdditionalModulePatterns}" Grid.Row="0" Grid.Column="1">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Module Pattern" Binding="{Binding Value}" Width="*"/>
+                        <DataGridTextColumn Header="Additional Module Pattern" Binding="{Binding Value}" Width="*"/>
                     </DataGrid.Columns>
                 </DataGrid>
 
