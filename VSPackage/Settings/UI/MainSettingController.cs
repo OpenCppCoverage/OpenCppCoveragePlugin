@@ -57,6 +57,20 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        public MainSettings GetMainSettings()
+        {
+            return new MainSettings
+            {
+                BasicSettings = this.BasicSettingController.GetSettings(),
+                FilterSettings = this.FilterSettingController.GetSettings(),
+                ImportExportSettings = this.ImportExportSettingController.GetSettings(),
+                MiscellaneousSettings = this.MiscellaneousSettingController.GetSettings(),
+                SolutionConfigurationName = this.settings.SolutionConfigurationName,
+                ProjectName = this.settings.ProjectName
+            };
+        }
+
+        //---------------------------------------------------------------------
         public BasicSettingController BasicSettingController { get; private set; }
         public FilterSettingController FilterSettingController { get; private set; }
         public ImportExportSettingController ImportExportSettingController { get; private set; }

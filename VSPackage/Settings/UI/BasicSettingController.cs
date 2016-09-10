@@ -57,6 +57,18 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        public BasicSettings GetSettings()
+        {
+            return new BasicSettings
+            {
+                Arguments = this.Arguments,
+                ProgramToRun = this.ProgramToRun,
+                CompileBeforeRunning = this.CompileBeforeRunning,
+                WorkingDirectory = this.WorkingDirectory
+            };
+        }
+
+        //---------------------------------------------------------------------
         List<SelectableProject> selectableProjects;
         public List<SelectableProject> SelectableProjects
         {

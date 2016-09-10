@@ -26,21 +26,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class ImportExportSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
-        public enum ExportType
-        {
-            Html,
-            Cobertura,
-            Binary
-        }
-
-        //---------------------------------------------------------------------
         public class Export : PropertyChangedNotifier
         {
-            ExportType type;
+            ImportExportSettings.Type type;
             string path;
 
             //-----------------------------------------------------------------
-            public ExportType Type
+            public ImportExportSettings.Type Type
             {
                 get { return this.type; }
                 set
@@ -56,7 +48,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             {
                 get
                 {
-                    return (this.Type == ImportExportSettingController.ExportType.Html) 
+                    return (this.Type == ImportExportSettings.Type.Html) 
                         ? FileSystemSelectionControl.SelectionMode.FolderSelection 
                         : FileSystemSelectionControl.SelectionMode.FileSelection;
                 }
@@ -69,9 +61,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 {
                     switch (this.type)
                     {
-                        case ExportType.Binary: return "Coverage Files (*.cov)|*.cov";
-                        case ExportType.Cobertura: return "Coverage Files (*.xml)|*.xml";
-                        case ExportType.Html: return string.Empty;
+                        case ImportExportSettings.Type.Binary: return "Coverage Files (*.cov)|*.cov";
+                        case ImportExportSettings.Type.Cobertura: return "Coverage Files (*.xml)|*.xml";
+                        case ImportExportSettings.Type.Html: return string.Empty;
                     }
                     throw new NotSupportedException();
                 }
@@ -88,7 +80,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public ImportExportSettingController()
         {
-            this.ExportTypeValues = Enum.GetValues(typeof(ExportType)).Cast<ExportType>();
+            this.ExportTypeValues = Enum.GetValues(typeof(ImportExportSettings.Type))
+                .Cast<ImportExportSettings.Type>();
             this.Exports = new ObservableCollection<Export>();
             this.InputCoverages = new ObservableCollection<BindableString>();
         }
@@ -103,7 +96,23 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public IEnumerable<ExportType> ExportTypeValues { get; private set; }
+        public ImportExportSettings GetSettings()
+        {
+            return new ImportExportSettings
+            {
+                Exports = this.Exports.Select(e => new ImportExportSettings.Export
+                {
+                    Path = e.Path,
+                    Type = e.Type
+                }),
+                InputCoverages = this.InputCoverages.ToStringList(),
+                AggregateByFile = this.AggregateByFile,
+                CoverChildrenProcesses = this.CoverChildrenProcesses  
+            };
+        }
+
+        //---------------------------------------------------------------------
+        public IEnumerable<ImportExportSettings.Type> ExportTypeValues { get; private set; }
         public ObservableCollection<Export> Exports { get; private set; }
         public ObservableCollection<BindableString> InputCoverages { get; private set; }
 

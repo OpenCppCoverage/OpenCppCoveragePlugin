@@ -24,25 +24,30 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     //-------------------------------------------------------------------------
     class MiscellaneousSettingController: PropertyChangedNotifier
     {
-        public enum LogType
-        {
-            Normal,
-            Quiet,
-            Verbose
-        }
-
         //---------------------------------------------------------------------
         public MiscellaneousSettingController()
         {
-            this.LogTypeValues = Enum.GetValues(typeof(LogType)).Cast<LogType>();
+            this.LogTypeValues = Enum.GetValues(typeof(MiscellaneousSettings.LogType))
+                .Cast<MiscellaneousSettings.LogType>();
         }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject()
         {
             this.HasConfigFile = false;
-            this.LogTypeValue = LogType.Normal;
+            this.LogTypeValue = MiscellaneousSettings.LogType.Normal;
             this.ContinueAfterCppExceptions = false;
+        }
+
+        //---------------------------------------------------------------------
+        public MiscellaneousSettings GetSettings()
+        {
+            return new MiscellaneousSettings
+            {
+                OptionalConfigFile = this.OptionalConfigFile,
+                LogTypeValue = this.LogTypeValue,
+                ContinueAfterCppExceptions = this.ContinueAfterCppExceptions
+            };
         }
 
         //---------------------------------------------------------------------
@@ -66,8 +71,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        LogType logTypeValue;
-        public LogType LogTypeValue
+        MiscellaneousSettings.LogType logTypeValue;
+        public MiscellaneousSettings.LogType LogTypeValue
         {
             get { return this.logTypeValue; }
             set { this.SetField(ref this.logTypeValue, value); }
@@ -82,6 +87,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
         
         //---------------------------------------------------------------------        
-        public IEnumerable<LogType> LogTypeValues { get; private set; }        
+        public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; private set; }        
     }
 }

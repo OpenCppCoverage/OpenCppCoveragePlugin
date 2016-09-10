@@ -58,6 +58,18 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        public FilterSettings GetSettings()
+        {
+            return new FilterSettings
+            {
+                SourcePaths = this.SourcePatterns.ToStringList(),
+                ModulePaths = this.ModulePatterns.ToStringList(),
+                ExcludedSourcePaths = this.ExcludedSourcePatterns.ToStringList(),
+                ExcludedModulePaths = this.ExcludedModulePatterns.ToStringList()
+            };
+        }
+
+        //---------------------------------------------------------------------
         List<BindableString> sourcePatterns;
         public List<BindableString> SourcePatterns
         {

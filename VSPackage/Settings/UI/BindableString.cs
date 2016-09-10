@@ -14,6 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     /// <summary>
@@ -28,5 +31,14 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         public string Value { get; set; }
+    }
+
+    //-------------------------------------------------------------------------
+    static class CollectionExtensions
+    {
+        public static List<string> ToStringList(this IEnumerable<BindableString> collection)
+        {
+            return collection.Select(v => v.Value).ToList();
+        }
     }
 }
