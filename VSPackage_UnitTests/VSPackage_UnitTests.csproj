@@ -85,6 +85,7 @@
     <Compile Include="CoverageTreeControllerTests.cs" />
     <Compile Include="CoverageRateBuilderTests.cs" />
     <Compile Include="DteMockBuilder.cs" />
+    <Compile Include="MainSettingControllerTests.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="SettingsBuilderTests.cs" />
     <Compile Include="TreeNodeVisibilityManagerTests.cs" />

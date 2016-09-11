@@ -89,7 +89,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public string ProgramToRun
         {
             get { return this.programToRun; }
-            private set { this.SetField(ref this.programToRun, value); }
+            set { this.SetField(ref this.programToRun, value); }
         }
 
         //---------------------------------------------------------------------
@@ -97,7 +97,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public string WorkingDirectory
         {
             get { return this.workingDirectory; }
-            private set { this.SetField(ref this.workingDirectory, value); }
+            set { this.SetField(ref this.workingDirectory, value); }
         }
 
         //---------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public string Arguments
         {
             get { return this.arguments; }
-            private set { this.SetField(ref this.arguments, value); }
+            set { this.SetField(ref this.arguments, value); }
         }
 
         //---------------------------------------------------------------------
@@ -113,7 +113,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public bool CompileBeforeRunning
         {
             get { return this.compileBeforeRunning; }
-            private set { this.SetField(ref this.compileBeforeRunning, value); }
+            set { this.SetField(ref this.compileBeforeRunning, value); }
         }
     }
 }
