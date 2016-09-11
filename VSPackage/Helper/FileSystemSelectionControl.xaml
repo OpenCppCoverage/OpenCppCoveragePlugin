@@ -14,6 +14,7 @@
         <TextBox 
             x:Name="textBox"
             IsReadOnly="True" 
+            IsReadOnlyCaretVisible="True"
             Grid.Column="0" 
             Text="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type local:FileSystemSelectionControl}}}" 
             ToolTip="{Binding SelectedPath, RelativeSource={RelativeSource AncestorType={x:Type local:FileSystemSelectionControl}}}"
