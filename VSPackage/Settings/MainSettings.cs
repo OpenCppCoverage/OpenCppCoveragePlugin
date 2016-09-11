@@ -43,10 +43,18 @@ namespace OpenCppCoverage.VSPackage.Settings
     //---------------------------------------------------------------------------
     class FilterSettings
     {
+        //-------------------------------------------------------------------------
+        public class UnifiedDiff
+        {
+            public string UnifiedDiffPath { get; set; }
+            public string OptionalRootFolder { get; set; }
+        }
+
         public IEnumerable<string> AdditionalModulePaths { get; set; }
         public IEnumerable<string> AdditionalSourcePaths { get; set; }
         public IEnumerable<string> ExcludedModulePaths { get; set; }
         public IEnumerable<string> ExcludedSourcePaths { get; set; }
+        public IEnumerable<UnifiedDiff> UnifiedDiffs { get; set; }
     }
 
     //---------------------------------------------------------------------------

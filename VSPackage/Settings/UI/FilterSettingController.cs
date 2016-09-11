@@ -19,13 +19,6 @@ using System.Collections.ObjectModel;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class UnifiedDiffs
-    {
-        public string UnifiedDiffPath { get; set; }
-        public string OptionalRootFolder { get; set; }
-    }
-
-    //-------------------------------------------------------------------------
     class FilterSettingController
     {
         //---------------------------------------------------------------------
@@ -35,7 +28,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.AdditionalModulePatterns = new ObservableCollection<BindableString>();
             this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();            
             this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
-            this.UnifiedDiffs = new ObservableCollection<UnifiedDiffs>();            
+            this.UnifiedDiffs = new ObservableCollection<FilterSettings.UnifiedDiff>();            
         }
 
         //---------------------------------------------------------------------
@@ -56,7 +49,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 AdditionalSourcePaths = this.AdditionalSourcePatterns.ToStringList(),
                 AdditionalModulePaths = this.AdditionalModulePatterns.ToStringList(),
                 ExcludedSourcePaths = this.ExcludedSourcePatterns.ToStringList(),
-                ExcludedModulePaths = this.ExcludedModulePatterns.ToStringList()
+                ExcludedModulePaths = this.ExcludedModulePatterns.ToStringList(),
+                UnifiedDiffs = this.UnifiedDiffs
             };
         }
 
@@ -65,6 +59,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public ObservableCollection<BindableString> AdditionalModulePatterns { get; private set; }
         public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }        
         public ObservableCollection<BindableString> ExcludedModulePatterns { get; private set; }
-        public ObservableCollection<UnifiedDiffs> UnifiedDiffs { get; private set; }
+        public ObservableCollection<FilterSettings.UnifiedDiff> UnifiedDiffs { get; private set; }
     }
 }
