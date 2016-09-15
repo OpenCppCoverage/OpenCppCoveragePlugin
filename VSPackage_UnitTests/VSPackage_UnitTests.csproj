@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{A900757D-A179-4D53-B1E9-76E880E89131}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>VSPackage_UnitTests</RootNamespace>
     <AssemblyName>VSPackage_UnitTests</AssemblyName>
@@ -34,6 +34,9 @@
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
@@ -81,11 +84,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BasicCoverageTreeNodeTests.cs" />
+    <Compile Include="CommandLineBuilderTests.cs" />
     <Compile Include="CoverageDataDeserializerTests.cs" />
     <Compile Include="CoverageTreeControllerTests.cs" />
     <Compile Include="CoverageRateBuilderTests.cs" />
     <Compile Include="DteMockBuilder.cs" />
     <Compile Include="MainSettingControllerTests.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="SettingsBuilderTests.cs" />
     <Compile Include="TreeNodeVisibilityManagerTests.cs" />

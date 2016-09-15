@@ -133,6 +133,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineBuilder.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="CoverageData\CoverageData.cs" />
     <Compile Include="CoverageData\CoverageDataDeserializer.cs" />
