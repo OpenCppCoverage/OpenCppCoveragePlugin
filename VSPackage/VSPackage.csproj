@@ -168,6 +168,7 @@
     <Compile Include="Guids.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="OpenCppCoverage.cs" />
+    <Compile Include="OpenCppCoverageCmdLine.cs" />
     <Compile Include="OutputWindowWriter.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

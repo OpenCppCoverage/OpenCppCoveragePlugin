@@ -90,6 +90,7 @@
     <Compile Include="CoverageRateBuilderTests.cs" />
     <Compile Include="DteMockBuilder.cs" />
     <Compile Include="MainSettingControllerTests.cs" />
+    <Compile Include="OpenCppCoverageCmdLineTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="SettingsBuilderTests.cs" />
