@@ -29,7 +29,7 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void GetMainSettings()
         {
-            var controller = new MainSettingController();
+            var controller = new MainSettingController(null);
             var project = new StartUpProjectSettings.CppProject
             {
                 ModulePath = "ModulePath1",
@@ -54,7 +54,7 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void ResetToDefaultCommand()
         {
-            var controller = new MainSettingController();
+            var controller = new MainSettingController(null);
             var startUpProjectSettings = new StartUpProjectSettings
             {
                 WorkingDir = "WorkingDir",
@@ -74,6 +74,25 @@ namespace VSPackage_UnitTests
             Assert.AreEqual(
                 startUpProjectSettings.WorkingDir,
                 settings.BasicSettings.WorkingDirectory);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void CommandLineText()
+        {
+            string commandLine = "commandLine";
+            var controller = new MainSettingController( settings => { return commandLine; });
+            controller.UpdateStartUpProject(new StartUpProjectSettings() {
+                CppProjects = new List<StartUpProjectSettings.CppProject>() });
+            
+            Assert.IsNull(controller.CommandLineText);
+            
+            controller.SelectedTab = new System.Windows.Controls.TabItem();
+            Assert.IsNull(controller.CommandLineText);
+
+            controller.SelectedTab = new System.Windows.Controls.TabItem()
+                                 { Header = MainSettingController.CommandLineHeader };
+            Assert.AreEqual(commandLine, controller.CommandLineText);
         }
     }
 }

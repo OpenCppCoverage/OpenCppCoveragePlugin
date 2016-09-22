@@ -15,19 +15,24 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using GalaSoft.MvvmLight.Command;
+using OpenCppCoverage.VSPackage.Helper;
 using System;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class MainSettingController
+    class MainSettingController: PropertyChangedNotifier
     {
+        readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
         StartUpProjectSettings settings;
 
         //---------------------------------------------------------------------
-        public MainSettingController()
+        public MainSettingController(
+            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
+            this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
             this.RunCoverageCommand = new RelayCommand(() => { });
             this.CancelCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
@@ -79,9 +84,28 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public ImportExportSettingController ImportExportSettingController { get; private set; }
         public MiscellaneousSettingController MiscellaneousSettingController { get; private set; }
 
-        public EventHandler CloseWindowEvent;
+        //---------------------------------------------------------------------
+        string commandLineText;
+        public string CommandLineText
+        {
+            get { return this.commandLineText; }
+            private set { this.SetField(ref this.commandLineText, value); }
+        }
 
-        public string CommandLineText { get; private set; }
+        //---------------------------------------------------------------------
+        public static string CommandLineHeader = "Command line";
+
+        public TabItem SelectedTab
+        {
+            set
+            {
+                if (value != null && (string)value.Header == CommandLineHeader)
+                    this.CommandLineText = this.buildOpenCppCoverageCmdLine(this.GetMainSettings());
+            }
+        }
+
+        //---------------------------------------------------------------------
+        public EventHandler CloseWindowEvent;
         public ICommand RunCoverageCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public ICommand ResetToDefaultCommand { get; private set; }

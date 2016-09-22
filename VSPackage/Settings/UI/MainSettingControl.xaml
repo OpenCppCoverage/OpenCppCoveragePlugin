@@ -11,7 +11,7 @@
             <RowDefinition/>
             <RowDefinition Height="auto"/>
         </Grid.RowDefinitions>
-        <TabControl Grid.Row="0" Margin="10 10 10 0">
+        <TabControl Grid.Row="0" Margin="10 10 10 0" SelectedItem="{Binding SelectedTab, Mode=OneWayToSource}">
             <TabItem Header="Basic">
                 <local:BasicSettingControl DataContext="{Binding BasicSettingController}" Margin = "10"/>
             </TabItem>
