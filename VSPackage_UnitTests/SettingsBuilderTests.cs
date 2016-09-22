@@ -81,7 +81,7 @@ namespace VSPackage_IntegrationTests
             var settingsBuilder = new StartUpProjectSettingsBuilder(
                 solution.Object, 
                 configurationManager.Object);
-            var settings = settingsBuilder.ComputeSettings();
+            var settings = settingsBuilder.ComputeOptionalSettings();
 
             var expectedFolders = new List<string> { 
                 Path.GetDirectoryName(file4) + Path.DirectorySeparatorChar, 

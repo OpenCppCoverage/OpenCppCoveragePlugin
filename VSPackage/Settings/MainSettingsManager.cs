@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
+using System.Collections.Generic;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
@@ -37,9 +38,24 @@ namespace OpenCppCoverage.VSPackage.Settings
         //---------------------------------------------------------------------
         public StartUpProjectSettings ComputeSettings()
         {
-            var configurationManager = new ConfigurationManager(this.solution);
-            var settingsBuilder = new StartUpProjectSettingsBuilder(this.solution, configurationManager);
-            var settings = settingsBuilder.ComputeSettings();
+            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
+            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
+
+            StartUpProjectSettings settings = null;
+
+            if (activeConfiguration != null)
+            {
+                var configurationManager = new ConfigurationManager(activeConfiguration);
+                var settingsBuilder = new StartUpProjectSettingsBuilder(this.solution, configurationManager);
+
+                settings = settingsBuilder.ComputeOptionalSettings();
+            }
+
+            if (settings == null)
+            {
+                settings = new StartUpProjectSettings();
+                settings.CppProjects = new List<StartUpProjectSettings.CppProject>();
+            }
 
             return ShowSettingWindow(settings);
         }

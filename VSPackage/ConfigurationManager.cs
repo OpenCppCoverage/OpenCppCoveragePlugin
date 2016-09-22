@@ -33,12 +33,6 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public ConfigurationManager(Solution2 solution)
-            : this(GetActiveConfiguration(solution))
-        {
-        }
-
-        //---------------------------------------------------------------------
         public DynamicVCConfiguration GetConfiguration(ExtendedProject project)
         {
             string error;
@@ -63,13 +57,6 @@ namespace OpenCppCoverage.VSPackage
         {
             return this.activeConfiguration_.Name + '|' + this.activeConfiguration_.PlatformName;
 
-        }
-
-        //---------------------------------------------------------------------
-        static SolutionConfiguration2 GetActiveConfiguration(Solution2 solution)
-        {
-            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
-            return (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
         }
 
         //---------------------------------------------------------------------

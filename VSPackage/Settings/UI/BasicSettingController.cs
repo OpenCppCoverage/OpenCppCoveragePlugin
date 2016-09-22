@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using OpenCppCoverage.VSPackage.Helper;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -56,8 +57,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.WorkingDirectory = settings.WorkingDir;
             this.Arguments = settings.Arguments;
             this.CompileBeforeRunning = true;
-            this.CurrentProject = settings.ProjectName;
-            this.CurrentConfiguration = settings.SolutionConfigurationName;
+            this.CurrentProject = String.IsNullOrEmpty(settings.ProjectName) 
+                ? "None" : settings.ProjectName;
+            this.CurrentConfiguration = String.IsNullOrEmpty(settings.SolutionConfigurationName) 
+                ? "None": settings.SolutionConfigurationName;
         }
 
         //---------------------------------------------------------------------

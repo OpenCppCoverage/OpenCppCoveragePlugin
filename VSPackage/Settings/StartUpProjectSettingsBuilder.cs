@@ -29,7 +29,7 @@ namespace OpenCppCoverage.VSPackage.Settings
     {
         //---------------------------------------------------------------------
         public StartUpProjectSettingsBuilder(
-            Solution2 solution, 
+            Solution2 solution,
             IConfigurationManager configurationManager)
         {
             solution_ = solution;
@@ -37,24 +37,27 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public StartUpProjectSettings ComputeSettings()
+        public StartUpProjectSettings ComputeOptionalSettings()
         {
             var projects = GetProjects();
-            var startupProject = GetStartupProject(projects);
+            var startupProject = GetOptionalStartupProject(projects);
+
+            if (startupProject == null)
+                return null;
+
             var startupConfiguration = configurationManager_.GetConfiguration(startupProject);
             var debugSettings = new DynamicVCDebugSettings(startupConfiguration.DebugSettings);
 
             if (debugSettings == null)
                 throw new Exception("DebugSettings is null");
-            var settings = new StartUpProjectSettings
-            {
-                WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory),
-                Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments),
-                Command = startupConfiguration.Evaluate(debugSettings.Command),
-                SolutionConfigurationName = configurationManager_.GetSolutionConfigurationName(),
-                ProjectName = startupProject.UniqueName,
-                CppProjects = BuildCppProject(configurationManager_, projects)
-            };
+
+            var settings = new StartUpProjectSettings();
+            settings.WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory);
+            settings.Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments);
+            settings.Command = startupConfiguration.Evaluate(debugSettings.Command);
+            settings.SolutionConfigurationName = configurationManager_.GetSolutionConfigurationName();
+            settings.ProjectName = startupProject.UniqueName;
+            settings.CppProjects = BuildCppProject(configurationManager_, projects);
             
             return settings;                                                 
         }
@@ -103,28 +106,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        ExtendedProject GetStartupProject(List<ExtendedProject> projects)
-        {
-            var startupProjects = GetStartupProjects(projects);
-
-            if (startupProjects.Count == 0)
-                throw new VSPackageException("No C++ startup project found.");
-            
-            if (startupProjects.Count != 1)
-            {
-                var error = new StringBuilder();
-
-                error.Append("You cannot run OpenCppCoverage for several projects:\n");
-                foreach (var project in startupProjects)
-                    error.Append(" - " + project.UniqueName + "\n");
-                throw new VSPackageException(error.ToString());
-            }
-
-            return startupProjects[0];
-        }
-
-        //---------------------------------------------------------------------
-        List<ExtendedProject> GetStartupProjects(List<ExtendedProject> projects)
+        public ExtendedProject GetOptionalStartupProject(List<ExtendedProject> projects)
         {            
             var startupProjectsNames = solution_.SolutionBuild.StartupProjects as object[];
 
@@ -135,7 +117,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             foreach (String projectName in startupProjectsNames)
                 startupProjectsSet.Add(projectName);
 
-            return projects.Where(p => startupProjectsSet.Contains(p.UniqueName)).ToList();
+            return projects.Where(p => startupProjectsSet.Contains(p.UniqueName)).FirstOrDefault();
         }
 
         //---------------------------------------------------------------------
