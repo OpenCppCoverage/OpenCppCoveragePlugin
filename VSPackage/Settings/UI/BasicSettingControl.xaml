@@ -31,15 +31,35 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
 
-            <Label Content="Selected projects:" Grid.Row="0" Grid.Column="0"/>
+            <Label Content="Current project:" Grid.Row="0" Grid.Column="0"/>
+            <TextBox 
+                Text="{Binding CurrentProject}" 
+                Margin="0 5 0 5"
+                IsReadOnly="True"
+                IsReadOnlyCaretVisible="True"
+                VerticalContentAlignment="Center"
+                Grid.Row="0" Grid.Column="1"/>
+            
+            <Label Content="Current configuration:" Grid.Row="1" Grid.Column="0"/>
+            <TextBox 
+                Text="{Binding CurrentConfiguration}" 
+                Margin="0 5 0 5" 
+                IsReadOnly="True"
+                IsReadOnlyCaretVisible="True"
+                VerticalContentAlignment="Center"
+                Grid.Row="1" Grid.Column="1"/>
+            
+            <Label Content="Selected projects:" Grid.Row="2" Grid.Column="0"/>
             <DataGrid 
                 ItemsSource="{Binding SelectableProjects}" 
                 AlternationCount="2" 
                 AlternatingRowBackground="AliceBlue" 
                 AutoGenerateColumns="False" 
-                Grid.Row="0" Grid.Column="1" 
+                Grid.Row="2" Grid.Column="1" 
                 CanUserAddRows="False"
                 HeadersVisibility="Column"
                 MinHeight="50"
@@ -57,29 +77,29 @@
                 </DataGrid.Columns>
             </DataGrid>
 
-            <Label Content="Program to run:" Grid.Row="1"/>
+            <Label Content="Program to run:" Grid.Row="3"/>
             <helper:FileSystemSelectionControl
                 Mode="FileSelection"
                 FileFilter="Executable Files (*.exe)|*.exe"
                 SelectedPath="{Binding ProgramToRun}" 
-                Grid.Row="1"/>
+                Grid.Row="3"/>
 
-            <Label Content="Arguments:" Grid.Row="2"/>
+            <Label Content="Arguments:" Grid.Row="4"/>
             <TextBox 
                 Text="{Binding Arguments}" 
-                Grid.Row="2" Grid.Column="1" 
+                Grid.Row="4" Grid.Column="1" 
                 ToolTip="{Binding Arguments}"
                 Margin="0 5 0 5"
                 VerticalContentAlignment="Center"/>
 
-            <Label Content="Working Directory:" Grid.Row="3"/>
+            <Label Content="Working Directory:" Grid.Row="5"/>
             <helper:FileSystemSelectionControl
                 Mode="FolderSelection"
                 SelectedPath="{Binding WorkingDirectory}" 
-                Grid.Row="3"/>
+                Grid.Row="5"/>
 
-            <Label Content="Compile before running:" Grid.Row="4"/>
-            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" Grid.Row="4" Grid.Column="1"/>
+            <Label Content="Compile before running:" Grid.Row="6"/>
+            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" Grid.Row="6" Grid.Column="1"/>
         </Grid>
 
     </Grid>

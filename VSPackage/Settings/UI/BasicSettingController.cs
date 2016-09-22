@@ -56,6 +56,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.WorkingDirectory = settings.WorkingDir;
             this.Arguments = settings.Arguments;
             this.CompileBeforeRunning = true;
+            this.CurrentProject = settings.ProjectName;
+            this.CurrentConfiguration = settings.SolutionConfigurationName;
         }
 
         //---------------------------------------------------------------------
@@ -114,6 +116,22 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             get { return this.compileBeforeRunning; }
             set { this.SetField(ref this.compileBeforeRunning, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string currentProject;
+        public string CurrentProject
+        {
+            get { return this.currentProject; }
+            set { this.SetField(ref this.currentProject, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string currentConfiguration;
+        public string CurrentConfiguration
+        {
+            get { return this.currentConfiguration; }
+            set { this.SetField(ref this.currentConfiguration, value); }
         }
     }
 }
