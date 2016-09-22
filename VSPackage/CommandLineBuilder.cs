@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -21,11 +22,14 @@ namespace OpenCppCoverage.VSPackage
 {
     class CommandLineBuilder
     {
-        readonly StringBuilder builder = new StringBuilder();
-
-        //---------------------------------------------------------------------
-        public string CommandLine { get { return this.builder.ToString(); } }
+        readonly List<string> commandLines = new List<string>();
         
+        //---------------------------------------------------------------------
+        public string GetCommandLine(string separator = " ")
+        {
+            return String.Join(separator, this.commandLines);
+        }
+
         //---------------------------------------------------------------------
         public CommandLineBuilder AppendArgumentCollection(
                         string argumentName, IEnumerable<string> values)
@@ -40,22 +44,17 @@ namespace OpenCppCoverage.VSPackage
             string argumentName,
             string optionalArgumentValue)
         {
-            if (this.builder.Length != 0)
-                this.builder.Append(' ');
-
-            this.builder.Append(argumentName);
+            var line = argumentName;
             if (optionalArgumentValue != null)
-            {
-                this.builder.Append(' ');
-                this.builder.Append(EscapeValue(optionalArgumentValue));
-            }
+                line += ' ' + EscapeValue(optionalArgumentValue);
+            commandLines.Add(line);
             return this;
         }
 
         //---------------------------------------------------------------------
         public CommandLineBuilder Append(string str)
         {
-            this.builder.Append(str);
+            commandLines.Add(str);
             return this;
         }
 

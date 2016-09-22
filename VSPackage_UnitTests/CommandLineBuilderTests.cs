@@ -31,9 +31,9 @@ namespace VSPackage_UnitTests
         public void AppendArgument()
         {
             Assert.AreEqual("argument",
-                new CommandLineBuilder().AppendArgument("argument", null).CommandLine);
+                new CommandLineBuilder().AppendArgument("argument", null).GetCommandLine());
             Assert.AreEqual(@"argument ""value""",
-                new CommandLineBuilder().AppendArgument("argument", "value").CommandLine);
+                new CommandLineBuilder().AppendArgument("argument", "value").GetCommandLine());
         }
 
         //---------------------------------------------------------------------
@@ -43,7 +43,7 @@ namespace VSPackage_UnitTests
             var builder = new CommandLineBuilder();
             builder.AppendArgumentCollection("argument", new List<string> { "value1", "value2" });
 
-            Assert.AreEqual(@"argument ""value1"" argument ""value2""", builder.CommandLine);
+            Assert.AreEqual(@"argument ""value1"" argument ""value2""", builder.GetCommandLine());
         }
         
         //---------------------------------------------------------------------

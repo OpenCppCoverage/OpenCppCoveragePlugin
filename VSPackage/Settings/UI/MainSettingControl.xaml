@@ -39,8 +39,9 @@
                         Grid.Row="1"
                         BorderThickness="1"
                         IsReadOnly="True"
-                        TextWrapping="Wrap"
-                        Margin="20 0 20 20"/>
+                        IsReadOnlyCaretVisible="True"
+                        Margin="20 0 20 20"
+                        TextWrapping="NoWrap"/>
                 </Grid>
             </TabItem>
         </TabControl>

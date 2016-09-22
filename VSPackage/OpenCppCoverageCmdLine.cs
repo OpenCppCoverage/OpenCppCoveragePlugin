@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using OpenCppCoverage.VSPackage.Settings;
+using System.Collections.Generic;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -39,7 +40,7 @@ namespace OpenCppCoverage.VSPackage
         public static readonly string ContinueAfterCppExceptionFlag = "--continue_after_cpp_exception";
 
         //---------------------------------------------------------------------
-        public static string Build(MainSettings settings)
+        public static string Build(MainSettings settings, string lineSeparator = " ")
         {
             var builder = new CommandLineBuilder();
 
@@ -50,7 +51,7 @@ namespace OpenCppCoverage.VSPackage
             // Should be last settings for program to run.
             AppendBasicSettings(builder, settings.BasicSettings);
 
-            return builder.CommandLine;
+            return builder.GetCommandLine(lineSeparator);
         }
         
         //---------------------------------------------------------------------
@@ -66,7 +67,7 @@ namespace OpenCppCoverage.VSPackage
 
             builder.Append(" --plugin ");
             builder.AppendArgument("--", settings.ProgramToRun);
-            builder.Append(" ").Append(settings.Arguments);
+            builder.Append(settings.Arguments);
         }
 
         //---------------------------------------------------------------------

@@ -31,7 +31,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.Caption = "Setting";
             var control = new MainSettingControl();
 
-            this.Controller = new MainSettingController(OpenCppCoverageCmdLine.Build);
+            this.Controller = new MainSettingController(
+                (settings) => OpenCppCoverageCmdLine.Build(settings, "\n"));
             control.DataContext = this.Controller;
             this.Controller.CloseWindowEvent += (o, e) => Close();
 
