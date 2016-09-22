@@ -54,7 +54,15 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.SelectableProjects = settings.CppProjects.Select(
                 project => new SelectableProject(project)).ToList();
             this.ProgramToRun = settings.Command;
-            this.WorkingDirectory = settings.WorkingDir;
+
+            if (String.IsNullOrEmpty(settings.WorkingDir))
+                this.HasWorkingDirectory = false;
+            else
+            {
+                this.HasWorkingDirectory = true;
+                this.OptionalWorkingDirectory = settings.WorkingDir;
+            }
+
             this.Arguments = settings.Arguments;
             this.CompileBeforeRunning = true;
             this.CurrentProject = String.IsNullOrEmpty(settings.ProjectName) 
@@ -77,7 +85,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 Arguments = this.Arguments,
                 ProgramToRun = this.ProgramToRun,
                 CompileBeforeRunning = this.CompileBeforeRunning,
-                WorkingDirectory = this.WorkingDirectory
+                WorkingDirectory = this.OptionalWorkingDirectory
             };
         }
 
@@ -98,11 +106,23 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        string workingDirectory;
-        public string WorkingDirectory
+        string optionalWorkingDirectory;
+        public string OptionalWorkingDirectory
         {
-            get { return this.workingDirectory; }
-            set { this.SetField(ref this.workingDirectory, value); }
+            get { return this.optionalWorkingDirectory; }
+            set { this.SetField(ref this.optionalWorkingDirectory, value); }
+        }
+
+        //---------------------------------------------------------------------
+        bool hasWorkingDirectory;
+        public bool HasWorkingDirectory
+        {
+            get { return this.hasWorkingDirectory; }
+            set
+            {
+                if (this.SetField(ref this.hasWorkingDirectory, value) && !value)
+                    this.OptionalWorkingDirectory = null;
+            }
         }
 
         //---------------------------------------------------------------------

@@ -23,6 +23,7 @@
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -42,7 +43,7 @@
                 IsReadOnly="True"
                 IsReadOnlyCaretVisible="True"
                 VerticalContentAlignment="Center"
-                Grid.Row="0" Grid.Column="1"/>
+                Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
             
             <Label Content="Current configuration:" Grid.Row="1" Grid.Column="0"/>
             <TextBox 
@@ -51,7 +52,7 @@
                 IsReadOnly="True"
                 IsReadOnlyCaretVisible="True"
                 VerticalContentAlignment="Center"
-                Grid.Row="1" Grid.Column="1"/>
+                Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
             
             <Label Content="Selected projects:" Grid.Row="2" Grid.Column="0"/>
             <DataGrid 
@@ -59,7 +60,7 @@
                 AlternationCount="2" 
                 AlternatingRowBackground="AliceBlue" 
                 AutoGenerateColumns="False" 
-                Grid.Row="2" Grid.Column="1" 
+                Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
                 CanUserAddRows="False"
                 HeadersVisibility="Column"
                 MinHeight="50"
@@ -82,24 +83,31 @@
                 Mode="FileSelection"
                 FileFilter="Executable Files (*.exe)|*.exe"
                 SelectedPath="{Binding ProgramToRun}" 
-                Grid.Row="3"/>
+                Grid.Row="3" Grid.ColumnSpan="2"/>
 
             <Label Content="Arguments:" Grid.Row="4"/>
             <TextBox 
                 Text="{Binding Arguments}" 
-                Grid.Row="4" Grid.Column="1" 
+                Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
                 ToolTip="{Binding Arguments}"
                 Margin="0 5 0 5"
                 VerticalContentAlignment="Center"/>
 
             <Label Content="Working Directory:" Grid.Row="5"/>
+            <CheckBox 
+                IsChecked="{Binding HasWorkingDirectory}"
+                VerticalAlignment="Center" 
+                Grid.Row="5" Grid.Column="1" 
+                Margin="0 0 5 0"/>
             <helper:FileSystemSelectionControl
                 Mode="FolderSelection"
-                SelectedPath="{Binding WorkingDirectory}" 
-                Grid.Row="5"/>
+                IsEnabled="{Binding HasWorkingDirectory}"
+                SelectedPath="{Binding OptionalWorkingDirectory}" 
+                Grid.Row="5" Grid.Column="2"/>
 
             <Label Content="Compile before running:" Grid.Row="6"/>
-            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" Grid.Row="6" Grid.Column="1"/>
+            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" 
+                      Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
         </Grid>
 
     </Grid>
