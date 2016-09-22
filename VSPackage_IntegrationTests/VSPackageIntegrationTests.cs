@@ -35,7 +35,10 @@ namespace VSPackage_IntegrationTests
         {
             var solutionService = TestHelpers.GetService<IVsSolution>();
             solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
-            Assert.AreEqual("OpenCppCoverage\n\nCannot get startup projects.", TestHelpers.GetOpenCppCoverageMessage());
+            Assert.AreEqual(
+                "OpenCppCoverage\n\nUnknow error. " + 
+                "Please see the output console for more information.", 
+                TestHelpers.GetOpenCppCoverageMessage());
         }
 
         //---------------------------------------------------------------------
