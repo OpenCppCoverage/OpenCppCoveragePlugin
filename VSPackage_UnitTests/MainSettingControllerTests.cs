@@ -23,7 +23,7 @@ using System.Linq;
 namespace VSPackage_UnitTests
 {
     [TestClass()]
-    class MainSettingControllerTests
+    public class MainSettingControllerTests
     {
         //---------------------------------------------------------------------
         [TestMethod]
@@ -35,20 +35,19 @@ namespace VSPackage_UnitTests
                 ModulePath = "ModulePath1",
                 SourcePaths = new List<string> { "Source1" }
             };
-            
+
             var startUpProjectSettings = new StartUpProjectSettings {
-                CppProjects = new List<StartUpProjectSettings.CppProject> {
-                    new StartUpProjectSettings.CppProject(),
-                    project},
-            };
+                CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
 
             controller.UpdateStartUpProject(startUpProjectSettings);
             var selectableProject = controller.BasicSettingController.SelectableProjects.First();
-            selectableProject.IsSelected = true;
+            selectableProject.IsSelected = false;
 
             var settings = controller.GetMainSettings();
-            Assert.Equals(project.ModulePath, settings.BasicSettings.ModulePaths);
-            Assert.Equals(project.SourcePaths, settings.BasicSettings.SourcePaths);
+            Assert.AreEqual(project.ModulePath, settings.BasicSettings.ModulePaths.Single());
+            CollectionAssert.AreEqual(
+                project.SourcePaths.ToList(), 
+                settings.BasicSettings.SourcePaths.ToList());
         }
 
         //---------------------------------------------------------------------
@@ -56,18 +55,24 @@ namespace VSPackage_UnitTests
         public void ResetToDefaultCommand()
         {
             var controller = new MainSettingController();
-            var startUpProjectSettings = new StartUpProjectSettings { WorkingDir = "WorkingDir" };
+            var startUpProjectSettings = new StartUpProjectSettings
+            {
+                WorkingDir = "WorkingDir",
+                CppProjects = new List<StartUpProjectSettings.CppProject>()
+            };
             
             controller.UpdateStartUpProject(startUpProjectSettings);
             controller.BasicSettingController.WorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();
 
-            Assert.Equals(
+            Assert.AreEqual(
                 controller.BasicSettingController.WorkingDirectory, 
                 settings.BasicSettings.WorkingDirectory);
+
             controller.ResetToDefaultCommand.Execute(null);
-            Assert.Equals(
-                startUpProjectSettings.WorkingDir, 
+            settings = controller.GetMainSettings();
+            Assert.AreEqual(
+                startUpProjectSettings.WorkingDir,
                 settings.BasicSettings.WorkingDirectory);
         }
     }
