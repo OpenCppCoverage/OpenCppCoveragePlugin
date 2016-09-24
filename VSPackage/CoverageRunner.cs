@@ -16,12 +16,11 @@
 
 using EnvDTE;
 using EnvDTE80;
-using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
-using System.Linq;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -37,22 +36,18 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public CoverageRunner(
             DTE2 dte,
-            IVsWebBrowsingService webBrowsingService,
-            MainSettingsManager mainSettingsManager,
             ErrorHandler errorHandler,
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager)
         {
             dte_ = dte;
-            webBrowsingService_ = webBrowsingService;
-            mainSettingsManager_ = mainSettingsManager;
             errorHandler_ = errorHandler;
             outputWindowWriter_ = outputWindowWriter;
             coverageTreeManager_ = coverageTreeManager;
         }
 
         //---------------------------------------------------------------------
-        public void RunCoverageOnStartupProject()
+        public void RunCoverageOnStartupProject(StartUpProjectSettings settings)
         {            
             var buildContext = new BuildContext();
             _dispBuildEvents_OnBuildProjConfigDoneEventHandler onBuildDone = 
@@ -60,7 +55,6 @@ namespace OpenCppCoverage.VSPackage
                     => OnBuildProjConfigDone(project, projectConfig, platform, solutionConfig, success, buildContext);
 
             buildContext.OnBuildDone = onBuildDone;
-            var settings = mainSettingsManager_.ComputeSettings();
             buildContext.Settings = settings;
             
             dte_.Events.BuildEvents.OnBuildProjConfigDone += onBuildDone;
@@ -151,11 +145,9 @@ namespace OpenCppCoverage.VSPackage
                 outputWindowWriter_.WriteLine(name + v); 
         }
 
-        readonly MainSettingsManager mainSettingsManager_;
         readonly DTE2 dte_;
         readonly OutputWindowWriter outputWindowWriter_;
         readonly ErrorHandler errorHandler_;
-        readonly IVsWebBrowsingService webBrowsingService_;
         readonly CoverageTreeManager coverageTreeManager_;
     }
 }

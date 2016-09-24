@@ -116,15 +116,14 @@ namespace OpenCppCoverage.VSPackage
                 var outputWriter = new OutputWindowWriter(dte, outputWindow);
 
                 errorHandler.OutputWriter = outputWriter;
-                var webBrowsingService = (IVsWebBrowsingService)GetService(typeof(IVsWebBrowsingService));
                 var mainSettingsManager = new MainSettingsManager(this, dte);
 
                 var coverageTreeManager = new CoverageTreeManager(this);
-                var openCppCoverageRunner = new CoverageRunner(dte, webBrowsingService,
-                    mainSettingsManager, errorHandler, outputWriter, coverageTreeManager);
+                var openCppCoverageRunner = new CoverageRunner(
+                    dte, errorHandler, outputWriter, coverageTreeManager);
 
                 CheckVCRedistInstalled();
-                openCppCoverageRunner.RunCoverageOnStartupProject();
+                mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
             });                                             
         }
 

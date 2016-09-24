@@ -33,16 +33,19 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
             this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
-            this.RunCoverageCommand = new RelayCommand(() => { });
+            this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
             this.CancelCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
-            this.ResetToDefaultCommand = new RelayCommand(() => UpdateStartUpProject(this.settings));
+            this.ResetToDefaultCommand = new RelayCommand(
+                () => UpdateStartUpProject(this.settings));
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
+
+        public CoverageRunner CoverageRunner { get; set; }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject(StartUpProjectSettings settings)
@@ -102,6 +105,11 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 if (value != null && (string)value.Header == CommandLineHeader)
                     this.CommandLineText = this.buildOpenCppCoverageCmdLine(this.GetMainSettings());
             }
+        }
+        //---------------------------------------------------------------------
+        void OnRunCoverageCommand()
+        {
+            this.CoverageRunner.RunCoverageOnStartupProject(this.settings);
         }
 
         //---------------------------------------------------------------------

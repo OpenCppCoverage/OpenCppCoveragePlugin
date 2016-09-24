@@ -36,7 +36,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public StartUpProjectSettings ComputeSettings()
+        public void ShowSettingsWindows(CoverageRunner coverageRunner)
         {
             var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
             var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
@@ -57,22 +57,24 @@ namespace OpenCppCoverage.VSPackage.Settings
                 settings.CppProjects = new List<StartUpProjectSettings.CppProject>();
             }
 
-            return ShowSettingWindow(settings);
+            ShowSettingWindow(settings, coverageRunner);
         }
 
         //---------------------------------------------------------------------
-        StartUpProjectSettings ShowSettingWindow(StartUpProjectSettings settings)
+        void ShowSettingWindow(
+            StartUpProjectSettings settings,
+            CoverageRunner coverageRunner)
         {
             var window = this.package.FindToolWindow(
                     typeof(SettingToolWindow), 0, true) as SettingToolWindow;
             if (window == null || window.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
+            window.Controller.CoverageRunner = coverageRunner;
             window.Controller.UpdateStartUpProject(settings);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
-            return window.Controller.GetSettings();
         }
     }
 }
