@@ -55,7 +55,7 @@ namespace OpenCppCoverage.VSPackage
     [ProvideToolWindow(typeof(SettingToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.Float,
         MultiInstances = false,
-        Transient = false)]
+        Transient = true)]
     [Guid(GuidList.guidVSPackagePkgString)]
     [ProvideBindingPath]
     public sealed class OpenCppCoveragePackage : Package
