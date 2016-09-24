@@ -106,8 +106,13 @@
                 Grid.Row="5" Grid.Column="2"/>
 
             <Label Content="Compile before running:" Grid.Row="6"/>
-            <CheckBox IsChecked="{Binding CompileBeforeRunning}" VerticalAlignment="Center" 
-                      Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
+            <CheckBox 
+                IsChecked="{Binding CompileBeforeRunning}" 
+                IsEnabled="{Binding IsCompileBeforeRunningEnabled}"
+                ToolTip="{Binding CompileBeforeRunningToolTip}"
+                ToolTipService.ShowOnDisabled="True"
+                VerticalAlignment="Center" 
+                Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
         </Grid>
 
     </Grid>

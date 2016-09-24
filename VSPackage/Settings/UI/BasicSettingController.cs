@@ -65,10 +65,22 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
             this.Arguments = settings.Arguments;
             this.CompileBeforeRunning = true;
-            this.CurrentProject = String.IsNullOrEmpty(settings.ProjectName) 
-                ? "None" : settings.ProjectName;
-            this.CurrentConfiguration = String.IsNullOrEmpty(settings.SolutionConfigurationName) 
-                ? "None": settings.SolutionConfigurationName;
+
+            if (String.IsNullOrEmpty(settings.ProjectName) 
+             || String.IsNullOrEmpty(settings.SolutionConfigurationName))
+            {
+                this.CurrentProject = "None";
+                this.CurrentConfiguration = "None";
+                this.IsCompileBeforeRunningEnabled = false;
+                this.CompileBeforeRunningToolTip = "Nothing to build (No startup project set).";
+            }
+            else
+            {
+                this.CurrentProject = settings.ProjectName;
+                this.CurrentConfiguration = settings.SolutionConfigurationName;
+                this.IsCompileBeforeRunningEnabled = true;
+                this.CompileBeforeRunningToolTip = null;
+            }
         }
 
         //---------------------------------------------------------------------
@@ -139,6 +151,22 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             get { return this.compileBeforeRunning; }
             set { this.SetField(ref this.compileBeforeRunning, value); }
+        }
+
+        //---------------------------------------------------------------------
+        bool isCompileBeforeRunningEnabled;
+        public bool IsCompileBeforeRunningEnabled
+        {
+            get { return this.isCompileBeforeRunningEnabled; }
+            set { this.SetField(ref this.isCompileBeforeRunningEnabled, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string compileBeforeRunningToolTip;
+        public string CompileBeforeRunningToolTip
+        {
+            get { return this.compileBeforeRunningToolTip; }
+            set { this.SetField(ref this.compileBeforeRunningToolTip, value); }
         }
 
         //---------------------------------------------------------------------
