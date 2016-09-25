@@ -16,6 +16,7 @@
 
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.Settings.UI;
@@ -49,18 +50,19 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static public void OpenDefaultSolution(params string[] startupProjects)
+        static public void OpenSolution(params string[] startupProjects)
         {
-            OpenDefaultSolution(startupProjects, ConfigurationName.Debug, PlatFormName.Win32);
+            OpenSolution(startupProjects, ConfigurationName.Debug, PlatFormName.Win32);
         }
 
         //---------------------------------------------------------------------
-        static public EnvDTE80.SolutionConfiguration2 OpenDefaultSolution(
+        static public VCDebugSettings OpenSolution(
             string startupProjects,
-            ConfigurationName configurationName,
-            PlatFormName platformName)
+            ConfigurationName configurationName = ConfigurationName.Debug,
+            PlatFormName platformName = PlatFormName.Win32)
         {
-            return OpenDefaultSolution(new string[] { startupProjects }, configurationName, platformName);            
+            OpenSolution(new string[] { startupProjects }, configurationName, platformName);
+            return SolutionConfigurationHelpers.GetCurrentDebugSettings(startupProjects);
         }
 
         //---------------------------------------------------------------------
@@ -164,7 +166,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static EnvDTE80.SolutionConfiguration2 OpenDefaultSolution(
+        static EnvDTE80.SolutionConfiguration2 OpenSolution(
             string[] startupProjects,
             ConfigurationName configurationName,
             PlatFormName platformName)

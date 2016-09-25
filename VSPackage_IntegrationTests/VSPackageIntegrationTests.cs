@@ -23,7 +23,6 @@ using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
 
 namespace VSPackage_IntegrationTests
 {
@@ -31,35 +30,44 @@ namespace VSPackage_IntegrationTests
     public class VSPackageIntegrationTests
     {
         //---------------------------------------------------------------------
+        void RunInUIhread(Action action)
+        {
+            UIThreadInvoker.Invoke(action);
+        }
+
+        //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
         public void EmptySolution()
         {
-            //var solutionService = TestHelpers.GetService<IVsSolution>();
-            //solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
-            //Assert.AreEqual(
-            //    "OpenCppCoverage\n\nUnknow error. " + 
-            //    "Please see the output console for more information.", 
-            //    TestHelpers.GetOpenCppCoverageMessage());
+            RunInUIhread(() =>
+            {
+                var solutionService = TestHelpers.GetService<IVsSolution>();
+                solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
+                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+
+                Assert.AreEqual(BasicSettingController.None,
+                    controller.BasicSettingController.CurrentConfiguration);
+                Assert.AreEqual(BasicSettingController.None,
+                    controller.BasicSettingController.CurrentProject);
+            });
         }
 
         //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
         public void NotCppStartupProject()
-        {         
-            UIThreadInvoker.Invoke((Action)(() =>
+        {
+            RunInUIhread(() =>
             {                
-                TestHelpers.OpenDefaultSolution(TestHelpers.CSharpConsoleApplication);
+                TestHelpers.OpenSolution(TestHelpers.CSharpConsoleApplication);
                 var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-                Assert.AreEqual(
-                    BasicSettingController.None, 
+                Assert.AreEqual(BasicSettingController.None, 
                     controller.BasicSettingController.CurrentConfiguration);
-                Assert.AreEqual(
-                    BasicSettingController.None, 
+                Assert.AreEqual(BasicSettingController.None, 
                     controller.BasicSettingController.CurrentProject);
-            }));
+            });
         }
 
         //---------------------------------------------------------------------
@@ -67,13 +75,16 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void SeveralStartupProjects()
         {
-            // $$ TODO: update this test
-            //TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication, TestHelpers.CppConsoleApplication2);         
-            //var message = new StringBuilder("OpenCppCoverage\n\nYou cannot run OpenCppCoverage for several projects:\n");
-            //message.Append(" - " + TestHelpers.CppConsoleApplication + '\n');
-            //message.Append(" - " + TestHelpers.CppConsoleApplication2);
+            RunInUIhread(() =>
+            {                
+                TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, TestHelpers.CppConsoleApplication2);
+                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-            //Assert.AreEqual(message.ToString(), TestHelpers.GetOpenCppCoverageMessage());
+                Assert.AreEqual("Debug|Win32",
+                    controller.BasicSettingController.CurrentConfiguration);
+                Assert.AreEqual(TestHelpers.CppConsoleApplication,
+                    controller.BasicSettingController.CurrentProject);
+            });
         }
 
         //---------------------------------------------------------------------
@@ -81,9 +92,16 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void ProjectInFolder()
         {
-            //TestHelpers.OpenDefaultSolution(TestHelpers.ConsoleApplicationInFolder);
-            //var output = TestHelpers.ExecuteOpenCppCoverageAndReturnOutput(TestHelpers.ConsoleApplicationInFolderName);
-            //Assert.AreNotEqual("", output);
+            RunInUIhread(() =>
+            {
+                TestHelpers.OpenSolution(TestHelpers.ConsoleApplicationInFolder);
+                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+
+                Assert.AreEqual("Debug|Win32",
+                    controller.BasicSettingController.CurrentConfiguration);
+                Assert.AreEqual(TestHelpers.ConsoleApplicationInFolder,
+                    controller.BasicSettingController.CurrentProject);
+            });
         }
 
         //---------------------------------------------------------------------
@@ -109,7 +127,7 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
-        public void InvalidCommand()
+        public void InvalidProgramToRun()
         {
             //CheckInvalidSettings(
             //    (debugSettings, v) => debugSettings.Command = v,
@@ -140,7 +158,7 @@ namespace VSPackage_IntegrationTests
             ConfigurationName configurationName, 
             PlatFormName platformName)
         {            
-            var configuration = TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication, configurationName, platformName);
+            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, configurationName, platformName);
             
             var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication);
             SolutionConfigurationHelpers.CleanSolution();
@@ -191,7 +209,7 @@ namespace VSPackage_IntegrationTests
             Func<VCDebugSettings, string> getter, 
             string expectedMessage)
         {
-            TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication);
+            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
             var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication);
             const string InvalidValue = "InvalidValue";
             var oldValue = getter(debugSettings);
