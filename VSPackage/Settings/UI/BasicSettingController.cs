@@ -43,6 +43,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class BasicSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
+        public static string None = "None";
+
+        //---------------------------------------------------------------------
         public BasicSettingController()
         {
             this.SelectableProjects = new List<SelectableProject>();
@@ -69,8 +72,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             if (String.IsNullOrEmpty(settings.ProjectName) 
              || String.IsNullOrEmpty(settings.SolutionConfigurationName))
             {
-                this.CurrentProject = "None";
-                this.CurrentConfiguration = "None";
+                this.CurrentProject = None;
+                this.CurrentConfiguration = None;
                 this.IsCompileBeforeRunningEnabled = false;
                 this.CompileBeforeRunningToolTip = "Nothing to build (No startup project set).";
             }

@@ -16,11 +16,11 @@
 
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -43,7 +43,7 @@ namespace VSPackage_IntegrationTests
 
             using (var dialogBoxMessageRetriever = new DialogBoxMessageRetriever(uiShell, TimeSpan.FromSeconds(10)))
             {
-                ExecuteOpenCppCoverage();
+                ExecuteOpenCppCoverageCommand();
                 return dialogBoxMessageRetriever.GetMessage();
             }
         }
@@ -74,7 +74,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static void ExecuteOpenCppCoverage()
+        public static MainSettingController ExecuteOpenCppCoverageCommand()
         {
             object Customin = null;
             object Customout = null;
@@ -84,12 +84,32 @@ namespace VSPackage_IntegrationTests
             DTE dte = VsIdeTestHostContext.Dte;
 
             dte.Commands.Raise(guidString, cmdId, ref Customin, ref Customout);
+
+            return GetMainSettingController();
+        }
+
+        //---------------------------------------------------------------------
+        static MainSettingController GetMainSettingController()
+        {
+            DTE dte = VsIdeTestHostContext.Dte;
+            return TestHelpers.Wait(TimeSpan.FromSeconds(10), () =>
+            {
+                foreach (Window window in dte.Windows)
+                {
+                    var controller = window.Object as MainSettingController;
+
+                    if (controller != null)
+                        return controller;
+                }
+
+                return null;
+            });
         }
 
         //---------------------------------------------------------------------
         public static string ExecuteOpenCppCoverageAndReturnOutput(string applicationName)
         {
-            TestHelpers.ExecuteOpenCppCoverage();
+            TestHelpers.ExecuteOpenCppCoverageCommand();
             TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(7));
 
             return TestHelpers.GetOpenCppCoverageOutput();
@@ -108,19 +128,24 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static void Wait(TimeSpan timeout, string timeoutMessage, Func<bool> action)
+        public static T Wait<T>(
+            TimeSpan timeout, 
+            Func<T> func, T 
+            defaultValue = default(T))
         {
             const int partCount = 50;
             var smallTimeout = new TimeSpan(timeout.Ticks / partCount);
-                
+
             for (int nbTry = 0; nbTry < partCount; ++nbTry)
             {
-                if (action())
-                    return;
+                T value = func();
+
+                if (!EqualityComparer<T>.Default.Equals(value, defaultValue))
+                    return value;
                 System.Threading.Thread.Sleep(smallTimeout);
             }
 
-            throw new Exception(timeoutMessage);
+            return defaultValue;
         }
 
         //---------------------------------------------------------------------
@@ -165,8 +190,8 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         static void WaitForSolutionLoading(TimeSpan timeout)
         {
-            TestHelpers.Wait(timeout, "Solution not loaded", () =>
-                {                    
+            TestHelpers.Wait(timeout, () =>
+                {
                     foreach (Project p in VsIdeTestHostContext.Dte.Solution.Projects)
                     {
                         if (p.Object == null)
@@ -174,7 +199,7 @@ namespace VSPackage_IntegrationTests
                     }
 
                     return true;
-                });
+                }, false);
         }        
     }
 }

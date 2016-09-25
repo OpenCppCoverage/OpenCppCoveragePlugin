@@ -23,7 +23,7 @@ using System.Runtime.InteropServices;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     [Guid("1305E50A-2B2B-4168-83A7-0D57ED1EF76A")]
-    class SettingToolWindow : ToolWindowPane
+    class SettingToolWindow : ToolWindowPane, IVsExtensibleObject
     {
         //---------------------------------------------------------------------
         public SettingToolWindow() : base(null)
@@ -46,6 +46,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
         //---------------------------------------------------------------------
         public MainSettingController Controller { get; private set; }
+
+        //---------------------------------------------------------------------
+        public int GetAutomationObject(string pszPropName, out object ppDisp)
+        {
+            ppDisp = this.Controller;
+            return Microsoft.VisualStudio.VSConstants.S_OK;
+        }
 
         //---------------------------------------------------------------------
         void Close()

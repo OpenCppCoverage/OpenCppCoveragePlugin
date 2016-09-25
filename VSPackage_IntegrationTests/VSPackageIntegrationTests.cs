@@ -19,7 +19,9 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 
@@ -45,10 +47,19 @@ namespace VSPackage_IntegrationTests
         [TestMethod]
         [HostType("VS IDE")]
         public void NotCppStartupProject()
-        {
-            // $$ TODO: update this test
-            //TestHelpers.OpenDefaultSolution(TestHelpers.CSharpConsoleApplication);
-            //Assert.AreEqual("OpenCppCoverage\n\nNo C++ startup project found.", TestHelpers.GetOpenCppCoverageMessage());
+        {         
+            UIThreadInvoker.Invoke((Action)(() =>
+            {                
+                TestHelpers.OpenDefaultSolution(TestHelpers.CSharpConsoleApplication);
+                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+
+                Assert.AreEqual(
+                    BasicSettingController.None, 
+                    controller.BasicSettingController.CurrentConfiguration);
+                Assert.AreEqual(
+                    BasicSettingController.None, 
+                    controller.BasicSettingController.CurrentProject);
+            }));
         }
 
         //---------------------------------------------------------------------

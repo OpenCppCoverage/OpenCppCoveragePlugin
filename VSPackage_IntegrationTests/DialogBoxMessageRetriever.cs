@@ -13,11 +13,10 @@ namespace VSPackage_IntegrationTests
             this.uiShell = uiShell;
             this.thread = new System.Threading.Thread(o =>
             {
-                TestHelpers.Wait(timeout, "Cannot get expected messagebox", () =>
-                {
-                    this.messageFound = GetMessageBoxText();
-                    return this.messageFound != null;
-                });
+                var message = TestHelpers.Wait(timeout, GetMessageBoxText);
+
+                this.messageFound = string.IsNullOrEmpty(message) ? 
+                    "Cannot get expected messagebox" : message;
             });
 
             this.thread.Start();            
