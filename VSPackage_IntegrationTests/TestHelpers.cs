@@ -32,6 +32,7 @@ namespace VSPackage_IntegrationTests
         static public readonly string CppConsoleApplication = @"CppConsoleApplication\CppConsoleApplication.vcxproj";
         static public readonly string CppConsoleApplication2 = @"CppConsoleApplication2\CppConsoleApplication2.vcxproj";
         static public readonly string CSharpConsoleApplication = @"CSharpConsoleApplication\CSharpConsoleApplication.csproj";
+        static public readonly string CppConsoleApplicationDll = @"CppConsoleApplicationDll\CppConsoleApplicationDll.vcxproj";
         static public readonly string ConsoleApplicationInFolder = @"ConsoleApplicationInFolder\ConsoleApplicationInFolder.vcxproj";
         static public readonly string ApplicationName = "CppConsoleApplication.exe";
         static public readonly string ApplicationName2 = "CppConsoleApplication2.exe";

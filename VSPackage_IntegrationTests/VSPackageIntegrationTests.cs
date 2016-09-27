@@ -21,8 +21,10 @@ using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
+using System.Linq;
 using System.Diagnostics;
 using System.IO;
+using System.Collections.Generic;
 
 namespace VSPackage_IntegrationTests
 {
@@ -108,7 +110,7 @@ namespace VSPackage_IntegrationTests
         [TestMethod]
         [HostType("VS IDE")]
         public void DoesNotCompile()
-        {            
+        {
             //TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication2);
             //Assert.AreEqual("OpenCppCoverage\n\nBuild failed.", TestHelpers.GetOpenCppCoverageMessage());
         }
@@ -116,12 +118,30 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
-        public void InvalidWorkingDirectory()
-        {            
-            //CheckInvalidSettings(
-            //    (debugSettings, v) => debugSettings.WorkingDirectory = v, 
-            //    debugSettings => debugSettings.WorkingDirectory, 
-            //    "OpenCppCoverage\n\nDebugging working directory \"{0}\" does not exist.");
+        public void StartUpProjectSettings()
+        {
+            RunInUIhread(() =>
+            {
+                var debugSettings = TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
+                debugSettings.Command = "Command";
+                debugSettings.CommandArguments = "Arguments";
+                debugSettings.WorkingDirectory = ".";
+
+                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+                var settings = controller.BasicSettingController;
+                Assert.AreEqual(debugSettings.Command, settings.ProgramToRun);
+                Assert.AreEqual(debugSettings.CommandArguments, settings.Arguments);
+                Assert.AreEqual(debugSettings.WorkingDirectory, settings.OptionalWorkingDirectory);
+
+                var expectedProjects = new List<string> {
+                        TestHelpers.CppConsoleApplication,
+                        TestHelpers.CppConsoleApplication2,
+                        TestHelpers.CppConsoleApplicationDll,
+                        TestHelpers.ConsoleApplicationInFolder };
+                CollectionAssert.AreEquivalent(
+                    expectedProjects,
+                    settings.SelectableProjects.Select(p => p.FullName).ToList());
+            });
         }
 
         //---------------------------------------------------------------------
@@ -201,29 +221,6 @@ namespace VSPackage_IntegrationTests
 
             Assert.Fail(string.Format("Cannot found {0} with a starting line :{1}",
                 textToFound, lineStartsWith));
-        }
-
-        //---------------------------------------------------------------------
-        static void CheckInvalidSettings(
-            Action<VCDebugSettings, string> setter, 
-            Func<VCDebugSettings, string> getter, 
-            string expectedMessage)
-        {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
-            var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication);
-            const string InvalidValue = "InvalidValue";
-            var oldValue = getter(debugSettings);
-            try
-            {
-                setter(debugSettings, InvalidValue);
-
-                var fullExpectedMessage = string.Format(expectedMessage, InvalidValue);
-                Assert.AreEqual(fullExpectedMessage, TestHelpers.GetOpenCppCoverageMessage());
-            }
-            finally
-            {
-                setter(debugSettings, oldValue);
-            }
         }
     }
 }

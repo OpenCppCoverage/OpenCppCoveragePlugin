@@ -37,6 +37,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public string FullName { get; private set; }
         public StartUpProjectSettings.CppProject Project { get; private set; }
         public bool IsSelected { get; set; }
+
+        //---------------------------------------------------------------------
+        public override string ToString()
+        {
+            return this.FullName;
+        }
     }
 
     //-------------------------------------------------------------------------
