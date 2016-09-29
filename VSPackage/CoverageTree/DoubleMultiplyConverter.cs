@@ -26,6 +26,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         public object Convert(
             object value, Type targetType, object parameter, CultureInfo culture)
         {
+            if (value == null)
+                return 0.0;
             return (double)value * System.Convert.ToDouble(parameter);
         }
 

@@ -53,9 +53,13 @@
                             <GridViewColumn.CellTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Horizontal">
-                                        <Rectangle Width="{Binding Path=CoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" Fill="Green" Margin="3 3 0 3"/>
-                                        <Rectangle Width="{Binding Path=UncoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" Fill="Red" Margin="0 3 10 3"/>
-                                        <TextBlock Text="{Binding CoverageRate, StringFormat=p0}" />
+                                        <Rectangle 
+                                            Width="{Binding Path=OptionalCoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" 
+                                            Fill="Green" Margin="3 3 0 3"/>
+                                        <Rectangle 
+                                            Width="{Binding Path=OptionalUncoverageRate, Converter={StaticResource MultiplyConverter}, ConverterParameter={StaticResource CoverageRectangleRate}}" 
+                                            Fill="Red" Margin="0 3 10 3"/>
+                                        <TextBlock Text="{Binding OptionalCoverageRate, StringFormat=p0}" />
                                     </StackPanel>
                                 </DataTemplate>
                             </GridViewColumn.CellTemplate>

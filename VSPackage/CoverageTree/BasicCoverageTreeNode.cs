@@ -73,7 +73,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
-        public double? CoverageRate
+        public double? OptionalCoverageRate
         {
             get
             {
@@ -84,7 +84,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
-        public double? UncoverageRate
+        public double? OptionalUncoverageRate
         {
             get
             {
@@ -130,7 +130,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
             // ToList is required to avoid calling Select during the second iteration
             // and so create new objects.
-            var sortedChildrenNode = childrenNode.OrderBy(c => c.CoverageRate).ToList();
+            var sortedChildrenNode = childrenNode.OrderBy(c => c.OptionalCoverageRate).ToList();
             this.Children.Clear();
             this.Children.AddRange(sortedChildrenNode);
 

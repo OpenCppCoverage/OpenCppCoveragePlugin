@@ -34,8 +34,8 @@ namespace VSPackage_UnitTests
             Assert.AreEqual(10, node.CoveredLineCount);
             Assert.AreEqual(50, node.TotalLineCount);
             Assert.AreEqual(40, node.UncoveredLineCount);
-            Assert.AreEqual(10 / 50.0, node.CoverageRate);
-            Assert.AreEqual(40 / 50.0, node.UncoverageRate);
+            Assert.AreEqual(10 / 50.0, node.OptionalCoverageRate);
+            Assert.AreEqual(40 / 50.0, node.OptionalUncoverageRate);
         }
 
         //---------------------------------------------------------------------
@@ -46,8 +46,8 @@ namespace VSPackage_UnitTests
             var node = new BasicCoverageTreeNode(null, coverage, 
                 RootCoverageTreeNode.IconFilename, false);
 
-            Assert.AreEqual(null, node.CoverageRate);
-            Assert.AreEqual(null, node.UncoverageRate);
+            Assert.AreEqual(null, node.OptionalCoverageRate);
+            Assert.AreEqual(null, node.OptionalUncoverageRate);
         }
 
         //---------------------------------------------------------------------
