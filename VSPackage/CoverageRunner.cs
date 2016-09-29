@@ -79,7 +79,12 @@ namespace OpenCppCoverage.VSPackage
             openCppCoverage.RunCodeCoverage(settings);
 
             if (!File.Exists(coveragePath))
-                throw new VSPackageException("Cannot generate coverage. See output pane for more information.");
+            {
+                outputWindowWriter.WriteLine("The execution of the previous line failed." +
+                    " Please execute the previous line in a promt" + 
+                    " command to have more information about the issue.");
+                throw new VSPackageException("Cannot generate coverage. See output pane for more information");                
+            }
             outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
             coverageTreeManager.ShowTreeCoverage(coveragePath);
         }

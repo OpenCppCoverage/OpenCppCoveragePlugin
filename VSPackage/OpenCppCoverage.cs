@@ -46,7 +46,9 @@ namespace OpenCppCoverage.VSPackage
                 if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
                     process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
 
-                this.outputWindowWriter.WriteLine("Run " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+                this.outputWindowWriter.WriteLine("Run:");
+                this.outputWindowWriter.WriteLine(string.Format(@"""{0}"" {1}",
+                    process.StartInfo.FileName, process.StartInfo.Arguments));
                 process.Start();
                 process.WaitForExit();                
             }
