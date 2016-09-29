@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using EnvDTE;
 using EnvDTE80;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
@@ -25,75 +24,64 @@ namespace OpenCppCoverage.VSPackage
 {
     class CoverageRunner
     {
-        public static readonly string ProjectNameTag = " - Project Name: ";
+        readonly ProjectBuilder projectBuilder;
+        readonly OutputWindowWriter outputWindowWriter;
+        readonly CoverageTreeManager coverageTreeManager;
 
         //---------------------------------------------------------------------
         public CoverageRunner(
             DTE2 dte,
-            ErrorHandler errorHandler,
             OutputWindowWriter outputWindowWriter,
-            CoverageTreeManager coverageTreeManager)
+            CoverageTreeManager coverageTreeManager,
+            ProjectBuilder projectBuilder)
         {
-            dte_ = dte;
-            errorHandler_ = errorHandler;
-            outputWindowWriter_ = outputWindowWriter;
-            coverageTreeManager_ = coverageTreeManager;
+            this.outputWindowWriter = outputWindowWriter;
+            this.coverageTreeManager = coverageTreeManager;
+            this.projectBuilder = projectBuilder;
         }
 
         //---------------------------------------------------------------------
         public void RunCoverageOnStartupProject(MainSettings settings)
-        {            
-            var buildContext = new BuildContext();
-            _dispBuildEvents_OnBuildProjConfigDoneEventHandler onBuildDone = 
-                (string project, string projectConfig, string platform, string solutionConfig, bool success)
-                    => OnBuildProjConfigDone(project, projectConfig, platform, solutionConfig, success, buildContext);
+        {
+            if (settings.BasicSettings.CompileBeforeRunning)
+            {
+                projectBuilder.Build(settings.SolutionConfigurationName, settings.ProjectName,
+                    compilationSuccess =>
+                    {
+                        if (!compilationSuccess)
+                            throw new VSPackageException("Build failed.");
 
-            buildContext.OnBuildDone = onBuildDone;
-            buildContext.Settings = settings;
-            
-            dte_.Events.BuildEvents.OnBuildProjConfigDone += onBuildDone;
-            outputWindowWriter_.WriteLine("Start building " + settings.ProjectName);
-
-            var solutionBuild = dte_.Solution.SolutionBuild;
-            solutionBuild.BuildProject(settings.SolutionConfigurationName, settings.ProjectName, false);
+                        RunCoverage(settings);
+                    });
+            }
+            else
+            {
+                RunCoverage(settings);
+            }
         }
 
         //---------------------------------------------------------------------
-        void OnBuildProjConfigDone(
-            string project, 
-            string projectConfig, 
-            string platform, 
-            string solutionConfig, 
-            bool success, 
-            BuildContext buildContext)
+        void RunCoverage(MainSettings settings)
         {
-            // This method is executed asynchronously and so we need to catch errors.
-            errorHandler_.Execute(() =>
-                {
-                    if (project == buildContext.Settings.ProjectName)
-                    {
-                        dte_.Events.BuildEvents.OnBuildProjConfigDone -= buildContext.OnBuildDone;
-                        outputWindowWriter_.ActivatePane();
+            outputWindowWriter.ActivatePane();
+            outputWindowWriter.WriteLine("Start computing code coverage...");
 
-                        if (!success)
-                            throw new VSPackageException("Build failed.");
+            if (!File.Exists(settings.BasicSettings.ProgramToRun))
+            {
+                throw new VSPackageException(
+                    string.Format(@"File ""{0}"" does not exist.", 
+                    settings.BasicSettings.ProgramToRun));
+            }
 
-                        outputWindowWriter_.WriteLine("Start code coverage...");
+            var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
+            var openCppCoverage = new OpenCppCoverage(outputWindowWriter);
 
-                        var settings = buildContext.Settings;
-                        CheckSettings(settings.BasicSettings);
+            openCppCoverage.RunCodeCoverage(settings);
 
-                        var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
-                        var openCppCoverage = new OpenCppCoverage(outputWindowWriter_);
-
-                        openCppCoverage.RunCodeCoverage(settings);
-
-                        if (!File.Exists(coveragePath))
-                            throw new VSPackageException("Cannot generate coverage. See output pane for more information.");
-                        outputWindowWriter_.WriteLine("Coverage written in " + coveragePath);
-                        coverageTreeManager_.ShowTreeCoverage(coveragePath);
-                    }
-                });
+            if (!File.Exists(coveragePath))
+                throw new VSPackageException("Cannot generate coverage. See output pane for more information.");
+            outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
+            coverageTreeManager.ShowTreeCoverage(coveragePath);
         }
 
         //---------------------------------------------------------------------        
@@ -110,27 +98,5 @@ namespace OpenCppCoverage.VSPackage
             importExportSettings.Exports = exports;
             return coveragePath;
         }
-
-        //---------------------------------------------------------------------        
-        void CheckSettings(BasicSettings settings)
-        {
-            if (!File.Exists(settings.ProgramToRun))
-            {
-                throw new VSPackageException(
-                    string.Format(@"Debugging command ""{0}"" does not exist.", settings.ProgramToRun));
-            }
-        }
-
-        //---------------------------------------------------------------------
-        class BuildContext
-        {            
-            public _dispBuildEvents_OnBuildProjConfigDoneEventHandler OnBuildDone { get; set; }
-            public MainSettings Settings { get; set; }
-        }
-
-        readonly DTE2 dte_;
-        readonly OutputWindowWriter outputWindowWriter_;
-        readonly ErrorHandler errorHandler_;
-        readonly CoverageTreeManager coverageTreeManager_;
     }
 }

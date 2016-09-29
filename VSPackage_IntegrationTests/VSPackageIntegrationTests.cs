@@ -172,22 +172,6 @@ namespace VSPackage_IntegrationTests
             
             //CheckCoverage(ConfigurationName.Debug, PlatFormName.x64);
         }
-
-        //---------------------------------------------------------------------
-        void CheckCoverage(
-            ConfigurationName configurationName, 
-            PlatFormName platformName)
-        {            
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, configurationName, platformName);
-            
-            var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication);
-            SolutionConfigurationHelpers.CleanSolution();
-            debugSettings.CommandArguments = "Test";
-
-            var output = TestHelpers.ExecuteOpenCppCoverageAndReturnOutput(TestHelpers.ApplicationName);
-            CheckOutput(output, CoverageRunner.ProjectNameTag, TestHelpers.CppConsoleApplication);
-            CheckOutput(output, "Coverage written in", "");
-        }
         
         //---------------------------------------------------------------------
         static string GetProjectFolder(string projectName)

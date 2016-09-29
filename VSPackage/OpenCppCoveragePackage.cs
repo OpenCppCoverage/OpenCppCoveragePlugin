@@ -119,8 +119,9 @@ namespace OpenCppCoverage.VSPackage
                 var mainSettingsManager = new MainSettingsManager(this, dte);
 
                 var coverageTreeManager = new CoverageTreeManager(this);
+                var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var openCppCoverageRunner = new CoverageRunner(
-                    dte, errorHandler, outputWriter, coverageTreeManager);
+                    dte, outputWriter, coverageTreeManager, projectBuilder);
 
                 CheckVCRedistInstalled();
                 mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);

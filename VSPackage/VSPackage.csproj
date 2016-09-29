@@ -170,6 +170,7 @@
     <Compile Include="OpenCppCoverage.cs" />
     <Compile Include="OpenCppCoverageCmdLine.cs" />
     <Compile Include="OutputWindowWriter.cs" />
+    <Compile Include="ProjectBuilder.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
