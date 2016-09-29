@@ -156,7 +156,7 @@ namespace VSPackage_UnitTests
 
                 Check(string.Format(@"{0} ""{1}{2}path""",
                     OpenCppCoverageCmdLine.ExportTypeFlag,
-                    exportType.ToString(),
+                    exportType.ToString().ToLowerInvariant(),
                     OpenCppCoverageCmdLine.ExportTypeSeparator), mainSettings);
             }
         }

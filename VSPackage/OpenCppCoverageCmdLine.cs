@@ -98,8 +98,9 @@ namespace OpenCppCoverage.VSPackage
 
             foreach (var export in settings.Exports)
             {
+                var type = export.Type.ToString().ToLowerInvariant();
                 builder.AppendArgument(ExportTypeFlag,
-                    export.Type.ToString() + ExportTypeSeparator + export.Path);
+                     type + ExportTypeSeparator + export.Path);
             }
 
             if (settings.CoverChildrenProcesses)
