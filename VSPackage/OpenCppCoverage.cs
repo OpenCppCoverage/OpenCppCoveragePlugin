@@ -18,87 +18,51 @@ using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace OpenCppCoverage.VSPackage
 {
     class OpenCppCoverage
     {
+        readonly OutputWindowWriter outputWindowWriter;
+
         //---------------------------------------------------------------------
         public OpenCppCoverage(OutputWindowWriter outputWindowWriter)
         {
-            this.outputWindowWriter_ = outputWindowWriter;
+            this.outputWindowWriter = outputWindowWriter;
         }
 
         //---------------------------------------------------------------------
-        public string RunCodeCoverage(StartUpProjectSettings settings)
+        public int RunCodeCoverage(MainSettings settings)
         {                                
-            var outputFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
+            var basicSettings = settings.BasicSettings;
             using (var process = new Process())
             {
-                process.StartInfo.FileName = GetOpenCppCoveragePath(settings.Command);
-                process.StartInfo.Arguments = BuildArguments(settings, outputFile);
+                process.StartInfo.FileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
+                process.StartInfo.Arguments = OpenCppCoverageCmdLine.Build(settings);
                 process.StartInfo.UseShellExecute = false;
                 process.StartInfo.CreateNoWindow = false;
 
-                if (!String.IsNullOrEmpty(settings.WorkingDir))
-                    process.StartInfo.WorkingDirectory = settings.WorkingDir;
+                if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
+                    process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
 
-                this.outputWindowWriter_.WriteLine("Run " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
+                this.outputWindowWriter.WriteLine("Run " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.Start();
                 process.WaitForExit();
+                return process.ExitCode;
             }
-
-            return outputFile;
         }
 
         //---------------------------------------------------------------------
         string GetOpenCppCoveragePath(string commandPath)
         {
             var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            var assemblyFolder = System.IO.Path.GetDirectoryName(assemblyLocation);
-            var openCppCovergeFolder = Is64bitsExecutable(commandPath) ? "OpenCppCoverage-x64" : "OpenCppCoverage-x86";
+            var assemblyFolder = Path.GetDirectoryName(assemblyLocation);
+            var openCppCovergeFolder = 
+                Is64bitsExecutable(commandPath) ? 
+                    "OpenCppCoverage-x64" : "OpenCppCoverage-x86";
 
             return Path.Combine(assemblyFolder, openCppCovergeFolder, "OpenCppCoverage.exe");
-        }
-
-        //---------------------------------------------------------------------
-        static string BuildArguments(StartUpProjectSettings settings, string outputFolder)
-        {
-            var builder = new StringBuilder();
-            var sourcePaths = settings.CppProjects.SelectMany(p => p.SourcePaths);
-            var modulePaths = settings.CppProjects.Select(p => p.ModulePath);
-
-            AppendArgument(builder, "--export_type", "binary:" + outputFolder);
-            foreach (var modulePath in modulePaths)
-                AppendArgument(builder, "--module", modulePath);
-            foreach (var sourcePath in sourcePaths)
-                AppendArgument(builder, "--sources", sourcePath);
-
-            builder.Append(" --plugin ");
-            AppendArgument(builder, "--", settings.Command);
-            builder.Append(' ').Append(settings.Arguments);
-            return builder.ToString();
-        }
-
-        //---------------------------------------------------------------------
-        static void AppendArgument(
-            StringBuilder builder, 
-            string argumentName, 
-            string argumentValue)
-        {
-            builder.Append(argumentName);
-            builder.Append(' ');
-            builder.Append('\"');
-
-            // Remove the last '\' to avoid issue with end of argument '"'
-            argumentValue = argumentValue.TrimEnd(new char[] { '\\' });
-            
-            builder.Append(argumentValue);
-            builder.Append("\" ");
         }
 
         //---------------------------------------------------------------------
@@ -109,7 +73,7 @@ namespace OpenCppCoverage.VSPackage
             if (NativeMethods.GetBinaryType(commandPath, out binaryType) == 0)
                 throw new VSPackageException("Invalid executable: " + commandPath);
 
-            outputWindowWriter_.WriteLine(
+            outputWindowWriter.WriteLine(
                 string.Format("{0} has binary type: {1}", commandPath, binaryType.ToString()));
 
             if (binaryType != NativeMethods.BinaryType.SCS_64BIT_BINARY 
@@ -139,7 +103,5 @@ namespace OpenCppCoverage.VSPackage
                 SCS_WOW_BINARY = 2 // A 16-bit Windows-based application
             }
         }
-
-        readonly OutputWindowWriter outputWindowWriter_;
     }
 }

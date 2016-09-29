@@ -18,7 +18,6 @@ using EnvDTE;
 using EnvDTE80;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -27,11 +26,6 @@ namespace OpenCppCoverage.VSPackage
     class CoverageRunner
     {
         public static readonly string ProjectNameTag = " - Project Name: ";
-        public static readonly string CommandTag = " - Command: ";
-        public static readonly string ArgumentTag = " - Arguments: ";
-        public static readonly string WorkingDirTag = " - WorkingDir: ";
-        public static readonly string SelectedFolderTag = " - Selected folders: ";
-        public static readonly string SelectedModuleTag = " - Selected modules: ";
 
         //---------------------------------------------------------------------
         public CoverageRunner(
@@ -47,7 +41,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public void RunCoverageOnStartupProject(StartUpProjectSettings settings)
+        public void RunCoverageOnStartupProject(MainSettings settings)
         {            
             var buildContext = new BuildContext();
             _dispBuildEvents_OnBuildProjConfigDoneEventHandler onBuildDone = 
@@ -58,8 +52,6 @@ namespace OpenCppCoverage.VSPackage
             buildContext.Settings = settings;
             
             dte_.Events.BuildEvents.OnBuildProjConfigDone += onBuildDone;
-
-            LogSettings(settings);
             outputWindowWriter_.WriteLine("Start building " + settings.ProjectName);
 
             var solutionBuild = dte_.Solution.SolutionBuild;
@@ -89,11 +81,15 @@ namespace OpenCppCoverage.VSPackage
                         outputWindowWriter_.WriteLine("Start code coverage...");
 
                         var settings = buildContext.Settings;
-                        CheckSettings(settings);
+                        CheckSettings(settings.BasicSettings);
 
+                        var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
                         var openCppCoverage = new OpenCppCoverage(outputWindowWriter_);
-                        var coveragePath = openCppCoverage.RunCodeCoverage(settings);
 
+                        openCppCoverage.RunCodeCoverage(settings);
+
+                        if (!File.Exists(coveragePath))
+                            throw new VSPackageException("Cannot generate coverage. See output pane for more information.");
                         outputWindowWriter_.WriteLine("Coverage written in " + coveragePath);
                         coverageTreeManager_.ShowTreeCoverage(coveragePath);
                     }
@@ -101,18 +97,27 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------        
-        void CheckSettings(StartUpProjectSettings settings)
+        string AddBinaryOutput(ImportExportSettings importExportSettings)
         {
-            if (!File.Exists(settings.Command))
-            {
-                throw new VSPackageException(
-                    string.Format(@"Debugging command ""{0}"" does not exist.", settings.Command));
-            }
+            var coveragePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
-            if (!string.IsNullOrEmpty(settings.WorkingDir) && !Directory.Exists(settings.WorkingDir))
+            var exports = importExportSettings.Exports.ToList();
+            exports.Add(new ImportExportSettings.Export
+            {
+                Type = ImportExportSettings.Type.Binary,
+                Path = coveragePath
+            });
+            importExportSettings.Exports = exports;
+            return coveragePath;
+        }
+
+        //---------------------------------------------------------------------        
+        void CheckSettings(BasicSettings settings)
+        {
+            if (!File.Exists(settings.ProgramToRun))
             {
                 throw new VSPackageException(
-                    string.Format(@"Debugging working directory ""{0}"" does not exist.", settings.WorkingDir));
+                    string.Format(@"Debugging command ""{0}"" does not exist.", settings.ProgramToRun));
             }
         }
 
@@ -120,29 +125,7 @@ namespace OpenCppCoverage.VSPackage
         class BuildContext
         {            
             public _dispBuildEvents_OnBuildProjConfigDoneEventHandler OnBuildDone { get; set; }
-            public StartUpProjectSettings Settings { get; set; }
-        }
-
-        //---------------------------------------------------------------------
-        void LogSettings(StartUpProjectSettings settings)
-        {                     
-            outputWindowWriter_.WriteLine("Current Configuration: ");
-            outputWindowWriter_.WriteLine(ProjectNameTag + settings.ProjectName);
-            outputWindowWriter_.WriteLine(CommandTag + settings.Command);
-            outputWindowWriter_.WriteLine(ArgumentTag + settings.Arguments);
-            outputWindowWriter_.WriteLine(WorkingDirTag + settings.WorkingDir);
-
-            var sourcePaths = settings.CppProjects.SelectMany(p => p.SourcePaths);
-            var modulePaths = settings.CppProjects.Select(p => p.ModulePath);
-            LogCollection(SelectedFolderTag, sourcePaths);
-            LogCollection(SelectedModuleTag, modulePaths);
-        }
-
-        //---------------------------------------------------------------------
-        void LogCollection(string name, IEnumerable<string> values)
-        {            
-            foreach (var v in values)
-                outputWindowWriter_.WriteLine(name + v); 
+            public MainSettings Settings { get; set; }
         }
 
         readonly DTE2 dte_;

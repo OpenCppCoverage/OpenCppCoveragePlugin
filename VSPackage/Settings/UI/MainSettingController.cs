@@ -62,12 +62,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public StartUpProjectSettings GetSettings()
-        {
-            return this.settings;
-        }
-
-        //---------------------------------------------------------------------
         public MainSettings GetMainSettings()
         {
             return new MainSettings
@@ -109,7 +103,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         void OnRunCoverageCommand()
         {
-            this.CoverageRunner.RunCoverageOnStartupProject(this.settings);
+            this.CoverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
         }
 
         //---------------------------------------------------------------------

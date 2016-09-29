@@ -186,13 +186,6 @@ namespace VSPackage_IntegrationTests
 
             var output = TestHelpers.ExecuteOpenCppCoverageAndReturnOutput(TestHelpers.ApplicationName);
             CheckOutput(output, CoverageRunner.ProjectNameTag, TestHelpers.CppConsoleApplication);
-            CheckOutput(output, CoverageRunner.CommandTag, TestHelpers.ApplicationName);
-            CheckOutput(output, CoverageRunner.ArgumentTag, debugSettings.CommandArguments);
-            CheckOutput(output, CoverageRunner.WorkingDirTag, GetProjectFolder(TestHelpers.CppConsoleApplication));
-            CheckOutput(output, CoverageRunner.SelectedFolderTag, GetProjectFolder(TestHelpers.CppConsoleApplication));
-            CheckOutput(output, CoverageRunner.SelectedFolderTag, GetProjectFolder(TestHelpers.CppConsoleApplication2));
-            CheckOutput(output, CoverageRunner.SelectedModuleTag, TestHelpers.ApplicationName);
-            CheckOutput(output, CoverageRunner.SelectedModuleTag, TestHelpers.ApplicationName2);
             CheckOutput(output, "Coverage written in", "");
         }
         
