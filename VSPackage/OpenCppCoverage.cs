@@ -33,7 +33,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public int RunCodeCoverage(MainSettings settings)
+        public void RunCodeCoverage(MainSettings settings)
         {                                
             var basicSettings = settings.BasicSettings;
             using (var process = new Process())
@@ -48,8 +48,7 @@ namespace OpenCppCoverage.VSPackage
 
                 this.outputWindowWriter.WriteLine("Run " + process.StartInfo.FileName + " " + process.StartInfo.Arguments);
                 process.Start();
-                process.WaitForExit();
-                return process.ExitCode;
+                process.WaitForExit();                
             }
         }
 
