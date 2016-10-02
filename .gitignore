@@ -7,6 +7,8 @@ TestResults/
 *.user
 *.sdf
 *.db
+*.ipch
+LastCoverageResults.log
 
 # Template files / OpenCppCoverage binaries
 VSPackage/OpenCppCoverage-x64
