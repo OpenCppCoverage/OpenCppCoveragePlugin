@@ -172,10 +172,10 @@ namespace OpenCppCoverage.VSPackage
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
             var exporterProvider = componentModel.DefaultExportProvider;
+            var listeners = exporterProvider.GetExportedValues<IWpfTextViewCreationListener>();
+            var listener = listeners.First(l => l is CoverageViewCreationListener);
 
-            return (CoverageViewCreationListener)
-                    exporterProvider.GetExportedValues<IWpfTextViewCreationListener>().First(
-                        l => l is CoverageViewCreationListener);
+            return (CoverageViewCreationListener)listener;
         }
     }
 }

@@ -36,7 +36,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     {
         const string HighlightLinesAdornment = "HighlightLines";
         readonly Dictionary<string, IWpfTextView> viewsByPath = new Dictionary<string, IWpfTextView>();
-        
+        readonly Dictionary<string, FileCoverage> coverageWithoutView = new Dictionary<string, FileCoverage>();
+
         //---------------------------------------------------------------------
         public void TextViewCreated(IWpfTextView textView)
         {
@@ -46,9 +47,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             {
                 this.viewsByPath.Add(optionalFilePath, textView);
                 textView.Closed += OnTextViewClosed;
+
+                // Here IWpfTextView.TextViewLines is null and so
+                // cannot call AddNewHighlightCoverage directly.
+                textView.LayoutChanged += OnLayoutChanged;
             }
         }
-        
+
         //---------------------------------------------------------------------
         // These lines declare new AdornmentLayer.
         [Export(typeof(AdornmentLayerDefinition))]
@@ -67,6 +72,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             set
             {
                 this.RemoveHighlightForAllViews();
+                this.coverageWithoutView.Clear();
 
                 var fileCoverageCollection = value.Children.SelectMany(module => module.Children);
                 foreach (var fileCoverage in fileCoverageCollection)
@@ -75,6 +81,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                     IWpfTextView view;
                     if (this.viewsByPath.TryGetValue(normalizedPath, out view))
                         AddNewHighlightCoverage(view, fileCoverage);
+                    else
+                        this.coverageWithoutView.Add(normalizedPath, fileCoverage);
                 }
             }
         }
@@ -89,6 +97,21 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 return null;
 
             return NormalizePath(textDocument.FilePath);
+        }
+
+        //---------------------------------------------------------------------
+        void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
+        {
+            var textView = (IWpfTextView)sender;
+            textView.LayoutChanged -= OnLayoutChanged;
+            var optionalFilePath = GetOptionalFilePath(textView);
+
+            if (optionalFilePath != null)
+            {
+                FileCoverage fileCoverage;
+                if (this.coverageWithoutView.TryGetValue(optionalFilePath, out fileCoverage))
+                    AddNewHighlightCoverage(textView, fileCoverage);
+            }
         }
 
         //---------------------------------------------------------------------
@@ -107,6 +130,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                     }
                 }
                 textView.Closed -= OnTextViewClosed;
+                textView.LayoutChanged -= OnLayoutChanged;
             }
         }
 
@@ -125,7 +149,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
             int lineNumber = 1;
             foreach (var textViewLine in textViewLines)
-            {                
+            {
                 LineCoverage lineCoverage;
 
                 if (coverage.TryGetValue(lineNumber, out lineCoverage))
