@@ -95,10 +95,19 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         void OnTextViewClosed(object sender, EventArgs e)
         {
             var textView = sender as IWpfTextView;
-            var optionalFilePath = textView != null ? GetOptionalFilePath(textView) : null;
 
-            if (optionalFilePath != null)
-                this.viewsByPath.Remove(optionalFilePath);
+            if (textView != null)
+            {
+                foreach (var kvp in this.viewsByPath)
+                {
+                    if (kvp.Value == textView)
+                    {
+                        this.viewsByPath.Remove(kvp.Key);
+                        break;
+                    }
+                }
+                textView.Closed -= OnTextViewClosed;
+            }
         }
 
         //---------------------------------------------------------------------
