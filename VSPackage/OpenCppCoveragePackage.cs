@@ -15,9 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using EnvDTE80;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.Win32;
+using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
@@ -25,6 +28,7 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace OpenCppCoverage.VSPackage
@@ -120,8 +124,11 @@ namespace OpenCppCoverage.VSPackage
 
                 var coverageTreeManager = new CoverageTreeManager(this);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
+                var coverageViewCreationListener = GetCoverageViewCreationListener();
+                var deserializer = new CoverageDataDeserializer();
                 var openCppCoverageRunner = new CoverageRunner(
-                    dte, outputWriter, coverageTreeManager, projectBuilder);
+                    dte, outputWriter, coverageTreeManager, projectBuilder, 
+                    coverageViewCreationListener, deserializer);
 
                 CheckVCRedistInstalled();
                 mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
@@ -158,6 +165,17 @@ namespace OpenCppCoverage.VSPackage
             }
 
             return false;
+        }
+
+        //---------------------------------------------------------------------
+        CoverageViewCreationListener GetCoverageViewCreationListener()
+        {
+            var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
+            var exporterProvider = componentModel.DefaultExportProvider;
+
+            return (CoverageViewCreationListener)
+                    exporterProvider.GetExportedValues<IWpfTextViewCreationListener>().First(
+                        l => l is CoverageViewCreationListener);
         }
     }
 }

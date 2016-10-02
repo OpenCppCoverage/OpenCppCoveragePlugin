@@ -15,6 +15,8 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using EnvDTE80;
+using OpenCppCoverage.VSPackage.CoverageData;
+using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
 using System.IO;
@@ -27,17 +29,23 @@ namespace OpenCppCoverage.VSPackage
         readonly ProjectBuilder projectBuilder;
         readonly OutputWindowWriter outputWindowWriter;
         readonly CoverageTreeManager coverageTreeManager;
+        readonly CoverageViewCreationListener coverageViewCreationListener;
+        readonly CoverageDataDeserializer coverageDataDeserializer;
 
         //---------------------------------------------------------------------
         public CoverageRunner(
             DTE2 dte,
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager,
-            ProjectBuilder projectBuilder)
+            ProjectBuilder projectBuilder,
+            CoverageViewCreationListener coverageViewCreationListener,
+            CoverageDataDeserializer coverageDataDeserializer)
         {
             this.outputWindowWriter = outputWindowWriter;
             this.coverageTreeManager = coverageTreeManager;
             this.projectBuilder = projectBuilder;
+            this.coverageViewCreationListener = coverageViewCreationListener;
+            this.coverageDataDeserializer = coverageDataDeserializer;
         }
 
         //---------------------------------------------------------------------
@@ -86,7 +94,17 @@ namespace OpenCppCoverage.VSPackage
                 throw new VSPackageException("Cannot generate coverage. See output pane for more information");                
             }
             outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
-            coverageTreeManager.ShowTreeCoverage(coveragePath);
+
+            try
+            {
+                var coverageRate = BuildCoverageRate(coveragePath);
+                coverageTreeManager.ShowTreeCoverage(coverageRate);
+                this.coverageViewCreationListener.CoverageRate = coverageRate;
+            }
+            finally
+            {
+                File.Delete(coveragePath);
+            }
         }
 
         //---------------------------------------------------------------------        
@@ -102,6 +120,18 @@ namespace OpenCppCoverage.VSPackage
             });
             importExportSettings.Exports = exports;
             return coveragePath;
+        }
+
+        //---------------------------------------------------------------------        
+        CoverageRate BuildCoverageRate(string coveragePath)
+        {
+            using (var stream = new FileStream(coveragePath.ToString(), FileMode.Open))
+            {
+                var coverageResult = this.coverageDataDeserializer.Deserialize(stream);
+                var coverageRateBuilder = new CoverageRateBuilder.CoverageRateBuilder();
+
+                return coverageRateBuilder.Build(coverageResult);
+            }
         }
     }
 }

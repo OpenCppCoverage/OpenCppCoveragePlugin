@@ -16,10 +16,8 @@
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using System;
-using System.IO;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
@@ -34,32 +32,17 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //---------------------------------------------------------------------        
-        public void ShowTreeCoverage(string coveragePath)
+        public void ShowTreeCoverage(CoverageRate coverageRate)
         {
             var window = this.package.FindToolWindow(
                 typeof(CoverageTreeToolWindow), 0, true) as CoverageTreeToolWindow;
             if (window == null || window.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
-            var coverageRate = BuildCoverageRate(coveragePath);
-            File.Delete(coveragePath);
             window.Controller.CoverageRate = coverageRate;
             
             var frame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
-        }
-
-        //---------------------------------------------------------------------        
-        static CoverageRate BuildCoverageRate(string coveragePath)
-        {
-            using (var stream = new FileStream(coveragePath.ToString(), FileMode.Open))
-            {
-                var deserializer = new CoverageDataDeserializer();
-                var coverageResult = deserializer.Deserialize(stream);
-                var coverageRateBuilder = new CoverageRateBuilder.CoverageRateBuilder();
-
-                return coverageRateBuilder.Build(coverageResult);
-            }
         }
     }
 }
