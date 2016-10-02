@@ -14,16 +14,18 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using EnvDTE;
+using EnvDTE80;
 using ICSharpCode.TreeView;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.Helper;
+using System;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
     class CoverageTreeController: PropertyChangedNotifier
     {
         RootCoverageTreeNode rootNode;
-        FileCoverage currentFileCoverage;
 
         string filter;
         string warning;
@@ -36,6 +38,9 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             this.visibilityManager = new TreeNodeVisibilityManager();
         }
 
+        //-----------------------------------------------------------------------
+        public DTE2 DTE { get; set; }
+         
         //-----------------------------------------------------------------------
         public CoverageRate CoverageRate
         {
@@ -60,10 +65,14 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             set
             {
                 var fileTreeNode = value as FileTreeNode;
-                var fileCoverage = fileTreeNode != null ? fileTreeNode.Coverage: null;
+                var fileCoverage = fileTreeNode?.Coverage;
 
-                if (fileCoverage != currentFileCoverage)
-                    currentFileCoverage = fileCoverage;
+                if (fileCoverage != null)
+                {
+                    if (this.DTE == null)
+                        throw new InvalidOperationException("DTE should be set before calling this method.");
+                    this.DTE.ItemOperations.OpenFile(fileCoverage.Path, Constants.vsViewKindCode);
+                }
             }
         }
 

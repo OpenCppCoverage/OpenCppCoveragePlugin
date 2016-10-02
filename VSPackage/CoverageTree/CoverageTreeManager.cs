@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
@@ -24,11 +25,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     class CoverageTreeManager
     {
         readonly Package package;
+        readonly DTE2 dte;
 
         //---------------------------------------------------------------------        
-        public CoverageTreeManager(Package package)
+        public CoverageTreeManager(Package package, DTE2 dte)
         {
             this.package = package;
+            this.dte = dte;
         }
 
         //---------------------------------------------------------------------        
@@ -40,7 +43,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 throw new NotSupportedException("Cannot create tool window");
 
             window.Controller.CoverageRate = coverageRate;
-            
+            window.Controller.DTE = this.dte;
+
             var frame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }

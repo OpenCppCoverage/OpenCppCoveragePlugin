@@ -121,8 +121,7 @@ namespace OpenCppCoverage.VSPackage
 
                 errorHandler.OutputWriter = outputWriter;
                 var mainSettingsManager = new MainSettingsManager(this, dte);
-
-                var coverageTreeManager = new CoverageTreeManager(this);
+                var coverageTreeManager = new CoverageTreeManager(this, dte);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var coverageViewCreationListener = GetCoverageViewCreationListener();
                 var deserializer = new CoverageDataDeserializer();
