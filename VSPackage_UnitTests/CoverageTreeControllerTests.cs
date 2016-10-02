@@ -18,7 +18,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
-using OpenCppCoverage.VSPackage.Editor;
 using System.Collections.Generic;
 
 namespace VSPackage_UnitTests
@@ -26,14 +25,12 @@ namespace VSPackage_UnitTests
     [TestClass()]
     public class CoverageTreeControllerTests
     {
-        readonly Mock<IEditorHighlighter> editorHighlighter;
         readonly CoverageTreeController controller;
 
         //---------------------------------------------------------------------
         public CoverageTreeControllerTests()
         {
-            this.editorHighlighter = new Mock<IEditorHighlighter>();
-            this.controller = new CoverageTreeController(editorHighlighter.Object);
+            this.controller = new CoverageTreeController();
         }
 
         //---------------------------------------------------------------------
@@ -50,36 +47,6 @@ namespace VSPackage_UnitTests
             Assert.IsTrue(propertyChangedCalled);
             Assert.AreEqual(name, controller.Root.Text);
             Assert.AreEqual("", controller.Filter);
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        public void CurrentFileTreeNode()
-        {
-            var node1 = new FileTreeNode("", new FileCoverage("", new List<LineCoverage>()));
-            var node2 = new FileTreeNode("", new FileCoverage("", new List<LineCoverage>()));
-
-            controller.Current = node1;
-            editorHighlighter.Verify(e => e.DisplayCoverage(node1.Coverage), Times.Once);
-            editorHighlighter.Verify(e => e.RemoveCoverage(null), Times.Never);
-
-            controller.Current = node2;
-            editorHighlighter.Verify(e => e.DisplayCoverage(node2.Coverage), Times.Once);
-            editorHighlighter.Verify(e => e.RemoveCoverage(node1.Coverage), Times.Once);
-
-            editorHighlighter.VerifyAll();
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        public void CurrentIsNotFileTreeNode()
-        {
-            editorHighlighter.Verify(
-                e => e.DisplayCoverage(It.IsAny<FileCoverage>()), Times.Never);
-
-            controller.Current = new RootCoverageTreeNode(new CoverageRate("", 0));
-
-            editorHighlighter.VerifyAll();
         }
 
         //---------------------------------------------------------------------

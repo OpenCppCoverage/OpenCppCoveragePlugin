@@ -16,7 +16,6 @@
 
 using ICSharpCode.TreeView;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
-using OpenCppCoverage.VSPackage.Editor;
 using OpenCppCoverage.VSPackage.Helper;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
@@ -29,13 +28,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         string filter;
         string warning;
 
-        readonly IEditorHighlighter editorHighlighter;
         readonly TreeNodeVisibilityManager visibilityManager;
 
         //-----------------------------------------------------------------------
-        public CoverageTreeController(IEditorHighlighter editorHighlighter)
+        public CoverageTreeController()
         {
-            this.editorHighlighter = editorHighlighter;
             this.visibilityManager = new TreeNodeVisibilityManager();
         }
 
@@ -66,14 +63,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 var fileCoverage = fileTreeNode != null ? fileTreeNode.Coverage: null;
 
                 if (fileCoverage != currentFileCoverage)
-                {
-                    if (currentFileCoverage != null)
-                        editorHighlighter.RemoveCoverage(currentFileCoverage);
-                    if (fileCoverage != null)
-                        editorHighlighter.DisplayCoverage(fileCoverage);
-
                     currentFileCoverage = fileCoverage;
-                }
             }
         }
 

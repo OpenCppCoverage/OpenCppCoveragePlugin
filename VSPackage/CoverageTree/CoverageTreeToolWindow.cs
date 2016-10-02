@@ -15,7 +15,6 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.Shell;
-using OpenCppCoverage.VSPackage.Editor;
 using System.Runtime.InteropServices;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
@@ -34,8 +33,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             // the object returned by the Content property.
             var coverageTreeControl = new CoverageTreeControl();
 
-            var editorHighlighter = new EditorHighlighter();
-            this.Controller = new CoverageTreeController(editorHighlighter);
+            this.Controller = new CoverageTreeController();
             coverageTreeControl.DataContext = this.Controller;
             this.Content = coverageTreeControl;
         }
