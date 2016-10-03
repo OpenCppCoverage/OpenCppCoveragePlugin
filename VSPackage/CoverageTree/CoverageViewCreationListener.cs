@@ -35,23 +35,15 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     sealed class CoverageViewCreationListener : IWpfTextViewCreationListener
     {
         const string HighlightLinesAdornment = "HighlightLines";
-        readonly Dictionary<string, IWpfTextView> viewsByPath = new Dictionary<string, IWpfTextView>();
-        readonly Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
+        readonly List<IWpfTextView> views = new List<IWpfTextView>();
+        Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
 
         //---------------------------------------------------------------------
         public void TextViewCreated(IWpfTextView textView)
         {
-            var optionalFilePath = GetOptionalFilePath(textView);
-
-            if (optionalFilePath != null)
-            {
-                this.viewsByPath.Add(optionalFilePath, textView);
-                textView.Closed += OnTextViewClosed;
-
-                // Here IWpfTextView.TextViewLines is null and so
-                // cannot call AddNewHighlightCoverage directly.
-                textView.LayoutChanged += OnLayoutChanged;
-            }
+            this.views.Add(textView);
+            textView.Closed += OnTextViewClosed;
+            textView.LayoutChanged += OnLayoutChanged;
         }
 
         //---------------------------------------------------------------------
@@ -71,18 +63,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         {
             set
             {
-                this.RemoveHighlightForAllViews();
-                this.coverageByFile.Clear();
+                this.coverageByFile = value.Children
+                    .SelectMany(module => module.Children)
+                    .ToDictionary(fileCoverage => NormalizePath(fileCoverage.Path));
 
-                var fileCoverageCollection = value.Children.SelectMany(module => module.Children);
-                foreach (var fileCoverage in fileCoverageCollection)
-                {
-                    var normalizedPath = NormalizePath(fileCoverage.Path);
-                    IWpfTextView view;
-                    if (this.viewsByPath.TryGetValue(normalizedPath, out view))
-                        AddNewHighlightCoverage(view, fileCoverage);
-                    this.coverageByFile.Add(normalizedPath, fileCoverage);
-                }
+                this.RemoveHighlightForAllViews();
+                foreach (var view in this.views)
+                    AddNewHighlightCoverage(view, view.TextViewLines);
             }
         }
 
@@ -101,16 +88,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------
         void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            var textView = (IWpfTextView)sender;
-            textView.LayoutChanged -= OnLayoutChanged;
-            var optionalFilePath = GetOptionalFilePath(textView);
-
-            if (optionalFilePath != null)
-            {
-                FileCoverage fileCoverage;
-                if (this.coverageByFile.TryGetValue(optionalFilePath, out fileCoverage))
-                    AddNewHighlightCoverage(textView, fileCoverage);
-            }
+            AddNewHighlightCoverage((IWpfTextView)sender, e.NewOrReformattedLines);
         }
 
         //---------------------------------------------------------------------
@@ -120,14 +98,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
             if (textView != null)
             {
-                foreach (var kvp in this.viewsByPath)
-                {
-                    if (kvp.Value == textView)
-                    {
-                        this.viewsByPath.Remove(kvp.Key);
-                        break;
-                    }
-                }
+                this.views.Remove(textView);
                 textView.Closed -= OnTextViewClosed;
                 textView.LayoutChanged -= OnLayoutChanged;
             }
@@ -140,33 +111,41 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //---------------------------------------------------------------------
-        void AddNewHighlightCoverage(IWpfTextView view, FileCoverage fileCoverage)
+        void AddNewHighlightCoverage(
+            IWpfTextView textView,
+            IEnumerable<ITextViewLine> textViewLines)
         {
-            var textViewLines = view.TextViewLines.ToList();
-            var coverage = fileCoverage.LineCoverages.ToDictionary(line => line.LineNumber);
-            var adornmentLayer = view.GetAdornmentLayer(HighlightLinesAdornment);
-
-            int lineNumber = 1;
-            foreach (var textViewLine in textViewLines)
+            if (textViewLines.Any())
             {
-                LineCoverage lineCoverage;
+                var optionalFilePath = GetOptionalFilePath(textView);
+                FileCoverage fileCoverage;
 
-                if (coverage.TryGetValue(lineNumber, out lineCoverage))
+                if (optionalFilePath != null && this.coverageByFile.TryGetValue(optionalFilePath, out fileCoverage))
                 {
-                    var color = lineCoverage.HasBeenExecuted ? Brushes.PaleGreen : Brushes.LightCoral;
+                    var coverage = fileCoverage.LineCoverages.ToDictionary(line => line.LineNumber);
+                    var adornmentLayer = textView.GetAdornmentLayer(HighlightLinesAdornment);
 
-                    AddAdornment(adornmentLayer, view, textViewLine, color);
+                    foreach (var line in textViewLines)
+                    {
+                        LineCoverage lineCoverage;
+                        int lineNumber = textView.TextSnapshot.GetLineNumberFromPosition(line.Extent.Start) + 1;
+
+                        if (coverage.TryGetValue(lineNumber, out lineCoverage))
+                        {
+                            var color = lineCoverage.HasBeenExecuted ? Brushes.PaleGreen : Brushes.LightCoral;
+
+                            AddAdornment(adornmentLayer, textView, line, color);
+                        }
+                    }
                 }
-                ++lineNumber;
             }
         }
 
         //---------------------------------------------------------------------
         void RemoveHighlightForAllViews()
         {
-            foreach (var kvp in this.viewsByPath)
+            foreach (var view in this.views)
             {
-                var view = kvp.Value;
                 var adornmentLayer = view.GetAdornmentLayer(HighlightLinesAdornment);
                 adornmentLayer.RemoveAllAdornments();
             }
