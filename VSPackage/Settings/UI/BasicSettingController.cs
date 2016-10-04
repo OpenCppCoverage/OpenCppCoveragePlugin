@@ -73,7 +73,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
 
             this.Arguments = settings.Arguments;
-            this.CompileBeforeRunning = true;
 
             if (String.IsNullOrEmpty(settings.ProjectName) 
              || String.IsNullOrEmpty(settings.SolutionConfigurationName))
@@ -89,6 +88,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CurrentConfiguration = settings.SolutionConfigurationName;
                 this.IsCompileBeforeRunningEnabled = true;
                 this.CompileBeforeRunningToolTip = null;
+                this.CompileBeforeRunning = true;
             }
         }
 
