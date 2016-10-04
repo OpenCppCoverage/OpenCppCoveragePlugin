@@ -31,6 +31,7 @@ namespace OpenCppCoverage.VSPackage
         readonly CoverageTreeManager coverageTreeManager;
         readonly CoverageViewCreationListener coverageViewCreationListener;
         readonly CoverageDataDeserializer coverageDataDeserializer;
+        readonly ErrorHandler errorHandler;
 
         //---------------------------------------------------------------------
         public CoverageRunner(
@@ -39,33 +40,38 @@ namespace OpenCppCoverage.VSPackage
             CoverageTreeManager coverageTreeManager,
             ProjectBuilder projectBuilder,
             CoverageViewCreationListener coverageViewCreationListener,
-            CoverageDataDeserializer coverageDataDeserializer)
+            CoverageDataDeserializer coverageDataDeserializer,
+            ErrorHandler errorHandler)
         {
             this.outputWindowWriter = outputWindowWriter;
             this.coverageTreeManager = coverageTreeManager;
             this.projectBuilder = projectBuilder;
             this.coverageViewCreationListener = coverageViewCreationListener;
             this.coverageDataDeserializer = coverageDataDeserializer;
+            this.errorHandler = errorHandler;
         }
 
         //---------------------------------------------------------------------
         public void RunCoverageOnStartupProject(MainSettings settings)
         {
-            if (settings.BasicSettings.CompileBeforeRunning)
-            {
-                projectBuilder.Build(settings.SolutionConfigurationName, settings.ProjectName,
-                    compilationSuccess =>
-                    {
-                        if (!compilationSuccess)
-                            throw new VSPackageException("Build failed.");
+           this.errorHandler.Execute(() =>
+           {
+               if (settings.BasicSettings.CompileBeforeRunning)
+               {
+                   projectBuilder.Build(settings.SolutionConfigurationName, settings.ProjectName,
+                       compilationSuccess =>
+                       {
+                           if (!compilationSuccess)
+                               throw new VSPackageException("Build failed.");
 
-                        RunCoverage(settings);
-                    });
-            }
-            else
-            {
-                RunCoverage(settings);
-            }
+                           RunCoverage(settings);
+                       });
+               }
+               else
+               {
+                   RunCoverage(settings);
+               }
+           });
         }
 
         //---------------------------------------------------------------------
@@ -77,7 +83,8 @@ namespace OpenCppCoverage.VSPackage
             if (!File.Exists(settings.BasicSettings.ProgramToRun))
             {
                 throw new VSPackageException(
-                    string.Format(@"File ""{0}"" does not exist.", 
+                    string.Format(@"File ""{0}"" does not exist. " 
+                    + @"Please use a valid value for ""Program to run""", 
                     settings.BasicSettings.ProgramToRun));
             }
 

@@ -127,7 +127,7 @@ namespace OpenCppCoverage.VSPackage
                 var deserializer = new CoverageDataDeserializer();
                 var openCppCoverageRunner = new CoverageRunner(
                     dte, outputWriter, coverageTreeManager, projectBuilder, 
-                    coverageViewCreationListener, deserializer);
+                    coverageViewCreationListener, deserializer, errorHandler);
 
                 CheckVCRedistInstalled();
                 mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
