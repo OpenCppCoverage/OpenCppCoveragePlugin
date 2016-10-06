@@ -94,7 +94,7 @@
     <Compile Include="OpenCppCoverageCmdLineTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
-    <Compile Include="SettingsBuilderTests.cs" />
+    <Compile Include="PathHelperTests.cs" />
     <Compile Include="TreeNodeVisibilityManagerTests.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

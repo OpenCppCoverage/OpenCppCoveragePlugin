@@ -161,6 +161,7 @@
     <Compile Include="Helper\FileSystemSelectionControl.xaml.cs">
       <DependentUpon>FileSystemSelectionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Helper\PathHelper.cs" />
     <Compile Include="Helper\PropertyChangedNotifier.cs" />
     <Compile Include="CoverageTree\RootCoverageTreeNode.cs" />
     <Compile Include="CoverageTree\TreeNodeVisibilityManager.cs" />

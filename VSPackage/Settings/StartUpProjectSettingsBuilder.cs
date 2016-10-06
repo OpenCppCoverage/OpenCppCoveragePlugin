@@ -17,9 +17,9 @@
 using EnvDTE;
 using EnvDTE80;
 using Microsoft.CSharp.RuntimeBinder;
+using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace OpenCppCoverage.VSPackage.Settings
@@ -164,7 +164,7 @@ namespace OpenCppCoverage.VSPackage.Settings
                     var cppProject = new StartUpProjectSettings.CppProject()
                     {
                         ModulePath = configuration.PrimaryOutput,
-                        SourcePaths = ComputeCommonFolders(project.Files.Select(f => f.FullPath)),
+                        SourcePaths = PathHelper.ComputeCommonFolders(project.Files.Select(f => f.FullPath)),
                         Path = project.UniqueName
                     };
                     cppProjects.Add(cppProject);
@@ -172,33 +172,6 @@ namespace OpenCppCoverage.VSPackage.Settings
             }
 
             return cppProjects;
-        }
-
-        //---------------------------------------------------------------------       
-        static IEnumerable<string> ComputeCommonFolders(IEnumerable<string> projectFilePaths)
-        {
-            var commonFolders = new List<string>();
-
-            foreach (var path in projectFilePaths)
-                commonFolders.Add(Path.GetDirectoryName(path) + Path.DirectorySeparatorChar);
-            commonFolders.Sort();
-            int index = 0;
-            string previousFolder = null;
-
-            while (index < commonFolders.Count)
-            {
-                string folder = commonFolders[index];
-
-                if (previousFolder != null && folder.StartsWith(previousFolder))
-                    commonFolders.RemoveAt(index);
-                else
-                {
-                    previousFolder = folder;
-                    ++index;
-                }
-            }
-
-            return commonFolders;
         }
 
         readonly DTE2 dte;
