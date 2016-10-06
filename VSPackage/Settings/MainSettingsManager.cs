@@ -19,45 +19,28 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
-using System.Collections.Generic;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
     class MainSettingsManager
     {
         readonly Package package;
-        readonly Solution2 solution;
+        readonly DTE2 dte;
 
         //---------------------------------------------------------------------
         public MainSettingsManager(Package package, DTE2 dte)
         {
             this.package = package;
-            this.solution = (Solution2)dte.Solution;            
+            this.dte = dte;
         }
 
         //---------------------------------------------------------------------
         public void ShowSettingsWindows(CoverageRunner coverageRunner)
         {
-            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
-            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
+            var configurationManager = new ConfigurationManager();
+            var settingsBuilder = new StartUpProjectSettingsBuilder(this.dte, configurationManager);
 
-            StartUpProjectSettings settings = null;
-
-            if (activeConfiguration != null)
-            {
-                var configurationManager = new ConfigurationManager(activeConfiguration);
-                var settingsBuilder = new StartUpProjectSettingsBuilder(this.solution, configurationManager);
-
-                settings = settingsBuilder.ComputeOptionalSettings();
-            }
-
-            if (settings == null)
-            {
-                settings = new StartUpProjectSettings();
-                settings.CppProjects = new List<StartUpProjectSettings.CppProject>();
-            }
-
-            ShowSettingWindow(settings, coverageRunner);
+            ShowSettingWindow(settingsBuilder.ComputeSettings(), coverageRunner);
         }
 
         //---------------------------------------------------------------------

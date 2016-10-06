@@ -25,18 +25,12 @@ namespace OpenCppCoverage.VSPackage
     class ConfigurationManager: IConfigurationManager
     {
         //---------------------------------------------------------------------
-        public ConfigurationManager(SolutionConfiguration2 activeConfiguration)
-        {
-            if (activeConfiguration == null)
-                throw new Exception("activeConfiguration is null");
-            activeConfiguration_ = activeConfiguration;
-        }
-
-        //---------------------------------------------------------------------
-        public DynamicVCConfiguration GetConfiguration(ExtendedProject project)
+        public DynamicVCConfiguration GetConfiguration(
+            SolutionConfiguration2 activeConfiguration,
+            ExtendedProject project)
         {
             string error;
-            var configuration = ComputeConfiguration(project, out error);
+            var configuration = ComputeConfiguration(activeConfiguration, project, out error);
             
             if (configuration == null)
                 throw new VSPackageException(error);
@@ -45,25 +39,30 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public DynamicVCConfiguration FindConfiguration(ExtendedProject project)
+        public DynamicVCConfiguration FindConfiguration(
+            SolutionConfiguration2 activeConfiguration,
+            ExtendedProject project)
         {
             string error;
-            var configuration = ComputeConfiguration(project, out error);
+            var configuration = ComputeConfiguration(activeConfiguration, project, out error);
             return configuration;
         }
 
         //---------------------------------------------------------------------
-        public string GetSolutionConfigurationName()
+        public string GetSolutionConfigurationName(SolutionConfiguration2 activeConfiguration)
         {
-            return this.activeConfiguration_.Name + '|' + this.activeConfiguration_.PlatformName;
+            return activeConfiguration.Name + '|' + activeConfiguration.PlatformName;
 
         }
 
         //---------------------------------------------------------------------
-        DynamicVCConfiguration ComputeConfiguration(ExtendedProject project, out string error)
+        DynamicVCConfiguration ComputeConfiguration(
+            SolutionConfiguration2 activeConfiguration,
+            ExtendedProject project, 
+            out string error)
         {
             error = null;
-            var context = ComputeContext(project, ref error);
+            var context = ComputeContext(activeConfiguration, project, ref error);
 
             if (context == null)
                 return null;
@@ -105,9 +104,12 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        SolutionContext ComputeContext(ExtendedProject project, ref string error)
+        SolutionContext ComputeContext(
+            SolutionConfiguration2 activeConfiguration, 
+            ExtendedProject project, 
+            ref string error)
         {
-            var contexts = activeConfiguration_.SolutionContexts.Cast<SolutionContext>();
+            var contexts = activeConfiguration.SolutionContexts.Cast<SolutionContext>();
             var context = contexts.FirstOrDefault(c => c.ProjectName == project.UniqueName);
 
             if (context == null)
@@ -120,7 +122,5 @@ namespace OpenCppCoverage.VSPackage
 
             return context;
         }
-
-        readonly SolutionConfiguration2 activeConfiguration_;
     }
 }

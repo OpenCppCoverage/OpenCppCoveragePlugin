@@ -38,24 +38,5 @@ namespace VSPackage_IntegrationTests
             //    " as not build for the active solution configuration. Please check your " + 
             //    "solution Configuration Manager.", TestHelpers.CppConsoleApplication), error);                    
         }
-
-        //---------------------------------------------------------------------
-        static string GetConfigurationError(SolutionConfiguration2 solutionConfiguration)
-        {
-            var solution = VsIdeTestHostContext.Dte.Solution;
-            var configurationManager = new ConfigurationManager(solutionConfiguration);            
-            var project = solution.Projects.Cast<EnvDTE.Project>().First(p => p.UniqueName == TestHelpers.CppConsoleApplication);
-            var extendedProject = new ExtendedProject(project, new DynamicVCProject(project.Object));
-
-            try
-            {
-                configurationManager.GetConfiguration(extendedProject);
-                return null;
-            }
-            catch (VSPackageException e)
-            {
-                return e.Message;
-            }
-        }
     }
 }

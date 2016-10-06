@@ -21,7 +21,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
@@ -29,23 +28,47 @@ namespace OpenCppCoverage.VSPackage.Settings
     {
         //---------------------------------------------------------------------
         public StartUpProjectSettingsBuilder(
-            Solution2 solution,
+            DTE2 dte,
             IConfigurationManager configurationManager)
         {
-            solution_ = solution;
-            configurationManager_ = configurationManager;
+            this.dte = dte;
+            this.configurationManager = configurationManager;
         }
 
         //---------------------------------------------------------------------
-        public StartUpProjectSettings ComputeOptionalSettings()
+        public StartUpProjectSettings ComputeSettings()
         {
-            var projects = GetProjects();
-            var startupProject = GetOptionalStartupProject(projects);
+            var solution = (Solution2)dte.Solution;
+            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
+            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
+
+            if (activeConfiguration != null)
+            {
+                var settings = ComputeOptionalSettings(activeConfiguration);
+
+                if (settings != null)
+                    return settings;
+            }
+
+            return new StartUpProjectSettings
+            {
+                CppProjects = new List<StartUpProjectSettings.CppProject>()
+            };
+        }
+
+        //---------------------------------------------------------------------
+        StartUpProjectSettings ComputeOptionalSettings(
+            SolutionConfiguration2 activeConfiguration)
+        {
+            var solution = (Solution2)dte.Solution;
+            var projects = GetProjects(solution);
+            var startupProject = GetOptionalStartupProject(solution, projects);
 
             if (startupProject == null)
                 return null;
 
-            var startupConfiguration = configurationManager_.GetConfiguration(startupProject);
+            var startupConfiguration = this.configurationManager.GetConfiguration(
+                activeConfiguration, startupProject);
             var debugSettings = new DynamicVCDebugSettings(startupConfiguration.DebugSettings);
 
             if (debugSettings == null)
@@ -55,19 +78,21 @@ namespace OpenCppCoverage.VSPackage.Settings
             settings.WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory);
             settings.Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments);
             settings.Command = startupConfiguration.Evaluate(debugSettings.Command);
-            settings.SolutionConfigurationName = configurationManager_.GetSolutionConfigurationName();
+            settings.SolutionConfigurationName = 
+                this.configurationManager.GetSolutionConfigurationName(activeConfiguration);
             settings.ProjectName = startupProject.UniqueName;
-            settings.CppProjects = BuildCppProject(configurationManager_, projects);
+            settings.CppProjects = BuildCppProject(
+                activeConfiguration, this.configurationManager, projects);
             
             return settings;                                                 
         }
 
         //---------------------------------------------------------------------
-        List<ExtendedProject> GetProjects()
+        List<ExtendedProject> GetProjects(Solution2 solution)
         {
             var projects = new List<ExtendedProject>();
             
-            foreach (Project project in solution_.Projects)
+            foreach (Project project in solution.Projects)
                 projects.AddRange(CreateExtendedProjectsFor(project));
 
             return projects;
@@ -106,9 +131,11 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public ExtendedProject GetOptionalStartupProject(List<ExtendedProject> projects)
+        public ExtendedProject GetOptionalStartupProject(
+            Solution2 solution,
+            List<ExtendedProject> projects)
         {            
-            var startupProjectsNames = solution_.SolutionBuild.StartupProjects as object[];
+            var startupProjectsNames = solution.SolutionBuild.StartupProjects as object[];
 
             if (startupProjectsNames == null)
                 return null;
@@ -122,6 +149,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
         //---------------------------------------------------------------------
         static IEnumerable<StartUpProjectSettings.CppProject> BuildCppProject(
+            SolutionConfiguration2 activeConfiguration,
             IConfigurationManager configurationManager,
             List<ExtendedProject> projects)
         {
@@ -129,7 +157,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             foreach (var project in projects)
             {
-                var configuration = configurationManager.FindConfiguration(project);
+                var configuration = configurationManager.FindConfiguration(activeConfiguration, project);
 
                 if (configuration != null)
                 {
@@ -173,7 +201,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             return commonFolders;
         }
 
-        readonly Solution2 solution_;
-        readonly IConfigurationManager configurationManager_;
+        readonly DTE2 dte;
+        readonly IConfigurationManager configurationManager;
     }
 }
