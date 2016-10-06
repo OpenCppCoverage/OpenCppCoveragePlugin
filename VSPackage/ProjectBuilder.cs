@@ -17,6 +17,7 @@
 using EnvDTE;
 using EnvDTE80;
 using System;
+using System.Runtime.InteropServices;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -61,7 +62,17 @@ namespace OpenCppCoverage.VSPackage
                 + " " + solutionConfigurationName);
 
             var solutionBuild = this.dte.Solution.SolutionBuild;
-            solutionBuild.BuildProject(solutionConfigurationName, projectName, false);
+
+            try
+            {
+                solutionBuild.BuildProject(solutionConfigurationName, projectName, false);
+            }
+            catch (COMException e)
+            {
+                throw new VSPackageException(
+                    string.Format("Error when building {0} with configuration {1}: {2}",
+                        projectName, solutionConfigurationName, e.Message));
+            }
         }
 
         //---------------------------------------------------------------------
