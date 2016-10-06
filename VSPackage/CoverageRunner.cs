@@ -56,9 +56,10 @@ namespace OpenCppCoverage.VSPackage
         {
            this.errorHandler.Execute(() =>
            {
-               if (settings.BasicSettings.CompileBeforeRunning)
+               var basicSettings = settings.BasicSettings;
+               if (basicSettings.CompileBeforeRunning)
                {
-                   projectBuilder.Build(settings.SolutionConfigurationName, settings.ProjectName,
+                   projectBuilder.Build(basicSettings.SolutionConfigurationName, basicSettings.ProjectName,
                        compilationSuccess =>
                        {
                            if (!compilationSuccess)

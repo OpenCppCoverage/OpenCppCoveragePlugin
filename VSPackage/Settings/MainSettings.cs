@@ -25,8 +25,6 @@ namespace OpenCppCoverage.VSPackage.Settings
         public FilterSettings FilterSettings { get; set; }
         public ImportExportSettings ImportExportSettings { get; set; }
         public MiscellaneousSettings MiscellaneousSettings { get; set; }
-        public string SolutionConfigurationName { get; set; }
-        public string ProjectName { get; set; }
     }
 
     //---------------------------------------------------------------------------
@@ -38,6 +36,8 @@ namespace OpenCppCoverage.VSPackage.Settings
         public string Arguments { get; set; }
         public string ProgramToRun { get; set; }
         public bool CompileBeforeRunning { get; set; }
+        public string ProjectName { get; set; }
+        public string SolutionConfigurationName { get; set; }
     }
 
     //---------------------------------------------------------------------------

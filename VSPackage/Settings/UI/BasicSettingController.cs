@@ -81,6 +81,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CurrentConfiguration = None;
                 this.IsCompileBeforeRunningEnabled = false;
                 this.CompileBeforeRunningToolTip = "Nothing to build (No startup project set).";
+                this.CompileBeforeRunning = false;
             }
             else
             {
@@ -106,7 +107,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 Arguments = this.Arguments,
                 ProgramToRun = this.ProgramToRun,
                 CompileBeforeRunning = this.CompileBeforeRunning,
-                WorkingDirectory = this.OptionalWorkingDirectory
+                WorkingDirectory = this.OptionalWorkingDirectory,
+                ProjectName = this.CurrentProject,
+                SolutionConfigurationName = this.CurrentConfiguration
             };
         }
 

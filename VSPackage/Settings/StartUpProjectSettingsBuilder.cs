@@ -24,7 +24,7 @@ using System.Linq;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
-    class StartUpProjectSettingsBuilder
+    class StartUpProjectSettingsBuilder: IStartUpProjectSettingsBuilder
     {
         //---------------------------------------------------------------------
         public StartUpProjectSettingsBuilder(

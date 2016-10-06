@@ -15,8 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -29,7 +31,6 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void GetMainSettings()
         {
-            var controller = new MainSettingController(null);
             var project = new StartUpProjectSettings.CppProject
             {
                 ModulePath = "ModulePath1",
@@ -39,7 +40,9 @@ namespace VSPackage_UnitTests
             var startUpProjectSettings = new StartUpProjectSettings {
                 CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
 
-            controller.UpdateStartUpProject(startUpProjectSettings);
+            var controller = CreateController(startUpProjectSettings, null);
+            controller.UpdateStartUpProject();
+
             var selectableProject = controller.BasicSettingController.SelectableProjects.First();
             selectableProject.IsSelected = false;
 
@@ -54,19 +57,20 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void ResetToDefaultCommand()
         {
-            var controller = new MainSettingController(null);
             var startUpProjectSettings = new StartUpProjectSettings
             {
                 WorkingDir = "WorkingDir",
                 CppProjects = new List<StartUpProjectSettings.CppProject>()
             };
-            
-            controller.UpdateStartUpProject(startUpProjectSettings);
+
+            var controller = CreateController(startUpProjectSettings, null);
+            controller.UpdateStartUpProject();
+
             controller.BasicSettingController.OptionalWorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();
 
             Assert.AreEqual(
-                controller.BasicSettingController.OptionalWorkingDirectory, 
+                controller.BasicSettingController.OptionalWorkingDirectory,
                 settings.BasicSettings.WorkingDirectory);
 
             controller.ResetToDefaultCommand.Execute(null);
@@ -81,18 +85,33 @@ namespace VSPackage_UnitTests
         public void CommandLineText()
         {
             string commandLine = "commandLine";
-            var controller = new MainSettingController( settings => { return commandLine; });
-            controller.UpdateStartUpProject(new StartUpProjectSettings() {
-                CppProjects = new List<StartUpProjectSettings.CppProject>() });
-            
+            var startUpProjectSettings = new StartUpProjectSettings()
+            {
+                CppProjects = new List<StartUpProjectSettings.CppProject>()
+            };
+
+            var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
             Assert.IsNull(controller.CommandLineText);
-            
+
             controller.SelectedTab = new System.Windows.Controls.TabItem();
             Assert.IsNull(controller.CommandLineText);
 
             controller.SelectedTab = new System.Windows.Controls.TabItem()
                                  { Header = MainSettingController.CommandLineHeader };
             Assert.AreEqual(commandLine, controller.CommandLineText);
+        }
+
+        //---------------------------------------------------------------------
+        MainSettingController CreateController(
+            StartUpProjectSettings settings,
+            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
+        {
+            var controller = new MainSettingController(buildOpenCppCoverageCmdLine);
+            var builder = new Mock<IStartUpProjectSettingsBuilder>();
+
+            builder.Setup(b => b.ComputeSettings()).Returns(settings);
+            controller.StartUpProjectSettingsBuilder = builder.Object;
+            return controller;
         }
     }
 }

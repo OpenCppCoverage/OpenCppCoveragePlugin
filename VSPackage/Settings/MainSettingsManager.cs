@@ -40,21 +40,14 @@ namespace OpenCppCoverage.VSPackage.Settings
             var configurationManager = new ConfigurationManager();
             var settingsBuilder = new StartUpProjectSettingsBuilder(this.dte, configurationManager);
 
-            ShowSettingWindow(settingsBuilder.ComputeSettings(), coverageRunner);
-        }
-
-        //---------------------------------------------------------------------
-        void ShowSettingWindow(
-            StartUpProjectSettings settings,
-            CoverageRunner coverageRunner)
-        {
             var window = this.package.FindToolWindow(
                     typeof(SettingToolWindow), 0, true) as SettingToolWindow;
             if (window == null || window.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
+            window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
             window.Controller.CoverageRunner = coverageRunner;
-            window.Controller.UpdateStartUpProject(settings);
+            window.Controller.UpdateStartUpProject();
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());

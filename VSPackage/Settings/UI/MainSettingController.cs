@@ -26,7 +26,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class MainSettingController: PropertyChangedNotifier
     {
         readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
-        StartUpProjectSettings settings;
 
         //---------------------------------------------------------------------
         public MainSettingController(
@@ -37,8 +36,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.CancelCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
-            this.ResetToDefaultCommand = new RelayCommand(
-                () => UpdateStartUpProject(this.settings));
+            this.ResetToDefaultCommand = new RelayCommand(UpdateStartUpProject);
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
@@ -46,19 +44,19 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         public CoverageRunner CoverageRunner { get; set; }
+        public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
 
         //---------------------------------------------------------------------
-        public void UpdateStartUpProject(StartUpProjectSettings settings)
+        public void UpdateStartUpProject()
         {
-            if (settings != null)
-            {
-                this.BasicSettingController.UpdateStartUpProject(settings);
-                this.FilterSettingController.UpdateStartUpProject();
-                this.ImportExportSettingController.UpdateStartUpProject();
-                this.MiscellaneousSettingController.UpdateStartUpProject();
+            if (this.StartUpProjectSettingsBuilder == null)
+                throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
 
-                this.settings = settings;
-            }
+            var settings = this.StartUpProjectSettingsBuilder.ComputeSettings();
+            this.BasicSettingController.UpdateStartUpProject(settings);
+            this.FilterSettingController.UpdateStartUpProject();
+            this.ImportExportSettingController.UpdateStartUpProject();
+            this.MiscellaneousSettingController.UpdateStartUpProject();
         }
 
         //---------------------------------------------------------------------
@@ -70,8 +68,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 FilterSettings = this.FilterSettingController.GetSettings(),
                 ImportExportSettings = this.ImportExportSettingController.GetSettings(),
                 MiscellaneousSettings = this.MiscellaneousSettingController.GetSettings(),
-                SolutionConfigurationName = this.settings.SolutionConfigurationName,
-                ProjectName = this.settings.ProjectName
             };
         }
 
