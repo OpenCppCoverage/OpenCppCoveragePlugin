@@ -19,6 +19,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -33,25 +34,32 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public void RunCodeCoverage(MainSettings settings)
-        {                                
+        public Task RunCodeCoverageAsync(MainSettings settings)
+        {
             var basicSettings = settings.BasicSettings;
-            using (var process = new Process())
+            var fileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
+            var arguments = OpenCppCoverageCmdLine.Build(settings);
+
+            this.outputWindowWriter.WriteLine("Run:");
+            this.outputWindowWriter.WriteLine(string.Format(@"""{0}"" {1}",
+                fileName, arguments));
+
+            // Run in a new thread to not block UI thread.
+            return Task.Run(() =>
             {
-                process.StartInfo.FileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
-                process.StartInfo.Arguments = OpenCppCoverageCmdLine.Build(settings);
-                process.StartInfo.UseShellExecute = false;
-                process.StartInfo.CreateNoWindow = false;
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = fileName;
+                    process.StartInfo.Arguments = arguments;
+                    process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = false;
 
-                if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
-                    process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
-
-                this.outputWindowWriter.WriteLine("Run:");
-                this.outputWindowWriter.WriteLine(string.Format(@"""{0}"" {1}",
-                    process.StartInfo.FileName, process.StartInfo.Arguments));
-                process.Start();
-                process.WaitForExit();                
-            }
+                    if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
+                        process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
+                    process.Start();
+                    process.WaitForExit();
+                }
+            });
         }
 
         //---------------------------------------------------------------------

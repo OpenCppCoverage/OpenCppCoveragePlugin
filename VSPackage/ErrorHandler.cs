@@ -16,6 +16,7 @@
 
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.Threading.Tasks;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -31,11 +32,11 @@ namespace OpenCppCoverage.VSPackage
         public OutputWindowWriter OutputWriter { get; set; }
 
         //---------------------------------------------------------------------
-        public void Execute(Action action)
+        public async Task ExecuteAsync(Func<Task> action)
         {
             try
             {
-                action();
+                await action();
             }
             catch (VSPackageException exception)
             {
@@ -49,7 +50,17 @@ namespace OpenCppCoverage.VSPackage
                     ShowMessage("Unknow error. Please see the output console for more information.");
                 else
                     ShowMessage(exception.ToString());
-            }                        
+            }
+        }
+
+        //---------------------------------------------------------------------
+        public void Execute(Action action)
+        {
+            ExecuteAsync(() =>
+            {
+                action();
+                return Task.FromResult(0);
+            }).Wait();
         }
 
         //---------------------------------------------------------------------

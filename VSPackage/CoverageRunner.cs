@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using EnvDTE80;
+using Microsoft.VisualStudio.Shell;
 using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
@@ -84,17 +85,51 @@ namespace OpenCppCoverage.VSPackage
             if (!File.Exists(settings.BasicSettings.ProgramToRun))
             {
                 throw new VSPackageException(
-                    string.Format(@"File ""{0}"" does not exist. " 
-                    + @"Please use a valid value for ""Program to run""", 
+                    string.Format(@"File ""{0}"" does not exist. "
+                    + @"Please use a valid value for ""Program to run""",
                     settings.BasicSettings.ProgramToRun));
             }
 
             var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
             var openCppCoverage = new OpenCppCoverage(outputWindowWriter);
+            var onCoverageFinished = openCppCoverage.RunCodeCoverageAsync(settings);
 
-            openCppCoverage.RunCodeCoverage(settings);
+            onCoverageFinished.ContinueWith(task => 
+                OnCoverageFinishedAsync(task, coveragePath, onCoverageFinished).Wait());
+        }
 
-            if (!File.Exists(coveragePath))
+        //---------------------------------------------------------------------
+        System.Threading.Tasks.Task OnCoverageFinishedAsync(
+            System.Threading.Tasks.Task onCoverageFinished,
+            string coveragePath,
+            System.Threading.Tasks.Task avoidGCCollect)
+        {
+            return errorHandler.ExecuteAsync(async () =>
+            {
+                try
+                {
+                    var exception = onCoverageFinished.Exception?.InnerExceptions.FirstOrDefault();
+                    if (exception != null)
+                        throw exception;
+
+                    CoverageRate coverageRate = null;
+                    if (File.Exists(coveragePath))
+                        coverageRate = BuildCoverageRate(coveragePath);
+
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    OnCoverageRateBuilt(coverageRate, coveragePath);
+                }
+                finally
+                {
+                    File.Delete(coveragePath);
+                }
+            });
+        }
+
+        //---------------------------------------------------------------------
+        void OnCoverageRateBuilt(CoverageRate coverageRate, string coveragePath)
+        {
+            if (coverageRate == null)
             {
                 outputWindowWriter.WriteLine("The execution of the previous line failed." +
                     " Please execute the previous line in a promt" + 
@@ -103,16 +138,8 @@ namespace OpenCppCoverage.VSPackage
             }
             outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
 
-            try
-            {
-                var coverageRate = BuildCoverageRate(coveragePath);
-                coverageTreeManager.ShowTreeCoverage(coverageRate);
-                this.coverageViewCreationListener.CoverageRate = coverageRate;
-            }
-            finally
-            {
-                File.Delete(coveragePath);
-            }
+            coverageTreeManager.ShowTreeCoverage(coverageRate);
+            this.coverageViewCreationListener.CoverageRate = coverageRate;
         }
 
         //---------------------------------------------------------------------        
