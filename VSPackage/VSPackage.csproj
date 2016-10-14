@@ -211,7 +211,7 @@
     <Compile Include="Settings\UI\SettingToolWindow.cs" />
     <Compile Include="Settings\StartUpProjectSettings.cs" />
     <Compile Include="Settings\StartUpProjectSettingsBuilder.cs" />
-    <Compile Include="CoverageTree\CoverageViewCreationListener.cs" />
+    <Compile Include="CoverageTree\CoverageViewManager.cs" />
     <Compile Include="VSPackageException.cs" />
     <Compile Include="OpenCppCoveragePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

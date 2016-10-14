@@ -32,7 +32,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     [Export(typeof(IWpfTextViewCreationListener))]
     [ContentType("C/C++")]
     [TextViewRole(PredefinedTextViewRoles.Document)]
-    sealed class CoverageViewCreationListener : IWpfTextViewCreationListener
+    sealed class CoverageViewManager : IWpfTextViewCreationListener
     {
         const string HighlightLinesAdornment = "HighlightLines";
         readonly List<IWpfTextView> views = new List<IWpfTextView>();

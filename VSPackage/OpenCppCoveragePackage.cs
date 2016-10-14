@@ -123,11 +123,11 @@ namespace OpenCppCoverage.VSPackage
                 var mainSettingsManager = new MainSettingsManager(this, dte);
                 var coverageTreeManager = new CoverageTreeManager(this, dte);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
-                var coverageViewCreationListener = GetCoverageViewCreationListener();
+                var coverageViewManager = GetCoverageViewManager();
                 var deserializer = new CoverageDataDeserializer();
                 var openCppCoverageRunner = new CoverageRunner(
                     dte, outputWriter, coverageTreeManager, projectBuilder, 
-                    coverageViewCreationListener, deserializer, errorHandler);
+                    coverageViewManager, deserializer, errorHandler);
 
                 CheckVCRedistInstalled();
                 mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
@@ -167,14 +167,14 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        CoverageViewCreationListener GetCoverageViewCreationListener()
+        CoverageViewManager GetCoverageViewManager()
         {
             var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
             var exporterProvider = componentModel.DefaultExportProvider;
             var listeners = exporterProvider.GetExportedValues<IWpfTextViewCreationListener>();
-            var listener = listeners.First(l => l is CoverageViewCreationListener);
+            var listener = listeners.First(l => l is CoverageViewManager);
 
-            return (CoverageViewCreationListener)listener;
+            return (CoverageViewManager)listener;
         }
     }
 }

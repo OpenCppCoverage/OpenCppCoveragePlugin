@@ -30,7 +30,7 @@ namespace OpenCppCoverage.VSPackage
         readonly ProjectBuilder projectBuilder;
         readonly OutputWindowWriter outputWindowWriter;
         readonly CoverageTreeManager coverageTreeManager;
-        readonly CoverageViewCreationListener coverageViewCreationListener;
+        readonly CoverageViewManager coverageViewManager;
         readonly CoverageDataDeserializer coverageDataDeserializer;
         readonly ErrorHandler errorHandler;
 
@@ -40,14 +40,14 @@ namespace OpenCppCoverage.VSPackage
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager,
             ProjectBuilder projectBuilder,
-            CoverageViewCreationListener coverageViewCreationListener,
+            CoverageViewManager coverageViewManager,
             CoverageDataDeserializer coverageDataDeserializer,
             ErrorHandler errorHandler)
         {
             this.outputWindowWriter = outputWindowWriter;
             this.coverageTreeManager = coverageTreeManager;
             this.projectBuilder = projectBuilder;
-            this.coverageViewCreationListener = coverageViewCreationListener;
+            this.coverageViewManager = coverageViewManager;
             this.coverageDataDeserializer = coverageDataDeserializer;
             this.errorHandler = errorHandler;
         }
@@ -139,7 +139,7 @@ namespace OpenCppCoverage.VSPackage
             outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
 
             coverageTreeManager.ShowTreeCoverage(coverageRate);
-            this.coverageViewCreationListener.CoverageRate = coverageRate;
+            this.coverageViewManager.CoverageRate = coverageRate;
         }
 
         //---------------------------------------------------------------------        
