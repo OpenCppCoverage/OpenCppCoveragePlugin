@@ -54,7 +54,7 @@ namespace OpenCppCoverage.VSPackage
     [ProvideToolWindow(typeof(CoverageTreeToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
         MultiInstances = false,
-        Transient = false,
+        Transient = true,
         Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
     [ProvideToolWindow(typeof(SettingToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.Float,
