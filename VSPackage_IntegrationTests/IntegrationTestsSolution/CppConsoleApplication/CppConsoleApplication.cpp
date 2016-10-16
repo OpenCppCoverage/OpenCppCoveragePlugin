@@ -5,8 +5,11 @@
 #include "../CppConsoleApplicationDll/CppConsoleApplicationDll.h"
 
 int _tmain(int argc, _TCHAR* argv[])
-{
-	Hello();
-	return 0;
-}
+{										// COVERED
+	if (false)							// COVERED
+		Hello();						// UNCOVERED
+	else								// UNCOVERED
+		Hello();						// COVERED
+	return 0;							// COVERED
+}										// COVERED
 

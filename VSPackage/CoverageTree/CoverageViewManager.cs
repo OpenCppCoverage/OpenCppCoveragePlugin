@@ -34,7 +34,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     [TextViewRole(PredefinedTextViewRoles.Document)]
     sealed class CoverageViewManager : IWpfTextViewCreationListener
     {
-        const string HighlightLinesAdornment = "HighlightLines";
+        //---------------------------------------------------------------------
+        public const string HighlightLinesAdornment = "HighlightLines";
+        public static object CoverageTag = new object();
+        public static Brush CoveredBrush = Brushes.PaleGreen;
+        public static Brush UncoveredBrush = Brushes.LightCoral;
+        
+        //---------------------------------------------------------------------
         readonly List<IWpfTextView> views = new List<IWpfTextView>();
         Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
 
@@ -132,7 +138,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
                         if (coverage.TryGetValue(lineNumber, out lineCoverage))
                         {
-                            var color = lineCoverage.HasBeenExecuted ? Brushes.PaleGreen : Brushes.LightCoral;
+                            var color = lineCoverage.HasBeenExecuted ? CoveredBrush : UncoveredBrush;
 
                             AddAdornment(adornmentLayer, textView, line, color);
                         }
@@ -156,7 +162,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             IAdornmentLayer adornmentLayer,
             IWpfTextView view, 
             ITextViewLine line,
-            SolidColorBrush colorBrush)
+            Brush colorBrush)
         {
             var rect = new Rectangle()
             {
@@ -167,7 +173,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
             Canvas.SetTop(rect, line.Top);
             Canvas.SetLeft(rect, 0);
-            adornmentLayer.AddAdornment(line.Extent, null, rect);
+            adornmentLayer.AddAdornment(line.Extent, CoverageTag, rect);
         }      
     }
 }

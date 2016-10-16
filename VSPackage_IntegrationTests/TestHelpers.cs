@@ -180,14 +180,23 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        static void RunInUIhread(Action action)
+        {
+            UIThreadInvoker.Invoke(action);
+        }
+
+        //---------------------------------------------------------------------
         static void OpenDefaultSolution()
         {
-            var solutionService = GetService<IVsSolution>();
-            var solutionPath = Path.Combine(GetIntegrationTestsSolutionFolder(), "IntegrationTestsSolution.sln");
-            
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
-                solutionService.OpenSolutionFile((uint)__VSSLNOPENOPTIONS.SLNOPENOPT_Silent, solutionPath));
-            WaitForSolutionLoading(TimeSpan.FromSeconds(10));
+           RunInUIhread(() =>
+           {
+               var solutionService = GetService<IVsSolution>();
+               var solutionPath = Path.Combine(GetIntegrationTestsSolutionFolder(), "IntegrationTestsSolution.sln");
+
+               Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
+                   solutionService.OpenSolutionFile((uint)__VSSLNOPENOPTIONS.SLNOPENOPT_Silent, solutionPath));
+           });
+           WaitForSolutionLoading(TimeSpan.FromSeconds(10));
         }
         
         //---------------------------------------------------------------------
