@@ -31,6 +31,11 @@
                 Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}" 
                 Margin="0 8 5 8"
                 VerticalContentAlignment="Center"/>
+            <CheckBox 
+                Content="Display coverage"
+                IsChecked="{Binding DisplayCoverage}"
+                VerticalAlignment="Center"
+                Margin="20 0 5 0"/>
         </StackPanel>
         <sd:SharpTreeView 
                 SelectedItem="{Binding Current, Mode=OneWayToSource}"

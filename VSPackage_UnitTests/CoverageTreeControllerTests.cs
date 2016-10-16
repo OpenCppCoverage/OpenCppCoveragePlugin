@@ -25,12 +25,15 @@ namespace VSPackage_UnitTests
     [TestClass()]
     public class CoverageTreeControllerTests
     {
-        readonly CoverageTreeController controller;
+        CoverageTreeController controller;
+        Mock<ICoverageViewManager> coverageViewManager;
 
         //---------------------------------------------------------------------
-        public CoverageTreeControllerTests()
+        [TestInitialize]
+        public void Initialize()
         {
             this.controller = new CoverageTreeController();
+            this.coverageViewManager = new Mock<ICoverageViewManager>();
         }
 
         //---------------------------------------------------------------------
@@ -43,7 +46,8 @@ namespace VSPackage_UnitTests
             controller.PropertyChanged += (s, e) => propertyChangedCalled = true;
 
             controller.Filter = "Filter";
-            controller.CoverageRate = new CoverageRate(name, 0);
+            controller.UpdateCoverageRate(
+                new CoverageRate(name, 0), null, this.coverageViewManager.Object);
             Assert.IsTrue(propertyChangedCalled);
             Assert.AreEqual(name, controller.Root.Text);
             Assert.AreEqual("", controller.Filter);
@@ -53,7 +57,8 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void Filter()
         {
-            this.controller.CoverageRate = new CoverageRate("", 0);
+            this.controller.UpdateCoverageRate(
+                new CoverageRate("", 0), null, this.coverageViewManager.Object);
             this.controller.Filter = "filter";
 
             bool rootChanged = false;
@@ -72,11 +77,25 @@ namespace VSPackage_UnitTests
         public void Warning()
         {
             Assert.IsNull(this.controller.Warning);
-            this.controller.CoverageRate = new CoverageRate("", 0);
+            this.controller.UpdateCoverageRate(
+                new CoverageRate("", 0), null, this.coverageViewManager.Object);
             Assert.IsNull(this.controller.Warning);
 
-            this.controller.CoverageRate = new CoverageRate("", 42);
+            this.controller.UpdateCoverageRate(
+                new CoverageRate("", 42), null, this.coverageViewManager.Object);
             Assert.IsNotNull(this.controller.Warning);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void DisplayCoverage()
+        {
+            this.controller.UpdateCoverageRate(
+                new CoverageRate("", 0), null, this.coverageViewManager.Object);
+            this.coverageViewManager.VerifySet(c => c.ShowCoverage = true);
+            
+            this.controller.DisplayCoverage = false;
+            this.coverageViewManager.VerifySet(c => c.ShowCoverage = false);
         }
     }
 }   

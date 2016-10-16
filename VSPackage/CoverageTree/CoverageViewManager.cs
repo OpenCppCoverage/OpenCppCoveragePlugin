@@ -32,7 +32,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     [Export(typeof(IWpfTextViewCreationListener))]
     [ContentType("C/C++")]
     [TextViewRole(PredefinedTextViewRoles.Document)]
-    sealed class CoverageViewManager : IWpfTextViewCreationListener
+    sealed class CoverageViewManager : IWpfTextViewCreationListener, ICoverageViewManager
     {
         //---------------------------------------------------------------------
         public const string HighlightLinesAdornment = "HighlightLines";
@@ -43,6 +43,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------
         readonly List<IWpfTextView> views = new List<IWpfTextView>();
         Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
+        bool showCoverage;
 
         //---------------------------------------------------------------------
         public void TextViewCreated(IWpfTextView textView)
@@ -74,9 +75,31 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                     .ToDictionary(fileCoverage => NormalizePath(fileCoverage.Path));
 
                 this.RemoveHighlightForAllViews();
-                foreach (var view in this.views)
-                    AddNewHighlightCoverage(view, view.TextViewLines);
+                AddHighlightCoverageForExistingViews();
             }
+        }
+
+        //---------------------------------------------------------------------
+        public bool ShowCoverage
+        {
+            set
+            {
+                if (this.showCoverage != value)
+                {
+                    this.showCoverage = value;
+                    this.RemoveHighlightForAllViews();
+                    if (this.showCoverage)
+                        AddHighlightCoverageForExistingViews();
+                }
+            }
+        }
+
+        //---------------------------------------------------------------------
+        void AddHighlightCoverageForExistingViews()
+        {
+            foreach (var view in this.views)
+                AddNewHighlightCoverage(view, view.TextViewLines);
+
         }
 
         //---------------------------------------------------------------------
@@ -94,7 +117,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------
         void OnLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
         {
-            AddNewHighlightCoverage((IWpfTextView)sender, e.NewOrReformattedLines);
+            if (this.showCoverage)
+                AddNewHighlightCoverage((IWpfTextView)sender, e.NewOrReformattedLines);
         }
 
         //---------------------------------------------------------------------

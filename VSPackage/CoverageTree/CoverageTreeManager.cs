@@ -26,12 +26,17 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     {
         readonly Package package;
         readonly DTE2 dte;
+        readonly ICoverageViewManager coverageViewManager;
 
         //---------------------------------------------------------------------        
-        public CoverageTreeManager(Package package, DTE2 dte)
+        public CoverageTreeManager(
+            Package package, 
+            DTE2 dte,
+            ICoverageViewManager coverageViewManager)
         {
             this.package = package;
             this.dte = dte;
+            this.coverageViewManager = coverageViewManager;
         }
 
         //---------------------------------------------------------------------        
@@ -42,8 +47,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             if (window == null || window.Frame == null)
                 throw new NotSupportedException("Cannot create tool window");
 
-            window.Controller.CoverageRate = coverageRate;
-            window.Controller.DTE = this.dte;
+            window.Controller.UpdateCoverageRate(
+                coverageRate, dte, this.coverageViewManager);
 
             var frame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());

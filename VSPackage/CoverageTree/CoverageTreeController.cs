@@ -26,9 +26,10 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     class CoverageTreeController: PropertyChangedNotifier
     {
         RootCoverageTreeNode rootNode;
-
         string filter;
         string warning;
+        DTE2 dte;
+        ICoverageViewManager coverageViewManager;
 
         readonly TreeNodeVisibilityManager visibilityManager;
 
@@ -39,23 +40,23 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
-        public DTE2 DTE { get; set; }
-         
-        //-----------------------------------------------------------------------
-        public CoverageRate CoverageRate
+        public void UpdateCoverageRate(
+            CoverageRate coverageRate,
+            DTE2 dte,
+            ICoverageViewManager coverageViewManager)
         {
-            set
-            {
-                this.Root = new RootCoverageTreeNode(value);
-                this.Filter = "";
+            this.dte = dte;
+            this.coverageViewManager = coverageViewManager;
+            this.Root = new RootCoverageTreeNode(coverageRate);
+            this.Filter = "";
+            this.DisplayCoverage = true;
 
-                if (value.ExitCode == 0)
-                    this.Warning = null;
-                else
-                {
-                    this.Warning = "Warning: Your program has exited with error code: "
-                                        + value.ExitCode;
-                }
+            if (coverageRate.ExitCode == 0)
+                this.Warning = null;
+            else
+            {
+                this.Warning = "Warning: Your program has exited with error code: "
+                                    + coverageRate.ExitCode;
             }
         }
 
@@ -69,9 +70,9 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
                 if (fileCoverage != null)
                 {
-                    if (this.DTE == null)
-                        throw new InvalidOperationException("DTE should be set before calling this method.");
-                    this.DTE.ItemOperations.OpenFile(fileCoverage.Path, Constants.vsViewKindCode);
+                    if (this.dte == null)
+                        throw new InvalidOperationException("UpdateCoverageRate should be call first.");
+                    this.dte.ItemOperations.OpenFile(fileCoverage.Path, Constants.vsViewKindCode);
                 }
             }
         }
@@ -105,6 +106,18 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         {
             get { return this.warning; }
             set { SetField(ref this.warning, value); }
+        }
+
+        //-----------------------------------------------------------------------
+        bool displayCoverage;
+        public bool DisplayCoverage
+        {
+            get { return this.displayCoverage; }
+            set
+            {
+                if (this.SetField(ref this.displayCoverage, value))
+                    this.coverageViewManager.ShowCoverage = value;
+            }
         }
     }
 }

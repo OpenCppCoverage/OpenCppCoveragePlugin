@@ -155,6 +155,7 @@
     <Compile Include="CoverageTree\CoverageTreeManager.cs" />
     <Compile Include="CoverageTree\CoverageTreeToolWindow.cs" />
     <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
+    <Compile Include="CoverageTree\ICoverageViewManager.cs" />
     <Compile Include="CoverageTree\NullCollapsedConverter.cs" />
     <Compile Include="Helper\DataGridFileSystemSelectionColumn.cs" />
     <Compile Include="Helper\FileSystemSelectionControl.xaml.cs">
