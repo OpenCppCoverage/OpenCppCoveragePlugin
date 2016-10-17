@@ -19,6 +19,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.Collections.Generic;
@@ -88,18 +89,18 @@ namespace VSPackage_IntegrationTests
 
             dte.Commands.Raise(guidString, cmdId, ref Customin, ref Customout);
 
-            return GetMainSettingController();
+            return GetController<MainSettingController>();
         }
 
         //---------------------------------------------------------------------
-        static MainSettingController GetMainSettingController()
+        static T GetController<T>() where T: class
         {
             DTE dte = VsIdeTestHostContext.Dte;
             return TestHelpers.Wait(TimeSpan.FromSeconds(10), () =>
             {
                 foreach (Window window in dte.Windows)
                 {
-                    var controller = window.Object as MainSettingController;
+                    var controller = window.Object as T;
 
                     if (controller != null)
                         return controller;
@@ -160,10 +161,11 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static void CloseOpenCppCoverageConsole(TimeSpan waitDuration)
+        public static CoverageTreeController CloseOpenCppCoverageConsole(TimeSpan waitDuration)
         {
             System.Threading.Thread.Sleep(waitDuration);
             System.Windows.Forms.SendKeys.SendWait("{ENTER}");
+            return GetController<CoverageTreeController>();
         }
 
         //---------------------------------------------------------------------

@@ -15,13 +15,16 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using System;
 using System.Runtime.InteropServices;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
     [Guid("2731AD3B-8E0A-46D2-B8F6-CA40C387732F")]
-    class CoverageTreeToolWindow : ToolWindowPane
+    class CoverageTreeToolWindow : ToolWindowPane, IVsExtensibleObject
     {
+        //---------------------------------------------------------------------
         public CoverageTreeToolWindow() : base(null)
         {
             this.Caption = "Coverage";
@@ -38,6 +41,14 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             this.Content = coverageTreeControl;
         }
 
+        //---------------------------------------------------------------------
         public CoverageTreeController Controller { get; private set; }
+
+        //---------------------------------------------------------------------
+        public int GetAutomationObject(string pszPropName, out object ppDisp)
+        {
+            ppDisp = this.Controller;
+            return Microsoft.VisualStudio.VSConstants.S_OK;
+        }
     }
 }

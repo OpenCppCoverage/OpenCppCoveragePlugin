@@ -76,6 +76,38 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void OpenFileAndDisableCoverage()
+        {
+            var wpfTextView = OpenMainFile();
+            var coverageTreeController = RunCoverageAndWait();
+
+            CheckCoverage(wpfTextView);
+
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+            Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
+
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            CheckCoverage(wpfTextView);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void DisableCoverageAndOpenFile()
+        {
+            var coverageTreeController = RunCoverageAndWait();
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+
+            var wpfTextView = OpenMainFile();
+            Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
+
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            CheckCoverage(wpfTextView);
+        }
+
+        //---------------------------------------------------------------------
         void CheckCoverage(IWpfTextView wpfTextView)
         {            
             var lines = GetLinesWithCoverageTag(wpfTextView);
@@ -165,14 +197,14 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        void RunCoverageAndWait()
+        CoverageTreeController RunCoverageAndWait()
         {
             RunInUIhread(() =>
             {
                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
                controller.RunCoverageCommand.Execute(null);
             });
-            TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
+            return TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
         }
 
         //---------------------------------------------------------------------
