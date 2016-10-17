@@ -16,20 +16,17 @@
 
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
-using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
-using System.Linq;
-using System.Diagnostics;
-using System.IO;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace VSPackage_IntegrationTests
 {
     [TestClass()]
-    public class VSPackageIntegrationTests
+    public class MainSettingInitialValuesTests
     {
         //---------------------------------------------------------------------
         void RunInUIhread(Action action)

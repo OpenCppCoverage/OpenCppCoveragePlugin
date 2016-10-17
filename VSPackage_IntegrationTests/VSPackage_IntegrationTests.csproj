@@ -96,7 +96,7 @@
     </Content>
     <Compile Include="SolutionConfigurationHelpers.cs" />
     <Compile Include="TestHelpers.cs" />
-    <Compile Include="VSPackageIntegrationTests.cs" />
+    <Compile Include="MainSettingInitialValuesTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="IntegrationTestsSolution\CppConsoleApplication2\CppConsoleApplication2.vcxproj">
