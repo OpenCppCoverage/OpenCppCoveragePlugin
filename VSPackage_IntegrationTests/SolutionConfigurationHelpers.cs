@@ -38,13 +38,43 @@ namespace VSPackage_IntegrationTests
     }
 
     //---------------------------------------------------------------------
+    class DebugSettingsRestorer : IDisposable
+    {
+        //---------------------------------------------------------------------
+        public DebugSettingsRestorer(VCDebugSettings settings)
+        {
+            this.Value = settings;
+            this.command = settings.Command;
+            this.commandArguments = settings.CommandArguments;
+            this.workingDirectory = settings.WorkingDirectory;
+        }
+
+        //---------------------------------------------------------------------
+        public VCDebugSettings Value { get; }
+
+        //---------------------------------------------------------------------
+        public void Dispose()
+        {
+            this.Value.Command = this.command;
+            this.Value.CommandArguments = this.commandArguments;
+            this.Value.WorkingDirectory = this.workingDirectory;
+        }
+
+        readonly string command;
+        readonly string commandArguments;
+        readonly string workingDirectory;
+    }
+
+    //---------------------------------------------------------------------
     class SolutionConfigurationHelpers
     {                
         //---------------------------------------------------------------------
-        static public VCDebugSettings GetCurrentDebugSettings(string applicationName)
+        static public DebugSettingsRestorer GetCurrentDebugSettings(string applicationName)
         {
             var configuration = GetCurrentConfiguration(applicationName);
-            return (VCDebugSettings)configuration.DebugSettings;
+            var settings = (VCDebugSettings)configuration.DebugSettings;
+
+            return new DebugSettingsRestorer(settings);
         }
 
         //---------------------------------------------------------------------

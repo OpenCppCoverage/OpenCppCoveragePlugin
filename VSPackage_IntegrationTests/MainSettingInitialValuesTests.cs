@@ -16,11 +16,8 @@
 
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage.Settings.UI;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace VSPackage_IntegrationTests
@@ -29,27 +26,18 @@ namespace VSPackage_IntegrationTests
     public class MainSettingInitialValuesTests
     {
         //---------------------------------------------------------------------
-        void RunInUIhread(Action action)
-        {
-            UIThreadInvoker.Invoke(action);
-        }
-
-        //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
         public void EmptySolution()
         {
-            RunInUIhread(() =>
-            {
-                var solutionService = TestHelpers.GetService<IVsSolution>();
-                solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
-                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            var solutionService = TestHelpers.GetService<IVsSolution>();
+            solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-                Assert.AreEqual(BasicSettingController.None,
-                    controller.BasicSettingController.CurrentConfiguration);
-                Assert.AreEqual(BasicSettingController.None,
-                    controller.BasicSettingController.CurrentProject);
-            });
+            Assert.AreEqual(BasicSettingController.None,
+                controller.BasicSettingController.CurrentConfiguration);
+            Assert.AreEqual(BasicSettingController.None,
+                controller.BasicSettingController.CurrentProject);
         }
 
         //---------------------------------------------------------------------
@@ -57,16 +45,13 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void NotCppStartupProject()
         {
-            RunInUIhread(() =>
-            {                
-                TestHelpers.OpenSolution(TestHelpers.CSharpConsoleApplication);
-                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            TestHelpers.OpenSolution(TestHelpers.CSharpConsoleApplication);
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-                Assert.AreEqual(BasicSettingController.None, 
-                    controller.BasicSettingController.CurrentConfiguration);
-                Assert.AreEqual(BasicSettingController.None, 
-                    controller.BasicSettingController.CurrentProject);
-            });
+            Assert.AreEqual(BasicSettingController.None, 
+                controller.BasicSettingController.CurrentConfiguration);
+            Assert.AreEqual(BasicSettingController.None, 
+                controller.BasicSettingController.CurrentProject);
         }
 
         //---------------------------------------------------------------------
@@ -74,16 +59,13 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void SeveralStartupProjects()
         {
-            RunInUIhread(() =>
-            {                
-                TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, TestHelpers.CppConsoleApplication2);
-                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, TestHelpers.CppConsoleApplication2);
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-                Assert.AreEqual("Debug|Win32",
-                    controller.BasicSettingController.CurrentConfiguration);
-                Assert.AreEqual(TestHelpers.CppConsoleApplication,
-                    controller.BasicSettingController.CurrentProject);
-            });
+            Assert.AreEqual("Debug|Win32",
+                controller.BasicSettingController.CurrentConfiguration);
+            Assert.AreEqual(TestHelpers.CppConsoleApplication,
+                controller.BasicSettingController.CurrentProject);
         }
 
         //---------------------------------------------------------------------
@@ -91,25 +73,13 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void ProjectInFolder()
         {
-            RunInUIhread(() =>
-            {
-                TestHelpers.OpenSolution(TestHelpers.ConsoleApplicationInFolder);
-                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            TestHelpers.OpenSolution(TestHelpers.ConsoleApplicationInFolder);
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
 
-                Assert.AreEqual("Debug|Win32",
-                    controller.BasicSettingController.CurrentConfiguration);
-                Assert.AreEqual(TestHelpers.ConsoleApplicationInFolder,
-                    controller.BasicSettingController.CurrentProject);
-            });
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        [HostType("VS IDE")]
-        public void DoesNotCompile()
-        {
-            //TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication2);
-            //Assert.AreEqual("OpenCppCoverage\n\nBuild failed.", TestHelpers.GetOpenCppCoverageMessage());
+            Assert.AreEqual("Debug|Win32",
+                controller.BasicSettingController.CurrentConfiguration);
+            Assert.AreEqual(TestHelpers.ConsoleApplicationInFolder,
+                controller.BasicSettingController.CurrentProject);
         }
 
         //---------------------------------------------------------------------
@@ -117,84 +87,29 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void StartUpProjectSettings()
         {
-            RunInUIhread(() =>
+            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication2);
+            using (var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication2))
             {
-                var debugSettings = TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
-                debugSettings.Command = "Command";
-                debugSettings.CommandArguments = "Arguments";
-                debugSettings.WorkingDirectory = ".";
+                var settings = debugSettings.Value;
+                settings.Command = "Command";
+                settings.CommandArguments = "Arguments";
+                settings.WorkingDirectory = ".";
 
                 var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
-                var settings = controller.BasicSettingController;
-                Assert.AreEqual(debugSettings.Command, settings.ProgramToRun);
-                Assert.AreEqual(debugSettings.CommandArguments, settings.Arguments);
-                Assert.AreEqual(debugSettings.WorkingDirectory, settings.OptionalWorkingDirectory);
+                var basicSettings = controller.BasicSettingController;
+                Assert.AreEqual(settings.Command, basicSettings.ProgramToRun);
+                Assert.AreEqual(settings.CommandArguments, basicSettings.Arguments);
+                Assert.AreEqual(settings.WorkingDirectory, basicSettings.OptionalWorkingDirectory);
 
                 var expectedProjects = new List<string> {
-                        TestHelpers.CppConsoleApplication,
-                        TestHelpers.CppConsoleApplication2,
-                        TestHelpers.CppConsoleApplicationDll,
-                        TestHelpers.ConsoleApplicationInFolder };
+                    TestHelpers.CppConsoleApplication,
+                    TestHelpers.CppConsoleApplication2,
+                    TestHelpers.CppConsoleApplicationDll,
+                    TestHelpers.ConsoleApplicationInFolder };
                 CollectionAssert.AreEquivalent(
                     expectedProjects,
-                    settings.SelectableProjects.Select(p => p.FullName).ToList());
-            });
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        [HostType("VS IDE")]
-        public void InvalidProgramToRun()
-        {
-            //CheckInvalidSettings(
-            //    (debugSettings, v) => debugSettings.Command = v,
-            //    debugSettings => debugSettings.Command,
-            //    "OpenCppCoverage\n\nDebugging command \"{0}\" does not exist.");
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        [HostType("VS IDE")]
-        public void CheckCoverageX86()
-        {
-            //TestHelpers.OpenDefaultSolution(TestHelpers.CppConsoleApplication);
-            //CheckCoverage(ConfigurationName.Debug, PlatFormName.Win32);
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        [HostType("VS IDE")]
-        public void CheckCoverageX64()
-        {
-            
-            //CheckCoverage(ConfigurationName.Debug, PlatFormName.x64);
-        }
-        
-        //---------------------------------------------------------------------
-        static string GetProjectFolder(string projectName)
-        {
-            var rootFolder = TestHelpers.GetIntegrationTestsSolutionFolder();
-
-            return Path.GetDirectoryName(Path.Combine(rootFolder, projectName));
-        }
-
-        //---------------------------------------------------------------------
-        static void CheckOutput(string output, string lineStartsWith, string textToFound)
-        {
-            using (var reader = new StringReader(output))
-            {
-                var line = reader.ReadLine();
-
-                while (line != null)
-                {
-                    if (line.StartsWith(lineStartsWith) && line.Contains(textToFound))
-                        return;
-                    line = reader.ReadLine();
-                }
+                    basicSettings.SelectableProjects.Select(p => p.FullName).ToList());
             }
-
-            Assert.Fail(string.Format("Cannot found {0} with a starting line :{1}",
-                textToFound, lineStartsWith));
         }
     }
 }

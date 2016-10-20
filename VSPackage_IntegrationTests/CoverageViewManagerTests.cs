@@ -199,11 +199,8 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         CoverageTreeController RunCoverageAndWait()
         {
-            RunInUIhread(() =>
-            {
-               var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
-               controller.RunCoverageCommand.Execute(null);
-            });
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
             return TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
         }
 

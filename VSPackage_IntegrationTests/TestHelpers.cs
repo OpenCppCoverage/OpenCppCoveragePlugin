@@ -58,13 +58,12 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static public VCDebugSettings OpenSolution(
+        static public void OpenSolution(
             string startupProjects,
             ConfigurationName configurationName = ConfigurationName.Debug,
             PlatFormName platformName = PlatFormName.Win32)
         {
             OpenSolution(new string[] { startupProjects }, configurationName, platformName);
-            return SolutionConfigurationHelpers.GetCurrentDebugSettings(startupProjects);
         }
 
         //---------------------------------------------------------------------
@@ -80,16 +79,22 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         public static MainSettingController ExecuteOpenCppCoverageCommand()
         {
-            object Customin = null;
-            object Customout = null;
-            var commandGuid = OpenCppCoverage.VSPackage.GuidList.guidVSPackageCmdSet;
-            string guidString = commandGuid.ToString("B").ToUpper();
-            int cmdId = (int)OpenCppCoverage.VSPackage.PkgCmdIDList.RunOpenCppCoverageCommand;
-            DTE dte = VsIdeTestHostContext.Dte;
+            MainSettingController controller = null;
+            RunInUIhread(() =>
+            {
+                object Customin = null;
+                object Customout = null;
+                var commandGuid = OpenCppCoverage.VSPackage.GuidList.guidVSPackageCmdSet;
+                string guidString = commandGuid.ToString("B").ToUpper();
+                int cmdId = (int)OpenCppCoverage.VSPackage.PkgCmdIDList.RunOpenCppCoverageCommand;
+                DTE dte = VsIdeTestHostContext.Dte;
 
-            dte.Commands.Raise(guidString, cmdId, ref Customin, ref Customout);
+                dte.Commands.Raise(guidString, cmdId, ref Customin, ref Customout);
 
-            return GetController<MainSettingController>();
+                controller = GetController<MainSettingController>();
+            });
+
+            return controller;
         }
 
         //---------------------------------------------------------------------
@@ -190,17 +195,17 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         static void OpenDefaultSolution()
         {
-           RunInUIhread(() =>
-           {
+            RunInUIhread(() =>
+            {
                var solutionService = GetService<IVsSolution>();
                var solutionPath = Path.Combine(GetIntegrationTestsSolutionFolder(), "IntegrationTestsSolution.sln");
 
                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
                    solutionService.OpenSolutionFile((uint)__VSSLNOPENOPTIONS.SLNOPENOPT_Silent, solutionPath));
-           });
-           WaitForSolutionLoading(TimeSpan.FromSeconds(10));
+            });
+            WaitForSolutionLoading(TimeSpan.FromSeconds(30));
         }
-        
+
         //---------------------------------------------------------------------
         static void WaitForSolutionLoading(TimeSpan timeout)
         {
