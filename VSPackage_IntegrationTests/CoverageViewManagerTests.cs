@@ -46,7 +46,7 @@ namespace VSPackage_IntegrationTests
         public void OpenFileAndComputeCoverage()
         {
             var wpfTextView = OpenMainFile();
-            RunCoverageAndWait();
+            TestHelpers.RunCoverageAndWait();
             
             CheckCoverage(wpfTextView);
         }
@@ -56,7 +56,7 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void ComputeCoverageAndOpenFile()
         {
-            RunCoverageAndWait();
+            TestHelpers.RunCoverageAndWait();
             var wpfTextView = OpenMainFile();
             
             CheckCoverage(wpfTextView);
@@ -68,7 +68,7 @@ namespace VSPackage_IntegrationTests
         public void CloseView()
         {
             var wpfTextView = OpenMainFile();
-            RunCoverageAndWait();
+            TestHelpers.RunCoverageAndWait();
 
             VsIdeTestHostContext.Dte.Documents.CloseAll();
             wpfTextView = OpenMainFile();            
@@ -81,14 +81,14 @@ namespace VSPackage_IntegrationTests
         public void OpenFileAndDisableCoverage()
         {
             var wpfTextView = OpenMainFile();
-            var coverageTreeController = RunCoverageAndWait();
+            var coverageTreeController = TestHelpers.RunCoverageAndWait();
 
             CheckCoverage(wpfTextView);
 
-            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
             Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
 
-            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
             CheckCoverage(wpfTextView);
         }
 
@@ -97,13 +97,13 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void DisableCoverageAndOpenFile()
         {
-            var coverageTreeController = RunCoverageAndWait();
-            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+            var coverageTreeController = TestHelpers.RunCoverageAndWait();
+            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
 
             var wpfTextView = OpenMainFile();
             Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
 
-            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
             CheckCoverage(wpfTextView);
         }
 
@@ -134,7 +134,7 @@ namespace VSPackage_IntegrationTests
             // AdornmentLayer is filled asynchronously by an event.
             // Wait here to be sure adornmentLayer.Elements is not empty.
             System.Threading.Thread.Sleep(1000);
-            RunInUIhread(() =>
+            TestHelpers.RunInUIhread(() =>
             {
                 var adornmentLayer = wpfTextView.GetAdornmentLayer(CoverageViewManager.HighlightLinesAdornment);
                 var elements = adornmentLayer.Elements.Where(e => e.Tag == CoverageViewManager.CoverageTag);
@@ -194,20 +194,6 @@ namespace VSPackage_IntegrationTests
                 @"cppconsoleapplication\cppconsoleapplication.cpp");
 
             return OpenWpfTextView(file);
-        }
-
-        //---------------------------------------------------------------------
-        CoverageTreeController RunCoverageAndWait()
-        {
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
-            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
-            return TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
-        }
-
-        //---------------------------------------------------------------------
-        void RunInUIhread(Action action)
-        {
-            UIThreadInvoker.Invoke(action);
         }
     }
 }

@@ -27,6 +27,13 @@ namespace OpenCppCoverage.VSPackage
 {
     class CoverageRunner
     {
+        //---------------------------------------------------------------------
+        public static readonly string BuilderFailedMsg = "Build failed.";
+        public static readonly string InvalidProgramToRunMsg =
+            @"File ""{0}"" does not exist. "
+            + @"Please use a valid value for ""Program to run""";
+
+        //---------------------------------------------------------------------
         readonly ProjectBuilder projectBuilder;
         readonly OutputWindowWriter outputWindowWriter;
         readonly CoverageTreeManager coverageTreeManager;
@@ -64,7 +71,7 @@ namespace OpenCppCoverage.VSPackage
                        compilationSuccess =>
                        {
                            if (!compilationSuccess)
-                               throw new VSPackageException("Build failed.");
+                               throw new VSPackageException(BuilderFailedMsg);
 
                            RunCoverage(settings);
                        });
@@ -85,9 +92,7 @@ namespace OpenCppCoverage.VSPackage
             if (!File.Exists(settings.BasicSettings.ProgramToRun))
             {
                 throw new VSPackageException(
-                    string.Format(@"File ""{0}"" does not exist. "
-                    + @"Please use a valid value for ""Program to run""",
-                    settings.BasicSettings.ProgramToRun));
+                    string.Format(InvalidProgramToRunMsg, settings.BasicSettings.ProgramToRun));
             }
 
             var coveragePath = AddBinaryOutput(settings.ImportExportSettings);

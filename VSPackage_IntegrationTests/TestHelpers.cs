@@ -98,6 +98,20 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        public static void RunCoverage()
+        {
+            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
+        }
+
+        //---------------------------------------------------------------------
+        public static CoverageTreeController RunCoverageAndWait()
+        {
+            RunCoverage();
+            return TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
+        }
+
+        //---------------------------------------------------------------------
         static T GetController<T>() where T: class
         {
             DTE dte = VsIdeTestHostContext.Dte;
@@ -174,6 +188,12 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        public static void RunInUIhread(Action action)
+        {
+            UIThreadInvoker.Invoke(action);
+        }
+
+        //---------------------------------------------------------------------
         static EnvDTE80.SolutionConfiguration2 OpenSolution(
             string[] startupProjects,
             ConfigurationName configurationName,
@@ -184,12 +204,6 @@ namespace VSPackage_IntegrationTests
             Array.Copy(startupProjects, startupProjectObjects, startupProjectObjects.Length);
             VsIdeTestHostContext.Dte.Solution.SolutionBuild.StartupProjects = startupProjectObjects;
             return SolutionConfigurationHelpers.SetActiveSolutionConfiguration(configurationName, platformName);
-        }
-
-        //---------------------------------------------------------------------
-        static void RunInUIhread(Action action)
-        {
-            UIThreadInvoker.Invoke(action);
         }
 
         //---------------------------------------------------------------------
