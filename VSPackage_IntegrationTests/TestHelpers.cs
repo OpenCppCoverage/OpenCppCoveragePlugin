@@ -138,27 +138,6 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static string ExecuteOpenCppCoverageAndReturnOutput(string applicationName)
-        {
-            TestHelpers.ExecuteOpenCppCoverageCommand();
-            TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(7));
-
-            return TestHelpers.GetOpenCppCoverageOutput();
-        }
-
-        //---------------------------------------------------------------------
-        public static string GetOpenCppCoverageOutput()
-        {
-            var dte2 = (EnvDTE80.DTE2)VsIdeTestHostContext.Dte;
-            var panes = dte2.ToolWindows.OutputWindow.OutputWindowPanes.Cast<OutputWindowPane>();
-            var openCppCoveragePane = panes.First( p => Guid.Parse(p.Guid) == OutputWindowWriter.OpenCppCoverageOutputPaneGuid);
-            var textDocument = openCppCoveragePane.TextDocument;
-            var editPoint = textDocument.CreateEditPoint();
-
-            return editPoint.GetText(textDocument.EndPoint);                       
-        }
-
-        //---------------------------------------------------------------------
         public static T Wait<T>(
             TimeSpan timeout, 
             Func<T> func, T 

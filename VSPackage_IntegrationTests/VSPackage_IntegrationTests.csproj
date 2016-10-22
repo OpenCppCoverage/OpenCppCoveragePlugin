@@ -70,7 +70,6 @@
     <!---->
     <!---->
     <!---->
-    <Compile Include="ConfigurationManagerTest.cs" />
     <Compile Include="CoverageViewManagerTests.cs" />
     <Compile Include="DialogBoxMessageRetriever.cs" />
     <Content Include="IntegrationTestsSolution\ConsoleApplicationInFolder\ConsoleApplicationInFolder.cpp">
