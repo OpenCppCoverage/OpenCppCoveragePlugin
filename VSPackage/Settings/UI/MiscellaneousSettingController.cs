@@ -35,6 +35,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public void UpdateStartUpProject()
         {
             this.HasConfigFile = false;
+            this.OptionalConfigFile = null;
             this.LogTypeValue = MiscellaneousSettings.LogType.Normal;
             this.ContinueAfterCppExceptions = false;
         }
