@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Moq;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
@@ -84,21 +85,24 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void CommandLineText()
         {
-            string commandLine = "commandLine";
-            var startUpProjectSettings = new StartUpProjectSettings()
+            UIThreadInvoker.Invoke((Action)(() =>
             {
-                CppProjects = new List<StartUpProjectSettings.CppProject>()
-            };
+                string commandLine = "commandLine";
+                var startUpProjectSettings = new StartUpProjectSettings()
+                {
+                    CppProjects = new List<StartUpProjectSettings.CppProject>()
+                };
 
-            var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
-            Assert.IsNull(controller.CommandLineText);
+                var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
+                Assert.IsNull(controller.CommandLineText);
 
-            controller.SelectedTab = new System.Windows.Controls.TabItem();
-            Assert.IsNull(controller.CommandLineText);
+                controller.SelectedTab = new System.Windows.Controls.TabItem();
+                Assert.IsNull(controller.CommandLineText);
 
-            controller.SelectedTab = new System.Windows.Controls.TabItem()
-                                 { Header = MainSettingController.CommandLineHeader };
-            Assert.AreEqual(commandLine, controller.CommandLineText);
+                controller.SelectedTab = new System.Windows.Controls.TabItem()
+                { Header = MainSettingController.CommandLineHeader };
+                Assert.AreEqual(commandLine, controller.CommandLineText);
+            }));
         }
 
         //---------------------------------------------------------------------
