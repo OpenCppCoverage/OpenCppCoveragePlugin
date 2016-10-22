@@ -20,16 +20,16 @@ using OpenCppCoverage.VSPackage;
 namespace VSPackage_IntegrationTests
 {
     [TestClass()]
-    public class RunCoverageTests
+    public class RunCoverageTests: TestHelpers
     {
         //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
         public void DoesNotCompile()
         {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication2);
-            TestHelpers.RunCoverage();
-            var outputMessage = TestHelpers.GetOpenCppCoverageMessage();
+            OpenSolution(CppConsoleApplication2);
+            RunCoverage();
+            var outputMessage = GetOpenCppCoverageMessage();
             Assert.AreEqual("OpenCppCoverage\n\n" + CoverageRunner.BuilderFailedMsg, 
                 outputMessage);
         }
@@ -39,15 +39,15 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void InvalidProgramToRun()
         {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
+            OpenSolution(CppConsoleApplication);
             using (var debugSettings = 
                 SolutionConfigurationHelpers.GetCurrentDebugSettings(
-                            TestHelpers.CppConsoleApplication))
+                            CppConsoleApplication))
             {
                 var settings = debugSettings.Value;
                 settings.Command = "Invalid";
-                TestHelpers.RunCoverage();
-                var outputMessage = TestHelpers.GetOpenCppCoverageMessage();
+                RunCoverage();
+                var outputMessage = GetOpenCppCoverageMessage();
                 var expectedMessage = "OpenCppCoverage\n\n" +
                     string.Format(CoverageRunner.InvalidProgramToRunMsg, settings.Command);
 
@@ -60,11 +60,11 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void CheckCoverageX86()
         {
-            TestHelpers.OpenSolution(
-                TestHelpers.CppConsoleApplication, 
+            OpenSolution(
+                CppConsoleApplication, 
                 ConfigurationName.Debug, 
                 PlatFormName.Win32);
-            var coverageTreeController = TestHelpers.RunCoverageAndWait();
+            var coverageTreeController = RunCoverageAndWait();
             var root = coverageTreeController.Root;
 
             Assert.IsTrue(root.CoveredLineCount > 0);
@@ -76,11 +76,11 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void CheckCoverageX64()
         {
-            TestHelpers.OpenSolution(
-                TestHelpers.CppConsoleApplication,
+            OpenSolution(
+                CppConsoleApplication,
                 ConfigurationName.Debug,
                 PlatFormName.x64);
-            var coverageTreeController = TestHelpers.RunCoverageAndWait();
+            var coverageTreeController = RunCoverageAndWait();
             var root = coverageTreeController.Root;
 
             Assert.IsTrue(root.CoveredLineCount > 0);

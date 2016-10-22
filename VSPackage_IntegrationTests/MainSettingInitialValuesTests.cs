@@ -23,16 +23,16 @@ using System.Linq;
 namespace VSPackage_IntegrationTests
 {
     [TestClass()]
-    public class MainSettingInitialValuesTests
+    public class MainSettingInitialValuesTests: TestHelpers
     {
         //---------------------------------------------------------------------
         [TestMethod]
         [HostType("VS IDE")]
         public void EmptySolution()
         {
-            var solutionService = TestHelpers.GetService<IVsSolution>();
+            var solutionService = GetService<IVsSolution>();
             solutionService.CloseSolutionElement((uint)__VSSLNSAVEOPTIONS.SLNSAVEOPT_NoSave, null, 0);
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            var controller = ExecuteOpenCppCoverageCommand();
 
             Assert.AreEqual(BasicSettingController.None,
                 controller.BasicSettingController.CurrentConfiguration);
@@ -45,8 +45,8 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void NotCppStartupProject()
         {
-            TestHelpers.OpenSolution(TestHelpers.CSharpConsoleApplication);
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            OpenSolution(CSharpConsoleApplication);
+            var controller = ExecuteOpenCppCoverageCommand();
 
             Assert.AreEqual(BasicSettingController.None, 
                 controller.BasicSettingController.CurrentConfiguration);
@@ -59,12 +59,12 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void SeveralStartupProjects()
         {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication, TestHelpers.CppConsoleApplication2);
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            OpenSolution(CppConsoleApplication, CppConsoleApplication2);
+            var controller = ExecuteOpenCppCoverageCommand();
 
             Assert.AreEqual("Debug|Win32",
                 controller.BasicSettingController.CurrentConfiguration);
-            Assert.AreEqual(TestHelpers.CppConsoleApplication,
+            Assert.AreEqual(CppConsoleApplication,
                 controller.BasicSettingController.CurrentProject);
         }
 
@@ -73,12 +73,12 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void ProjectInFolder()
         {
-            TestHelpers.OpenSolution(TestHelpers.ConsoleApplicationInFolder);
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            OpenSolution(ConsoleApplicationInFolder);
+            var controller = ExecuteOpenCppCoverageCommand();
 
             Assert.AreEqual("Debug|Win32",
                 controller.BasicSettingController.CurrentConfiguration);
-            Assert.AreEqual(TestHelpers.ConsoleApplicationInFolder,
+            Assert.AreEqual(ConsoleApplicationInFolder,
                 controller.BasicSettingController.CurrentProject);
         }
 
@@ -87,25 +87,25 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void StartUpProjectSettings()
         {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication2);
-            using (var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(TestHelpers.CppConsoleApplication2))
+            OpenSolution(CppConsoleApplication2);
+            using (var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(CppConsoleApplication2))
             {
                 var settings = debugSettings.Value;
                 settings.Command = "Command";
                 settings.CommandArguments = "Arguments";
                 settings.WorkingDirectory = ".";
 
-                var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+                var controller = ExecuteOpenCppCoverageCommand();
                 var basicSettings = controller.BasicSettingController;
                 Assert.AreEqual(settings.Command, basicSettings.ProgramToRun);
                 Assert.AreEqual(settings.CommandArguments, basicSettings.Arguments);
                 Assert.AreEqual(settings.WorkingDirectory, basicSettings.OptionalWorkingDirectory);
 
                 var expectedProjects = new List<string> {
-                    TestHelpers.CppConsoleApplication,
-                    TestHelpers.CppConsoleApplication2,
-                    TestHelpers.CppConsoleApplicationDll,
-                    TestHelpers.ConsoleApplicationInFolder };
+                    CppConsoleApplication,
+                    CppConsoleApplication2,
+                    CppConsoleApplicationDll,
+                    ConsoleApplicationInFolder };
                 CollectionAssert.AreEquivalent(
                     expectedProjects,
                     basicSettings.SelectableProjects.Select(p => p.FullName).ToList());

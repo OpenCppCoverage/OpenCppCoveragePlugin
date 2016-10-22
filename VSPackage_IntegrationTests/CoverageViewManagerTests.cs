@@ -30,13 +30,13 @@ using System.Windows.Shapes;
 namespace VSPackage_IntegrationTests
 {
     [TestClass()]
-    public class CoverageViewManagerTests
+    public class CoverageViewManagerTests: TestHelpers
     {        
         //---------------------------------------------------------------------
         [TestInitialize]
         public void TestInitialize()
         {
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
+            OpenSolution(CppConsoleApplication);
             VsIdeTestHostContext.Dte.Documents.CloseAll();
         }
 
@@ -46,7 +46,7 @@ namespace VSPackage_IntegrationTests
         public void OpenFileAndComputeCoverage()
         {
             var wpfTextView = OpenMainFile();
-            TestHelpers.RunCoverageAndWait();
+            RunCoverageAndWait();
             
             CheckCoverage(wpfTextView);
         }
@@ -56,7 +56,7 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void ComputeCoverageAndOpenFile()
         {
-            TestHelpers.RunCoverageAndWait();
+            RunCoverageAndWait();
             var wpfTextView = OpenMainFile();
             
             CheckCoverage(wpfTextView);
@@ -68,7 +68,7 @@ namespace VSPackage_IntegrationTests
         public void CloseView()
         {
             var wpfTextView = OpenMainFile();
-            TestHelpers.RunCoverageAndWait();
+            RunCoverageAndWait();
 
             VsIdeTestHostContext.Dte.Documents.CloseAll();
             wpfTextView = OpenMainFile();            
@@ -81,14 +81,14 @@ namespace VSPackage_IntegrationTests
         public void OpenFileAndDisableCoverage()
         {
             var wpfTextView = OpenMainFile();
-            var coverageTreeController = TestHelpers.RunCoverageAndWait();
+            var coverageTreeController = RunCoverageAndWait();
 
             CheckCoverage(wpfTextView);
 
-            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
             Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
 
-            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
             CheckCoverage(wpfTextView);
         }
 
@@ -97,13 +97,13 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void DisableCoverageAndOpenFile()
         {
-            var coverageTreeController = TestHelpers.RunCoverageAndWait();
-            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
+            var coverageTreeController = RunCoverageAndWait();
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = false);
 
             var wpfTextView = OpenMainFile();
             Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
 
-            TestHelpers.RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
             CheckCoverage(wpfTextView);
         }
 
@@ -134,7 +134,7 @@ namespace VSPackage_IntegrationTests
             // AdornmentLayer is filled asynchronously by an event.
             // Wait here to be sure adornmentLayer.Elements is not empty.
             System.Threading.Thread.Sleep(1000);
-            TestHelpers.RunInUIhread(() =>
+            RunInUIhread(() =>
             {
                 var adornmentLayer = wpfTextView.GetAdornmentLayer(CoverageViewManager.HighlightLinesAdornment);
                 var elements = adornmentLayer.Elements.Where(e => e.Tag == CoverageViewManager.CoverageTag);
@@ -190,7 +190,7 @@ namespace VSPackage_IntegrationTests
         IWpfTextView OpenMainFile()
         {
             var file = System.IO.Path.Combine(
-                TestHelpers.GetIntegrationTestsSolutionFolder(),
+                GetIntegrationTestsSolutionFolder(),
                 @"cppconsoleapplication\cppconsoleapplication.cpp");
 
             return OpenWpfTextView(file);

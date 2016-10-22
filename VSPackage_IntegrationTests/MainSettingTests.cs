@@ -23,7 +23,7 @@ using System.IO;
 namespace VSPackage_IntegrationTests
 {
     [TestClass]
-    public class MainSettingTests
+    public class MainSettingTests: TestHelpers
     {
         readonly Dictionary<PathKind, string> paths = new Dictionary<PathKind, string>();
 
@@ -56,11 +56,11 @@ namespace VSPackage_IntegrationTests
         [HostType("VS IDE")]
         public void CheckAllSettings()
         {            
-            TestHelpers.OpenSolution(TestHelpers.CppConsoleApplication);
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            OpenSolution(CppConsoleApplication);
+            var controller = ExecuteOpenCppCoverageCommand();
             var binaryOutput = CreateBinaryOutput(controller);
 
-            TestHelpers.RunInUIhread(() => SetMainSettingValue(controller, binaryOutput));
+            RunInUIhread(() => SetMainSettingValue(controller, binaryOutput));
             RunCoverageAndCheckExitCode(controller);
             Assert.IsTrue(File.Exists(paths[PathKind.Binary]));
             Assert.IsTrue(File.Exists(paths[PathKind.Cobertura]));
@@ -138,7 +138,7 @@ namespace VSPackage_IntegrationTests
         string CreateBinaryOutput(MainSettingController controller)
         {
             string path = GetTemporaryPath(PathKind.Binary);
-            TestHelpers.RunInUIhread(() =>
+            RunInUIhread(() =>
             {
                 controller.ImportExportSettingController.Exports.Add(new ImportExportSettingController.Export
                 { Type = ImportExportSettings.Type.Binary, Path = path });
@@ -152,7 +152,7 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         void RunCoverageAndCheckExitCode(MainSettingController controller)
         {
-            var coverageTreeController = TestHelpers.ExecuteRunCoverageCommand(controller);
+            var coverageTreeController = ExecuteRunCoverageCommand(controller);
             Assert.IsTrue(string.IsNullOrEmpty(coverageTreeController.Warning));
         }
     }

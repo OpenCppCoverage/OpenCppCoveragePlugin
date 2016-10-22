@@ -16,31 +16,29 @@
 
 using EnvDTE;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.VCProjectEngine;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
-using OpenCppCoverage.VSPackage;
+
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace VSPackage_IntegrationTests
 {
-    class TestHelpers
+    public class TestHelpers
     {
-        static public readonly string CppConsoleApplication = @"CppConsoleApplication\CppConsoleApplication.vcxproj";
-        static public readonly string CppConsoleApplication2 = @"CppConsoleApplication2\CppConsoleApplication2.vcxproj";
-        static public readonly string CSharpConsoleApplication = @"CSharpConsoleApplication\CSharpConsoleApplication.csproj";
-        static public readonly string CppConsoleApplicationDll = @"CppConsoleApplicationDll\CppConsoleApplicationDll.vcxproj";
-        static public readonly string ConsoleApplicationInFolder = @"ConsoleApplicationInFolder\ConsoleApplicationInFolder.vcxproj";
-        static public readonly string ApplicationName = "CppConsoleApplication.exe";
-        static public readonly string ApplicationName2 = "CppConsoleApplication2.exe";
-        static public readonly string ConsoleApplicationInFolderName = "ConsoleApplicationInFolder.exe";
+        internal readonly string CppConsoleApplication = @"CppConsoleApplication\CppConsoleApplication.vcxproj";
+        internal readonly string CppConsoleApplication2 = @"CppConsoleApplication2\CppConsoleApplication2.vcxproj";
+        internal readonly string CSharpConsoleApplication = @"CSharpConsoleApplication\CSharpConsoleApplication.csproj";
+        internal readonly string CppConsoleApplicationDll = @"CppConsoleApplicationDll\CppConsoleApplicationDll.vcxproj";
+        internal readonly string ConsoleApplicationInFolder = @"ConsoleApplicationInFolder\ConsoleApplicationInFolder.vcxproj";
+        internal readonly string ApplicationName = "CppConsoleApplication.exe";
+        internal readonly string ApplicationName2 = "CppConsoleApplication2.exe";
+        internal readonly string ConsoleApplicationInFolderName = "ConsoleApplicationInFolder.exe";
 
         //---------------------------------------------------------------------
-        static public string GetOpenCppCoverageMessage()
+        internal string GetOpenCppCoverageMessage()
         {                        
             var uiShell = GetService<IVsUIShell>();
 
@@ -52,13 +50,13 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static public void OpenSolution(params string[] startupProjects)
+        internal void OpenSolution(params string[] startupProjects)
         {
             OpenSolution(startupProjects, ConfigurationName.Debug, PlatFormName.Win32);
         }
 
         //---------------------------------------------------------------------
-        static public void OpenSolution(
+        internal void OpenSolution(
             string startupProjects,
             ConfigurationName configurationName = ConfigurationName.Debug,
             PlatFormName platformName = PlatFormName.Win32)
@@ -67,7 +65,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static public T GetService<T>() where T : class
+        internal T GetService<T>() where T : class
         {
             var service = VsIdeTestHostContext.ServiceProvider.GetService(typeof(T)) as T;
             if (service == null)
@@ -77,7 +75,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static MainSettingController ExecuteOpenCppCoverageCommand()
+        internal MainSettingController ExecuteOpenCppCoverageCommand()
         {
             MainSettingController controller = null;
             RunInUIhread(() =>
@@ -98,32 +96,32 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static void RunCoverage()
+        internal void RunCoverage()
         {
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            var controller = ExecuteOpenCppCoverageCommand();
             RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
         }
 
         //---------------------------------------------------------------------
-        public static CoverageTreeController RunCoverageAndWait()
+        internal CoverageTreeController RunCoverageAndWait()
         {
-            var controller = TestHelpers.ExecuteOpenCppCoverageCommand();
+            var controller = ExecuteOpenCppCoverageCommand();
             return ExecuteRunCoverageCommand(controller);
         }
 
         //---------------------------------------------------------------------
-        public static CoverageTreeController ExecuteRunCoverageCommand(
+        internal CoverageTreeController ExecuteRunCoverageCommand(
                             MainSettingController controller)
         {
             RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
-            return TestHelpers.CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
+            return CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
         }
 
         //---------------------------------------------------------------------
-        static T GetController<T>() where T: class
+        T GetController<T>() where T: class
         {
             DTE dte = VsIdeTestHostContext.Dte;
-            return TestHelpers.Wait(TimeSpan.FromSeconds(10), () =>
+            return Wait(TimeSpan.FromSeconds(10), () =>
             {
                 foreach (Window window in dte.Windows)
                 {
@@ -138,7 +136,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static T Wait<T>(
+        internal T Wait<T>(
             TimeSpan timeout, 
             Func<T> func, T 
             defaultValue = default(T))
@@ -159,7 +157,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static string GetIntegrationTestsSolutionFolder()
+        internal string GetIntegrationTestsSolutionFolder()
         {
             var currentLocation = typeof(TestHelpers).Assembly.Location;
             var currentDirectory = Path.GetDirectoryName(currentLocation);
@@ -167,7 +165,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static CoverageTreeController CloseOpenCppCoverageConsole(TimeSpan waitDuration)
+        internal CoverageTreeController CloseOpenCppCoverageConsole(TimeSpan waitDuration)
         {
             System.Threading.Thread.Sleep(waitDuration);
             System.Windows.Forms.SendKeys.SendWait("{ENTER}");
@@ -175,13 +173,13 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        public static void RunInUIhread(Action action)
+        internal void RunInUIhread(Action action)
         {
             UIThreadInvoker.Invoke(action);
         }
 
         //---------------------------------------------------------------------
-        static EnvDTE80.SolutionConfiguration2 OpenSolution(
+        EnvDTE80.SolutionConfiguration2 OpenSolution(
             string[] startupProjects,
             ConfigurationName configurationName,
             PlatFormName platformName)
@@ -194,7 +192,7 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static void OpenDefaultSolution()
+        void OpenDefaultSolution()
         {
             RunInUIhread(() =>
             {
@@ -208,9 +206,9 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
-        static void WaitForSolutionLoading(TimeSpan timeout)
+        void WaitForSolutionLoading(TimeSpan timeout)
         {
-            TestHelpers.Wait(timeout, () =>
+            Wait(timeout, () =>
                 {
                     foreach (Project p in VsIdeTestHostContext.Dte.Solution.Projects)
                     {

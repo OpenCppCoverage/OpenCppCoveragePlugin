@@ -5,7 +5,7 @@ using System.Text;
 
 namespace VSPackage_IntegrationTests
 {
-    class DialogBoxMessageRetriever: IDisposable
+    class DialogBoxMessageRetriever: TestHelpers, IDisposable
     {
         //---------------------------------------------------------------------
         public DialogBoxMessageRetriever(IVsUIShell uiShell, TimeSpan timeout)
@@ -13,7 +13,7 @@ namespace VSPackage_IntegrationTests
             this.uiShell = uiShell;
             this.thread = new System.Threading.Thread(o =>
             {
-                var message = TestHelpers.Wait(timeout, GetMessageBoxText);
+                var message = Wait(timeout, GetMessageBoxText);
 
                 this.messageFound = string.IsNullOrEmpty(message) ? 
                     "Cannot get expected messagebox" : message;
