@@ -94,6 +94,7 @@
     <Content Include="IntegrationTestsSolution\CSharpConsoleApplication\Properties\AssemblyInfo.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Compile Include="MainSettingTests.cs" />
     <Compile Include="RunCoverageTests.cs" />
     <Compile Include="SolutionConfigurationHelpers.cs" />
     <Compile Include="TestHelpers.cs" />
