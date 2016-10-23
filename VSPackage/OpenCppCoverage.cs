@@ -37,7 +37,7 @@ namespace OpenCppCoverage.VSPackage
         public Task RunCodeCoverageAsync(MainSettings settings)
         {
             var basicSettings = settings.BasicSettings;
-            var fileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
+            var fileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun, settings);
             var arguments = OpenCppCoverageCmdLine.Build(settings);
 
             this.outputWindowWriter.WriteLine("Run:");
@@ -63,15 +63,9 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        string GetOpenCppCoveragePath(string commandPath)
+        string GetOpenCppCoveragePath(string commandPath, MainSettings settings)
         {
-            var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            var assemblyFolder = Path.GetDirectoryName(assemblyLocation);
-            var openCppCovergeFolder = 
-                Is64bitsExecutable(commandPath) ? 
-                    "OpenCppCoverage-x64" : "OpenCppCoverage-x86";
-
-            return Path.Combine(assemblyFolder, openCppCovergeFolder, "OpenCppCoverage.exe");
+            return settings.MiscellaneousSettings.OpenCppCoverExe;
         }
 
         //---------------------------------------------------------------------

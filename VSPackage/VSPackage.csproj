@@ -9,6 +9,8 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>12.0</OldToolsVersion>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -84,6 +86,10 @@
     <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PropertyChanged, Version=1.52.1.0, Culture=neutral, PublicKeyToken=ee3ee20bcf148ddd, processorArchitecture=MSIL">
+      <HintPath>..\packages\PropertyChanged.Fody.1.52.1\lib\netstandard10\PropertyChanged.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
@@ -247,6 +253,7 @@
     <None Include="Resources\Images.png" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="FodyWeavers.xml" />
     <Content Include="gpl-3.0.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -263,193 +270,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="OpenCppCoverage-x64\boost_chrono-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_date_time-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_filesystem-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_locale-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_log-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_program_options-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_regex-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_system-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\boost_thread-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\CppCoverage.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Exporter.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\libctemplate.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\OpenCppCoverage.exe">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\MainTemplate.html">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\SourceTemplate.html">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\css\style.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\css\table-images\botleft.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\css\table-images\botright.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\css\table-images\left.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\css\table-images\right.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\google-code-prettify\prettify-CppCoverage.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\google-code-prettify\prettify.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\google-code-prettify\run_prettify.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\JQuery\jquery-1.11.1.min.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\RGraph\libraries\RGraph.common.core.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\RGraph\libraries\RGraph.common.dynamic.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\RGraph\libraries\RGraph.common.tooltips.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\RGraph\libraries\RGraph.pie.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Template\third-party\RGraph\license.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\template_test_util_test.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x64\Tools.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\OpenCppCoverage.exe">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\template_test_util_test.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="Resources\Package.ico" />
-    <Content Include="OpenCppCoverage-x86\Template\MainTemplate.html">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\SourceTemplate.html">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\css\style.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\css\table-images\botleft.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\css\table-images\botright.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\css\table-images\left.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\css\table-images\right.png">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\google-code-prettify\prettify-CppCoverage.css">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\google-code-prettify\prettify.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\google-code-prettify\run_prettify.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\JQuery\jquery-1.11.1.min.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\RGraph\libraries\RGraph.common.core.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\RGraph\libraries\RGraph.common.dynamic.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\RGraph\libraries\RGraph.common.tooltips.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\RGraph\libraries\RGraph.pie.js">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Template\third-party\RGraph\license.txt">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_chrono-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_date_time-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_filesystem-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_locale-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_log-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_program_options-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_regex-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_system-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\boost_thread-vc140-mt-1_59.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\CppCoverage.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Exporter.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\libctemplate.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="OpenCppCoverage-x86\Tools.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Page Include="CoverageTree\CoverageTreeControl.xaml">
@@ -493,6 +314,13 @@
     <PostBuildEvent>
     </PostBuildEvent>
   </PropertyGroup>
+  <Import Project="..\packages\Fody.1.29.2\build\dotnet\Fody.targets" Condition="Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.1.29.2\build\dotnet\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.1.29.2\build\dotnet\Fody.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
