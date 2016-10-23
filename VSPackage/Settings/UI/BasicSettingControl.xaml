@@ -20,100 +20,101 @@
             </Style>
         </Grid.Resources>
 
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-                <RowDefinition Height="auto"/>
-            </Grid.RowDefinitions>
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
 
-            <Label Content="Current project:" Grid.Row="0" Grid.Column="0"/>
-            <TextBox 
-                Text="{Binding CurrentProject}" 
-                Margin="0 5 0 5"
-                IsReadOnly="True"
-                IsReadOnlyCaretVisible="True"
-                VerticalContentAlignment="Center"
-                Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <Label Content="Current project:" Grid.Row="0" Grid.Column="0"/>
+                <TextBox 
+                    Text="{Binding CurrentProject}" 
+                    Margin="0 5 0 5"
+                    IsReadOnly="True"
+                    IsReadOnlyCaretVisible="True"
+                    VerticalContentAlignment="Center"
+                    Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
             
-            <Label Content="Current configuration:" Grid.Row="1" Grid.Column="0"/>
-            <TextBox 
-                Text="{Binding CurrentConfiguration}" 
-                Margin="0 5 0 5" 
-                IsReadOnly="True"
-                IsReadOnlyCaretVisible="True"
-                VerticalContentAlignment="Center"
-                Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
+                <Label Content="Current configuration:" Grid.Row="1" Grid.Column="0"/>
+                <TextBox 
+                    Text="{Binding CurrentConfiguration}" 
+                    Margin="0 5 0 5" 
+                    IsReadOnly="True"
+                    IsReadOnlyCaretVisible="True"
+                    VerticalContentAlignment="Center"
+                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
             
-            <Label Content="Selected projects:" Grid.Row="2" Grid.Column="0"/>
-            <DataGrid 
-                ItemsSource="{Binding SelectableProjects}" 
-                AlternationCount="2" 
-                AlternatingRowBackground="AliceBlue" 
-                AutoGenerateColumns="False" 
-                Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
-                CanUserAddRows="False"
-                HeadersVisibility="Column"
-                MinHeight="50"
-                MaxHeight="120"
-                Margin="0 0 0 6">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
-                        <DataGridTextColumn.CellStyle>
-                            <Style TargetType="DataGridCell">
-                                <Setter Property="ToolTip" Value="{Binding FullName}" />
-                            </Style>
-                        </DataGridTextColumn.CellStyle>
-                    </DataGridTextColumn>
-                    <DataGridCheckBoxColumn Header="Selected" Binding="{Binding IsSelected}"/>
-                </DataGrid.Columns>
-            </DataGrid>
+                <Label Content="Selected projects:" Grid.Row="2" Grid.Column="0"/>
+                <DataGrid 
+                    ItemsSource="{Binding SelectableProjects}" 
+                    AlternationCount="2" 
+                    AlternatingRowBackground="AliceBlue" 
+                    AutoGenerateColumns="False" 
+                    Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2"
+                    CanUserAddRows="False"
+                    HeadersVisibility="Column"
+                    MinHeight="50"
+                    MaxHeight="120"
+                    Margin="0 0 0 6">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
+                            <DataGridTextColumn.CellStyle>
+                                <Style TargetType="DataGridCell">
+                                    <Setter Property="ToolTip" Value="{Binding FullName}" />
+                                </Style>
+                            </DataGridTextColumn.CellStyle>
+                        </DataGridTextColumn>
+                        <DataGridCheckBoxColumn Header="Selected" Binding="{Binding IsSelected}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
 
-            <Label Content="Program to run:" Grid.Row="3"/>
-            <helper:FileSystemSelectionControl
-                Mode="FileSelection"
-                FileFilter="Executable Files (*.exe)|*.exe"
-                SelectedPath="{Binding ProgramToRun}" 
-                Grid.Row="3" Grid.ColumnSpan="2"/>
+                <Label Content="Program to run:" Grid.Row="3"/>
+                <helper:FileSystemSelectionControl
+                    Mode="FileSelection"
+                    FileFilter="Executable Files (*.exe)|*.exe"
+                    SelectedPath="{Binding ProgramToRun}" 
+                    Grid.Row="3" Grid.ColumnSpan="2"/>
 
-            <Label Content="Arguments:" Grid.Row="4"/>
-            <TextBox 
-                Text="{Binding Arguments}" 
-                Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
-                ToolTip="{Binding Arguments}"
-                Margin="0 5 0 5"
-                VerticalContentAlignment="Center"/>
+                <Label Content="Arguments:" Grid.Row="4"/>
+                <TextBox 
+                    Text="{Binding Arguments}" 
+                    Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                    ToolTip="{Binding Arguments}"
+                    Margin="0 5 0 5"
+                    VerticalContentAlignment="Center"/>
 
-            <Label Content="Working Directory:" Grid.Row="5"/>
-            <CheckBox 
-                IsChecked="{Binding HasWorkingDirectory}"
-                VerticalAlignment="Center" 
-                Grid.Row="5" Grid.Column="1" 
-                Margin="0 0 5 0"/>
-            <helper:FileSystemSelectionControl
-                Mode="FolderSelection"
-                IsEnabled="{Binding HasWorkingDirectory}"
-                SelectedPath="{Binding OptionalWorkingDirectory}" 
-                Grid.Row="5" Grid.Column="2"/>
+                <Label Content="Working Directory:" Grid.Row="5"/>
+                <CheckBox 
+                    IsChecked="{Binding HasWorkingDirectory}"
+                    VerticalAlignment="Center" 
+                    Grid.Row="5" Grid.Column="1" 
+                    Margin="0 0 5 0"/>
+                <helper:FileSystemSelectionControl
+                    Mode="FolderSelection"
+                    IsEnabled="{Binding HasWorkingDirectory}"
+                    SelectedPath="{Binding OptionalWorkingDirectory}" 
+                    Grid.Row="5" Grid.Column="2"/>
 
-            <Label Content="Compile before running:" Grid.Row="6"/>
-            <CheckBox 
-                IsChecked="{Binding CompileBeforeRunning}" 
-                IsEnabled="{Binding IsCompileBeforeRunningEnabled}"
-                ToolTip="{Binding CompileBeforeRunningToolTip}"
-                ToolTipService.ShowOnDisabled="True"
-                VerticalAlignment="Center" 
-                Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
-        </Grid>
-
+                <Label Content="Compile before running:" Grid.Row="6"/>
+                <CheckBox 
+                    IsChecked="{Binding CompileBeforeRunning}" 
+                    IsEnabled="{Binding IsCompileBeforeRunningEnabled}"
+                    ToolTip="{Binding CompileBeforeRunningToolTip}"
+                    ToolTipService.ShowOnDisabled="True"
+                    VerticalAlignment="Center" 
+                    Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
+            </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

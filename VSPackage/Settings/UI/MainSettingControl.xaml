@@ -25,24 +25,30 @@
                 <local:MiscellaneousSettingControl DataContext="{Binding MiscellaneousSettingController}" Margin = "10"/>
             </TabItem>
             <TabItem Header="Command line">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Label 
-                        Content="The following command will be executed:"
-                        Grid.Row="0" 
-                        Margin="15 0 0 0"/>
-                    <TextBox 
-                        Text="{Binding CommandLineText, Mode=OneWay}"
-                        Grid.Row="1"
-                        BorderThickness="1"
-                        IsReadOnly="True"
-                        IsReadOnlyCaretVisible="True"
-                        Margin="20 0 20 20"
-                        TextWrapping="NoWrap"/>
-                </Grid>
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <Label 
+                            Content="The following command will be executed:"
+                            Grid.Row="0" 
+                            Margin="15 0 0 0"/>
+                        <ScrollViewer 
+                            HorizontalScrollBarVisibility="Auto"
+                            VerticalScrollBarVisibility="Disabled"
+                            Margin="20 0 20 20"
+                            Grid.Row="1">
+                            <TextBox 
+                                Text="{Binding CommandLineText, Mode=OneWay}"                                
+                                BorderThickness="1"
+                                IsReadOnly="True"
+                                IsReadOnlyCaretVisible="True"                                
+                                TextWrapping="NoWrap"/>
+                        </ScrollViewer>
+                    </Grid>
+                </ScrollViewer>
             </TabItem>
         </TabControl>
         <Grid Grid.Row="1">
