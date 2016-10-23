@@ -15,6 +15,7 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using OpenCppCoverage.VSPackage.Helper;
+using PropertyChanged;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ using System.Linq;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
+    [ImplementPropertyChanged]
     class MiscellaneousSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
@@ -29,6 +31,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             this.LogTypeValues = Enum.GetValues(typeof(MiscellaneousSettings.LogType))
                 .Cast<MiscellaneousSettings.LogType>();
+
+            this.OpenCppCoverExe = @"C:\Program Files\OpenCppCoverage\OpenCppCoverage.exe";
         }
 
         //---------------------------------------------------------------------
@@ -47,47 +51,27 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             {
                 OptionalConfigFile = this.OptionalConfigFile,
                 LogTypeValue = this.LogTypeValue,
-                ContinueAfterCppExceptions = this.ContinueAfterCppExceptions
+                ContinueAfterCppExceptions = this.ContinueAfterCppExceptions,
+                OpenCppCoverExe = this.OpenCppCoverExe
             };
         }
 
         //---------------------------------------------------------------------
-        bool hasConfigFile;
-        public bool HasConfigFile
-        {
-            get { return this.hasConfigFile; }
-            set
-            {
-                if (this.SetField(ref this.hasConfigFile, value) && !value)
-                    this.OptionalConfigFile = null;
-            }
-        }
+        public bool HasConfigFile { get; set; }
 
         //---------------------------------------------------------------------
-        string optionalConfigFile;
-        public string OptionalConfigFile
-        {
-            get { return this.optionalConfigFile; }
-            set { this.SetField(ref this.optionalConfigFile, value); }
-        }
+        public string OptionalConfigFile { get; set; }
 
         //---------------------------------------------------------------------
-        MiscellaneousSettings.LogType logTypeValue;
-        public MiscellaneousSettings.LogType LogTypeValue
-        {
-            get { return this.logTypeValue; }
-            set { this.SetField(ref this.logTypeValue, value); }
-        }
+        public MiscellaneousSettings.LogType LogTypeValue { get; set; }
 
         //---------------------------------------------------------------------
-        bool continueAfterCppExceptions;
-        public bool ContinueAfterCppExceptions
-        {
-            get { return this.continueAfterCppExceptions; }
-            set { this.SetField(ref this.continueAfterCppExceptions, value); }
-        }
-        
-        //---------------------------------------------------------------------        
-        public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; private set; }        
+        public bool ContinueAfterCppExceptions { get; set; }
+
+        //---------------------------------------------------------------------
+        public string OpenCppCoverExe { get; set; }
+
+        //---------------------------------------------------------------------
+        public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; private set; }
     }
 }

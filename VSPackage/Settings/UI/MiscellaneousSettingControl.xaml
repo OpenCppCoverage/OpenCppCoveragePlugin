@@ -24,6 +24,7 @@
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
                 <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
             </Grid.RowDefinitions>
             <Label Content="Log verbosity" Grid.Row="0"/>
             <ComboBox 
@@ -46,6 +47,14 @@
                 Grid.Row="1" Grid.Column="2"
                 Margin="0 5 0 5"/>
 
+            <Label Content="OpenCppCover Executable" Grid.Row="4"/>
+            <helper:FileSystemSelectionControl 
+                Mode="FileSelection"
+                FileFilter="OpenCppCoverage (OpenCppCoverage.exe)|OpenCppCoverage.exe"
+                SelectedPath="{Binding OpenCppCoverExe}"
+                Grid.Row="3" Grid.Column="2"
+                Margin="0 5 0 5"/>
+            
             <Label Content="Continue after C++ exceptions" Grid.Row="2"/>
             <CheckBox 
                 IsChecked="{Binding ContinueAfterCppExceptions}" 
