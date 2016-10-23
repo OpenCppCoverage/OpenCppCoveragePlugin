@@ -48,6 +48,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
             window.Controller.CoverageRunner = coverageRunner;
             window.Controller.UpdateStartUpProject();
+            var vsEvents = new VsEvents(dte, window);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
