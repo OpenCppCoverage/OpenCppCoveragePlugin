@@ -99,9 +99,58 @@ namespace OpenCppCoverage.VSPackage
                 CommandID menuCommandID = new CommandID(GuidList.guidVSPackageCmdSet, (int)PkgCmdIDList.RunOpenCppCoverageCommand);
                 MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
                 mcs.AddCommand( menuItem );
+
+
+                menuCommandID = new CommandID(GuidList.guidStartCovInProjCTXCmdSet, (int)PkgCmdIDList.RunCoverageInProjectFromProjectCtx);
+                menuItem = new MenuCommand(RunCoverageFromProjectCtxCallback, menuCommandID);
+                mcs.AddCommand(menuItem);
             }
         }
         #endregion
+
+        /// <summary>
+        /// This function is the callback used to execute a command when the a menu item is clicked.
+        /// See the Initialize method to see how the menu item is associated to this function using
+        /// the OleMenuCommandService service and the MenuCommand class.
+        /// </summary>
+        private void RunCoverageFromProjectCtxCallback(object sender, EventArgs e)
+        {
+            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
+
+            var errorHandler = new ErrorHandler(uiShell);
+            errorHandler.Execute(() =>
+            {
+                var window = this.FindToolWindow(
+                        typeof(SettingToolWindow), 0, true) as SettingToolWindow;
+                if (window == null || window.Frame == null)
+                    throw new NotSupportedException("Cannot create tool window");
+
+               
+
+                if (window.Controller.CoverageRunner == null)
+                {
+                    DTE2 dte = (DTE2)GetService(typeof(EnvDTE.DTE));
+                    var outputWindow = (IVsOutputWindow)GetService(typeof(SVsOutputWindow));
+                    var outputWriter = new OutputWindowWriter(dte, outputWindow);
+
+                    errorHandler.OutputWriter = outputWriter;
+                    var mainSettingsManager = new MainSettingsManager(this, dte);
+                    var coverageViewManager = GetCoverageViewManager();
+                    var coverageTreeManager = new CoverageTreeManager(this, dte, coverageViewManager);
+                    var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
+                    var deserializer = new CoverageDataDeserializer();
+                    var openCppCoverageRunner = new CoverageRunner(
+                        dte, outputWriter, coverageTreeManager, projectBuilder,
+                        coverageViewManager, deserializer, errorHandler);
+
+                    CheckVCRedistInstalled();
+                    mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
+                }
+
+                window.Controller.UpdateFromSelectedProjects();
+                window.Controller.OnRunCoverageCommand();
+            });
+        }
 
         /// <summary>
         /// This function is the callback used to execute a command when the a menu item is clicked.

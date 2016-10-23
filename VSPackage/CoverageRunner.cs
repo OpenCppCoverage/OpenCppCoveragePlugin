@@ -60,7 +60,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public void RunCoverageOnStartupProject(MainSettings settings)
+        public void RunCoverageOnCurrentProject(MainSettings settings)
         {
            this.errorHandler.Execute(() =>
            {
