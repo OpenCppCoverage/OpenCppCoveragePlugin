@@ -17,6 +17,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
@@ -104,6 +105,27 @@ namespace VSPackage_IntegrationTests
             Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
 
             RunInUIhread(() => coverageTreeController.DisplayCoverage = true);
+            CheckCoverage(wpfTextView);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void EditFile()
+        {
+            var wpfTextView = OpenMainFile();
+            var coverageTreeController = RunCoverageAndWait();
+            
+            RunInUIhread(() =>
+            {
+                var text = "// Add and remove a line to stop displaying coverage\r\n";
+                wpfTextView.TextBuffer.Insert(0, text);
+                wpfTextView.TextBuffer.Delete(new Span(0, text.Length));
+            });
+
+            Assert.AreEqual(0, GetLinesWithCoverageTag(wpfTextView).Count);
+
+            RunCoverageAndWait();
             CheckCoverage(wpfTextView);
         }
 

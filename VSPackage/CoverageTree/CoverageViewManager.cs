@@ -43,6 +43,9 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------
         readonly List<IWpfTextView> views = new List<IWpfTextView>();
         Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
+        Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>> 
+            onTextChangedHanlders = new Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>>();
+
         bool showCoverage;
 
         //---------------------------------------------------------------------
@@ -51,6 +54,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             this.views.Add(textView);
             textView.Closed += OnTextViewClosed;
             textView.LayoutChanged += OnLayoutChanged;
+            
+            EventHandler<TextContentChangedEventArgs> onTextChanged = 
+                (sender, e) => OnTextChanged(textView, e);
+            onTextChangedHanlders.Add(textView, onTextChanged);
+            textView.TextBuffer.Changed += onTextChanged;
         }
 
         //---------------------------------------------------------------------
@@ -99,7 +107,6 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         {
             foreach (var view in this.views)
                 AddNewHighlightCoverage(view, view.TextViewLines);
-
         }
 
         //---------------------------------------------------------------------
@@ -131,6 +138,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 this.views.Remove(textView);
                 textView.Closed -= OnTextViewClosed;
                 textView.LayoutChanged -= OnLayoutChanged;
+
+                var onTextChangedHandler = this.onTextChangedHanlders[textView];
+                this.onTextChangedHanlders.Remove(textView);
+
+                textView.TextBuffer.Changed -= onTextChangedHandler;
             }
         }
 
@@ -175,10 +187,14 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         void RemoveHighlightForAllViews()
         {
             foreach (var view in this.views)
-            {
-                var adornmentLayer = view.GetAdornmentLayer(HighlightLinesAdornment);
-                adornmentLayer.RemoveAllAdornments();
-            }
+                RemoveHighlight(view);
+        }
+
+        //---------------------------------------------------------------------
+        void RemoveHighlight(IWpfTextView textView)
+        {
+            var adornmentLayer = textView.GetAdornmentLayer(HighlightLinesAdornment);
+            adornmentLayer.RemoveAllAdornments();
         }
 
         //---------------------------------------------------------------------
@@ -198,6 +214,18 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             Canvas.SetTop(rect, line.Top);
             Canvas.SetLeft(rect, 0);
             adornmentLayer.AddAdornment(line.Extent, CoverageTag, rect);
-        }      
+        }
+
+        //---------------------------------------------------------------------
+        void OnTextChanged(IWpfTextView textView, TextContentChangedEventArgs e)
+        {
+            var lineChanged = e.Changes.Sum(c => c.LineCountDelta);
+            if (lineChanged != 0)
+            {
+                var optionalFilePath = GetOptionalFilePath(textView);
+                if (this.coverageByFile.Remove(optionalFilePath))
+                    RemoveHighlight(textView);
+            }
+        }
     }
 }
