@@ -59,6 +59,19 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.MiscellaneousSettingController.UpdateStartUpProject();
         }
 
+        internal void UpdateFromSelectedProjects()
+        {
+            if (this.StartUpProjectSettingsBuilder == null)
+                throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
+
+            var settings = this.StartUpProjectSettingsBuilder.ComputeSettingsFromSelectedProject();
+            this.BasicSettingController.UpdateStartUpProject(settings);
+            this.FilterSettingController.UpdateStartUpProject();
+            this.ImportExportSettingController.UpdateStartUpProject();
+            this.MiscellaneousSettingController.UpdateStartUpProject();
+
+        }
+
         //---------------------------------------------------------------------
         public MainSettings GetMainSettings()
         {
@@ -97,9 +110,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
         }
         //---------------------------------------------------------------------
-        void OnRunCoverageCommand()
+        public void OnRunCoverageCommand()
         {
-            this.CoverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
+            this.CoverageRunner.RunCoverageOnCurrentProject(this.GetMainSettings());
         }
 
         //---------------------------------------------------------------------
@@ -107,5 +120,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public ICommand RunCoverageCommand { get; private set; }
         public ICommand CancelCommand { get; private set; }
         public ICommand ResetToDefaultCommand { get; private set; }
+
+
     }
 }

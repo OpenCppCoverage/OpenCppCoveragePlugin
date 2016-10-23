@@ -70,6 +70,13 @@
       </Button>
 
 
+        <Button guid="guidStartCovInProjCTXCmdSet" id="RunCoverageInProjectFromProjectCtx" priority="0x0300" type="Button">
+            <Parent guid="guidReferenceContext" id="cmdAddReferenceGroup" />
+            <Strings>
+                <CommandName>cmdRunCoverageFromProjectCtx</CommandName>
+                <ButtonText>Run OpenCppCoverage</ButtonText>
+            </Strings>
+        </Button>
 
     </Buttons>
    
@@ -86,6 +93,14 @@
  
   </Commands>
 
+    <!-- Commands in solution explorer -->
+    <CommandPlacements>
+        <CommandPlacement guid="guidStartCovInProjCTXCmdSet" id="RunCoverageInProjectFromProjectCtx" priority="0xF101">
+            <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
+        </CommandPlacement>
+
+    </CommandPlacements>
+    
 
   <KeyBindings>
     <KeyBinding guid="guidVSPackageCmdSet" id="RunOpenCppCoverageCommand" editor="guidVSStd97" key1="R" mod1="CONTROL" key2="C" mod2="CONTROL"/>
@@ -102,12 +117,18 @@
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="RunOpenCppCoverageCommand" value="0x0100" />
     </GuidSymbol>
-    
-    
+
+      <GuidSymbol name="guidStartCovInProjCTXCmdSet" value="{7FFD1AD4-5BFD-4F5C-9EBC-52AFE39D4BFE}">
+          <IDSymbol name="RunCoverageInProjectFromProjectCtx" value="0x0300" />
+      </GuidSymbol>
     
     <GuidSymbol name="guidImages" value="{b85a417d-6d03-47ea-8445-f6cf164bcc58}" >
       <IDSymbol name="bmpPic1" value="1" />      
     </GuidSymbol>
+
+      <GuidSymbol name="guidReferenceContext" value="{C59571BD-7D8F-4B2E-B1B1-E32918CA4C89}">
+          <IdSymbol name="cmdAddReferenceGroup" value="0x450" />
+      </GuidSymbol>
   </Symbols>
 
 </CommandTable>

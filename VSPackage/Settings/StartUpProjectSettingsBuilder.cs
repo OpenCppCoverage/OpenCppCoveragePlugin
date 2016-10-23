@@ -56,6 +56,28 @@ namespace OpenCppCoverage.VSPackage.Settings
             };
         }
 
+
+        public StartUpProjectSettings ComputeSettingsFromSelectedProject()
+        {
+            var solution = (Solution2)dte.Solution;
+            var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
+            var activeConfiguration = (SolutionConfiguration2)solutionBuild.ActiveConfiguration;
+
+            if (activeConfiguration != null)
+            {
+                var settings = ComputeOptionalSettingsFromSelectedProject(activeConfiguration);
+
+                if (settings != null)
+                    return settings;
+            }
+
+            return new StartUpProjectSettings
+            {
+                CppProjects = new List<StartUpProjectSettings.CppProject>()
+            };
+        }
+        
+
         //---------------------------------------------------------------------
         StartUpProjectSettings ComputeOptionalSettings(
             SolutionConfiguration2 activeConfiguration)
@@ -85,6 +107,37 @@ namespace OpenCppCoverage.VSPackage.Settings
                 activeConfiguration, this.configurationManager, projects);
             
             return settings;                                                 
+        }
+
+
+        StartUpProjectSettings ComputeOptionalSettingsFromSelectedProject(
+            SolutionConfiguration2 activeConfiguration)
+        {
+            var solution = (Solution2)dte.Solution;
+            var projects = GetProjects(solution);
+            var startupProject = GetSelectedProject(dte, projects);
+
+            if (startupProject == null)
+                return null;
+
+            var startupConfiguration = this.configurationManager.GetConfiguration(
+                activeConfiguration, startupProject);
+            var debugSettings = new DynamicVCDebugSettings(startupConfiguration.DebugSettings);
+
+            if (debugSettings == null)
+                throw new Exception("DebugSettings is null");
+
+            var settings = new StartUpProjectSettings();
+            settings.WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory);
+            settings.Arguments = startupConfiguration.Evaluate(debugSettings.CommandArguments);
+            settings.Command = startupConfiguration.Evaluate(debugSettings.Command);
+            settings.SolutionConfigurationName =
+                this.configurationManager.GetSolutionConfigurationName(activeConfiguration);
+            settings.ProjectName = startupProject.UniqueName;
+            settings.CppProjects = BuildCppProject(
+                activeConfiguration, this.configurationManager, projects);
+
+            return settings;
         }
 
         //---------------------------------------------------------------------
@@ -143,6 +196,22 @@ namespace OpenCppCoverage.VSPackage.Settings
             var startupProjectsSet = new HashSet<String>();
             foreach (String projectName in startupProjectsNames)
                 startupProjectsSet.Add(projectName);
+
+            return projects.Where(p => startupProjectsSet.Contains(p.UniqueName)).FirstOrDefault();
+        }
+
+        public ExtendedProject GetSelectedProject(
+            DTE2 dte,
+            List<ExtendedProject> projects)
+        {
+            var startupProjectsNames = (Array)dte.ActiveSolutionProjects;
+
+            if (startupProjectsNames == null)
+                return null;
+
+            var startupProjectsSet = new HashSet<String>();
+            foreach (Project project in startupProjectsNames)
+                startupProjectsSet.Add(project.UniqueName);
 
             return projects.Where(p => startupProjectsSet.Contains(p.UniqueName)).FirstOrDefault();
         }

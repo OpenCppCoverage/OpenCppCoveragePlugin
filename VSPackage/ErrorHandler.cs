@@ -46,7 +46,7 @@ namespace OpenCppCoverage.VSPackage
             }
             catch (Exception exception)
             {
-                if (OutputWriter != null && OutputWriter.WriteLine(exception.ToString()))             
+                if (OutputWriter != null && OutputWriter.WriteLine(exception.ToString()))
                     ShowMessage("Unknow error. Please see the output console for more information.");
                 else
                     ShowMessage(exception.ToString());

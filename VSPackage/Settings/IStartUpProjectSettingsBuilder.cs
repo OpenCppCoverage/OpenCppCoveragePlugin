@@ -19,5 +19,6 @@ namespace OpenCppCoverage.VSPackage.Settings
     interface IStartUpProjectSettingsBuilder
     {
         StartUpProjectSettings ComputeSettings();
+        StartUpProjectSettings ComputeSettingsFromSelectedProject();
     }
 }
