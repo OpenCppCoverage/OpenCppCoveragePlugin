@@ -38,7 +38,7 @@ namespace VSPackage_IntegrationTests
         public void TestInitialize()
         {
             OpenSolution(CppConsoleApplication);
-            VsIdeTestHostContext.Dte.Documents.CloseAll();
+            CloseAllDocuments();
         }
 
         //---------------------------------------------------------------------
@@ -71,7 +71,7 @@ namespace VSPackage_IntegrationTests
             var wpfTextView = OpenMainFile();
             RunCoverageAndWait();
 
-            VsIdeTestHostContext.Dte.Documents.CloseAll();
+            CloseAllDocuments();
             wpfTextView = OpenMainFile();            
             CheckCoverage(wpfTextView);
         }
@@ -139,9 +139,9 @@ namespace VSPackage_IntegrationTests
             {
                 var text = line.Item1;
 
-                if (text.EndsWith(" COVERED"))
+                if (text.EndsWith(CoveredTag))
                     Assert.AreEqual(CoverageViewManager.CoveredBrush, line.Item2);
-                else if (text.EndsWith(" UNCOVERED"))
+                else if (text.EndsWith(UncoveredTag))
                     Assert.AreEqual(CoverageViewManager.UncoveredBrush, line.Item2);
                 else
                     Assert.Fail();

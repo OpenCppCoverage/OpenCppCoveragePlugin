@@ -39,6 +39,10 @@
   <ItemGroup>
     <Reference Include="envdte" />
     <Reference Include="envdte80" />
+    <Reference Include="ICSharpCode.TreeView, Version=5.0.0.0, Culture=neutral, PublicKeyToken=f829da5c02be14ee, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\ICSharpCode.TreeView.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
@@ -70,6 +74,7 @@
     <!---->
     <!---->
     <!---->
+    <Compile Include="CoverageTreeTests.cs" />
     <Compile Include="CoverageViewManagerTests.cs" />
     <Compile Include="DialogBoxMessageRetriever.cs" />
     <Content Include="IntegrationTestsSolution\ConsoleApplicationInFolder\ConsoleApplicationInFolder.cpp">

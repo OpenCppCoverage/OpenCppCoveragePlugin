@@ -6,7 +6,7 @@
 #include <iostream>
 
 __declspec(dllexport) void Hello()
-{
-	std::cout << "Hello!" << std::endl;
-}
+{										// COVERED
+	std::cout << "Hello!" << std::endl;	// COVERED
+}										// COVERED
 

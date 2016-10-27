@@ -36,6 +36,8 @@ namespace VSPackage_IntegrationTests
         internal readonly string ApplicationName = "CppConsoleApplication.exe";
         internal readonly string ApplicationName2 = "CppConsoleApplication2.exe";
         internal readonly string ConsoleApplicationInFolderName = "ConsoleApplicationInFolder.exe";
+        internal readonly string CoveredTag = " COVERED";
+        internal readonly string UncoveredTag = " UNCOVERED";
 
         //---------------------------------------------------------------------
         internal string GetOpenCppCoverageMessage(Action action)
@@ -121,6 +123,12 @@ namespace VSPackage_IntegrationTests
         internal void RunCoverageCommand(MainSettingController controller)
         {
             RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
+        }
+
+        //---------------------------------------------------------------------
+        internal void CloseAllDocuments()
+        {
+            VsIdeTestHostContext.Dte.Documents.CloseAll();
         }
 
         //---------------------------------------------------------------------
