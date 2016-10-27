@@ -104,6 +104,19 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void ProjectNotMarkedAsBuild()
+        {
+            OpenSolution(CppConsoleApplication, ConfigurationName.Release, PlatFormName.Win32);
+            var outputMessage = GetOpenCppCoverageMessage(() => ExecuteOpenCppCoverageCommand());
+
+            CheckMessage(
+                string.Format(ConfigurationManager.ProjectNotMarkedAsBuildError, CppConsoleApplication),
+                outputMessage);
+        }
+
+        //---------------------------------------------------------------------
         static void CheckMessage(string expectedMessage, string outputMessage)
         {
             Assert.AreEqual("OpenCppCoverage\n\n" + expectedMessage, outputMessage);

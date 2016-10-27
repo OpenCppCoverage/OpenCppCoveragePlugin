@@ -16,7 +16,6 @@
 
 using EnvDTE;
 using EnvDTE80;
-using System;
 using System.Linq;
 using System.Text;
 
@@ -24,6 +23,11 @@ namespace OpenCppCoverage.VSPackage
 {
     class ConfigurationManager: IConfigurationManager
     {
+        //---------------------------------------------------------------------
+        public static readonly string ProjectNotMarkedAsBuildError
+            = "The project {0} is marked as not build for the active solution configuration. "
+                + "Please check your solution Configuration Manager.";
+
         //---------------------------------------------------------------------
         public DynamicVCConfiguration GetConfiguration(
             SolutionConfiguration2 activeConfiguration,
@@ -69,9 +73,7 @@ namespace OpenCppCoverage.VSPackage
 
             if (!context.ShouldBuild)
             {
-                error = string.Format("The project {0} is marked as not build for the active solution configuration. "
-                                + "Please check your solution Configuration Manager.",
-                        project.UniqueName);
+                error = string.Format(ProjectNotMarkedAsBuildError, project.UniqueName);
                 return null;
             }
 
