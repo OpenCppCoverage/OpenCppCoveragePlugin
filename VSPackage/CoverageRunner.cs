@@ -29,9 +29,10 @@ namespace OpenCppCoverage.VSPackage
     {
         //---------------------------------------------------------------------
         public static readonly string BuilderFailedMsg = "Build failed.";
+        public static readonly string InvalidValueForProgramToRun =
+            @"Please use a valid value for ""Program to run""";
         public static readonly string InvalidProgramToRunMsg =
-            @"File ""{0}"" does not exist. "
-            + @"Please use a valid value for ""Program to run""";
+            @"File ""{0}"" does not exist. " + InvalidValueForProgramToRun;
 
         //---------------------------------------------------------------------
         readonly ProjectBuilder projectBuilder;

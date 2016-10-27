@@ -38,13 +38,13 @@ namespace VSPackage_IntegrationTests
         internal readonly string ConsoleApplicationInFolderName = "ConsoleApplicationInFolder.exe";
 
         //---------------------------------------------------------------------
-        internal string GetOpenCppCoverageMessage()
+        internal string GetOpenCppCoverageMessage(Action action)
         {                        
             var uiShell = GetService<IVsUIShell>();
 
             using (var dialogBoxMessageRetriever = new DialogBoxMessageRetriever(uiShell, TimeSpan.FromSeconds(10)))
             {
-                ExecuteOpenCppCoverageCommand();
+                action();
                 return dialogBoxMessageRetriever.GetMessage();
             }
         }
@@ -99,22 +99,28 @@ namespace VSPackage_IntegrationTests
         internal void RunCoverage()
         {
             var controller = ExecuteOpenCppCoverageCommand();
-            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
+            RunCoverageCommand(controller);
         }
 
         //---------------------------------------------------------------------
         internal CoverageTreeController RunCoverageAndWait()
         {
             var controller = ExecuteOpenCppCoverageCommand();
-            return ExecuteRunCoverageCommand(controller);
+            return RunCoverageCommandAndWait(controller);
         }
 
         //---------------------------------------------------------------------
-        internal CoverageTreeController ExecuteRunCoverageCommand(
+        internal CoverageTreeController RunCoverageCommandAndWait(
                             MainSettingController controller)
         {
-            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
+            RunCoverageCommand(controller);
             return CloseOpenCppCoverageConsole(TimeSpan.FromSeconds(10));
+        }
+
+        //---------------------------------------------------------------------
+        internal void RunCoverageCommand(MainSettingController controller)
+        {
+            RunInUIhread(() => { controller.RunCoverageCommand.Execute(null); });
         }
 
         //---------------------------------------------------------------------
@@ -176,6 +182,13 @@ namespace VSPackage_IntegrationTests
         internal void RunInUIhread(Action action)
         {
             UIThreadInvoker.Invoke(action);
+        }
+
+        //---------------------------------------------------------------------
+        internal void WaitEndOfBuild()
+        {
+            while (VsIdeTestHostContext.Dte.Solution.SolutionBuild.BuildState == vsBuildState.vsBuildStateInProgress)
+                System.Threading.Thread.Sleep(TimeSpan.FromMilliseconds(100));
         }
 
         //---------------------------------------------------------------------

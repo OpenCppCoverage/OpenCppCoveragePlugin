@@ -152,7 +152,7 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         void RunCoverageAndCheckExitCode(MainSettingController controller)
         {
-            var coverageTreeController = ExecuteRunCoverageCommand(controller);
+            var coverageTreeController = RunCoverageCommandAndWait(controller);
             Assert.IsTrue(string.IsNullOrEmpty(coverageTreeController.Warning));
         }
     }

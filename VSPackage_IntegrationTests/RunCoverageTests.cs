@@ -28,10 +28,9 @@ namespace VSPackage_IntegrationTests
         public void DoesNotCompile()
         {
             OpenSolution(CppConsoleApplication2);
-            RunCoverage();
-            var outputMessage = GetOpenCppCoverageMessage();
-            Assert.AreEqual("OpenCppCoverage\n\n" + CoverageRunner.BuilderFailedMsg, 
-                outputMessage);
+            var outputMessage = GetOpenCppCoverageMessage(RunCoverage);
+            CheckMessage(CoverageRunner.BuilderFailedMsg, outputMessage);
+            WaitEndOfBuild();
         }
 
         //---------------------------------------------------------------------
@@ -46,13 +45,30 @@ namespace VSPackage_IntegrationTests
             {
                 var settings = debugSettings.Value;
                 settings.Command = "Invalid";
-                RunCoverage();
-                var outputMessage = GetOpenCppCoverageMessage();
-                var expectedMessage = "OpenCppCoverage\n\n" +
-                    string.Format(CoverageRunner.InvalidProgramToRunMsg, settings.Command);
+                var outputMessage = GetOpenCppCoverageMessage(RunCoverage);
 
-                Assert.AreEqual(expectedMessage, outputMessage);
+                CheckMessage(
+                    string.Format(CoverageRunner.InvalidProgramToRunMsg, settings.Command), 
+                    outputMessage);
             }
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void DisableCompileBeforeRunning()
+        {
+            OpenSolution(CppConsoleApplication);
+            SolutionConfigurationHelpers.CleanSolution();
+            var controller = ExecuteOpenCppCoverageCommand();
+            controller.BasicSettingController.CompileBeforeRunning = false;
+                
+            RunInUIhread(() => 
+            {
+                var outputMessage = GetOpenCppCoverageMessage(() => RunCoverageCommand(controller));
+
+                Assert.IsTrue(outputMessage.EndsWith(CoverageRunner.InvalidValueForProgramToRun));
+            });
         }
 
         //---------------------------------------------------------------------
@@ -85,6 +101,12 @@ namespace VSPackage_IntegrationTests
 
             Assert.IsTrue(root.CoveredLineCount > 0);
             Assert.IsTrue(root.UncoveredLineCount > 0);
+        }
+
+        //---------------------------------------------------------------------
+        static void CheckMessage(string expectedMessage, string outputMessage)
+        {
+            Assert.AreEqual("OpenCppCoverage\n\n" + expectedMessage, outputMessage);
         }
     }
 }
