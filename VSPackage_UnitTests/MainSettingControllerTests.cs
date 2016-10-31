@@ -85,7 +85,7 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void CommandLineText()
         {
-            UIThreadInvoker.Invoke((Action)(() =>
+            TestHelper.RunInUIhread(() =>
             {
                 string commandLine = "commandLine";
                 var startUpProjectSettings = new StartUpProjectSettings()
@@ -102,7 +102,7 @@ namespace VSPackage_UnitTests
                 controller.SelectedTab = new System.Windows.Controls.TabItem()
                 { Header = MainSettingController.CommandLineHeader };
                 Assert.AreEqual(commandLine, controller.CommandLineText);
-            }));
+            });
         }
 
         //---------------------------------------------------------------------
