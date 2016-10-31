@@ -15,7 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.Settings.UI;
+using System.Linq;
 
 namespace VSPackage_IntegrationTests
 {
@@ -117,9 +120,32 @@ namespace VSPackage_IntegrationTests
         }
 
         //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void CloseSettingWindow()
+        {
+            OpenSolution(CppConsoleApplication);
+            var controller = ExecuteOpenCppCoverageCommand();
+
+            Assert.IsTrue(IsWindowVisible(SettingToolWindow.WindowCaption));
+            RunInUIhread(() => controller.CancelCommand.Execute(null));
+            Assert.IsFalse(IsWindowVisible(SettingToolWindow.WindowCaption));
+        }
+
+        //---------------------------------------------------------------------
         static void CheckMessage(string expectedMessage, string outputMessage)
         {
             Assert.AreEqual("OpenCppCoverage\n\n" + expectedMessage, outputMessage);
+        }
+
+        //---------------------------------------------------------------------
+        static bool IsWindowVisible(string windowCaption)
+        {
+            var window = VsIdeTestHostContext.Dte.Windows
+                .Cast<EnvDTE.Window>()
+                .First(w => w.Caption == windowCaption);
+
+            return window.Visible;
         }
     }
 }

@@ -16,7 +16,6 @@
 
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Runtime.InteropServices;
 
@@ -26,9 +25,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class SettingToolWindow : ToolWindowPane, IVsExtensibleObject
     {
         //---------------------------------------------------------------------
+        public static readonly string WindowCaption = "Settings";
+
+        //---------------------------------------------------------------------
         public SettingToolWindow() : base(null)
         {
-            this.Caption = "Setting";
+            this.Caption = WindowCaption;
             var control = new MainSettingControl();
 
             this.Controller = new MainSettingController(
