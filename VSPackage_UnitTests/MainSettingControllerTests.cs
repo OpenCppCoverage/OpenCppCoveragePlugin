@@ -106,6 +106,21 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
+        [TestMethod]
+        public void MiscellaneousSettingControllerHasConfigFile()
+        {
+            TestHelper.RunInUIhread(() =>
+            {
+                var controller = new MiscellaneousSettingController();
+                controller.HasConfigFile = true;
+                controller.OptionalConfigFile = "configFile";
+
+                controller.HasConfigFile = false;
+                Assert.IsNull(controller.OptionalConfigFile);
+            });
+        }
+
+        //---------------------------------------------------------------------
         MainSettingController CreateController(
             StartUpProjectSettings settings,
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
