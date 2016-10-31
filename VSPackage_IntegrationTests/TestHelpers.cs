@@ -33,9 +33,6 @@ namespace VSPackage_IntegrationTests
         internal readonly string CSharpConsoleApplication = @"CSharpConsoleApplication\CSharpConsoleApplication.csproj";
         internal readonly string CppConsoleApplicationDll = @"CppConsoleApplicationDll\CppConsoleApplicationDll.vcxproj";
         internal readonly string ConsoleApplicationInFolder = @"ConsoleApplicationInFolder\ConsoleApplicationInFolder.vcxproj";
-        internal readonly string ApplicationName = "CppConsoleApplication.exe";
-        internal readonly string ApplicationName2 = "CppConsoleApplication2.exe";
-        internal readonly string ConsoleApplicationInFolderName = "ConsoleApplicationInFolder.exe";
         internal readonly string CoveredTag = " COVERED";
         internal readonly string UncoveredTag = " UNCOVERED";
 
