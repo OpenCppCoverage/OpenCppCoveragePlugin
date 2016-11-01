@@ -231,7 +231,61 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
-        public static List<T> ToList<T>(T value)
+        [TestMethod]
+        public void WhiteSpaceAndEmptyBasicSettings()
+        {
+            var basicSettings = mainSettings.BasicSettings;
+            basicSettings.WorkingDirectory = string.Empty;
+            basicSettings.ModulePaths = new List<string> { string.Empty };
+            basicSettings.SourcePaths = new List<string> { " " };
+
+            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void WhiteSpaceAndEmptyFilterSettings()
+        {
+            var filterSettings = mainSettings.FilterSettings;
+        
+            filterSettings.AdditionalModulePaths = new List<string> { string.Empty };
+            filterSettings.AdditionalSourcePaths = new List<string> { string.Empty };
+            filterSettings.ExcludedModulePaths = new List<string> { " " };
+            filterSettings.ExcludedSourcePaths = new List<string> { string.Empty };
+            filterSettings.UnifiedDiffs = new List<FilterSettings.UnifiedDiff>
+                { new FilterSettings.UnifiedDiff() };
+
+            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void EmptyImportExportSettings()
+        {
+            var importExportSettings = mainSettings.ImportExportSettings;
+
+            importExportSettings.InputCoverages = new List<string> { string.Empty };
+            importExportSettings.Exports = new List<ImportExportSettings.Export>
+                { new ImportExportSettings.Export() };
+
+            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void WhiteSpaceMiscellaneousSettings()
+        {
+            mainSettings.MiscellaneousSettings.OptionalConfigFile = "   ";
+
+            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+        }
+
+        //---------------------------------------------------------------------
+        static List<T> ToList<T>(T value)
         {
             return new List<T> { value };
         }

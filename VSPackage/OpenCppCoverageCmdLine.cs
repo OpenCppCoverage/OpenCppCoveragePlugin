@@ -16,6 +16,7 @@
 
 using OpenCppCoverage.VSPackage.Settings;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -38,6 +39,7 @@ namespace OpenCppCoverage.VSPackage
         public static readonly string QuietFlag = "--quiet";
         public static readonly string VerboseFlag = "--verbose";
         public static readonly string ContinueAfterCppExceptionFlag = "--continue_after_cpp_exception";
+        public static readonly string PluginFlag = "--plugin";
 
         //---------------------------------------------------------------------
         public static string Build(MainSettings settings, string lineSeparator = " ")
@@ -53,19 +55,19 @@ namespace OpenCppCoverage.VSPackage
 
             return builder.GetCommandLine(lineSeparator);
         }
-        
+
         //---------------------------------------------------------------------
         static void AppendBasicSettings(
             CommandLineBuilder builder,
             BasicSettings settings)
         {
-            builder.AppendArgumentCollection(SourcesFlag, settings.SourcePaths);
-            builder.AppendArgumentCollection(ModulesFlag, settings.ModulePaths);
+            AppendArgumentCollection(builder, SourcesFlag, settings.SourcePaths);
+            AppendArgumentCollection(builder, ModulesFlag, settings.ModulePaths);
 
-            if (!string.IsNullOrEmpty(settings.WorkingDirectory))
+            if (!string.IsNullOrWhiteSpace(settings.WorkingDirectory))
                 builder.AppendArgument(WorkingDirFlag, settings.WorkingDirectory);
 
-            builder.Append(" --plugin ");
+            builder.Append(" " + PluginFlag + " ");
             builder.AppendArgument("--", settings.ProgramToRun);
             builder.Append(settings.Arguments);
         }
@@ -75,17 +77,20 @@ namespace OpenCppCoverage.VSPackage
             CommandLineBuilder builder,
             FilterSettings settings)
         {
-            builder.AppendArgumentCollection(SourcesFlag, settings.AdditionalSourcePaths);
-            builder.AppendArgumentCollection(ModulesFlag, settings.AdditionalModulePaths);
-            builder.AppendArgumentCollection(ExcludedSourcesFlag, settings.ExcludedSourcePaths);
-            builder.AppendArgumentCollection(ExcludedModulesFlag, settings.ExcludedModulePaths);
+            AppendArgumentCollection(builder, SourcesFlag, settings.AdditionalSourcePaths);
+            AppendArgumentCollection(builder, ModulesFlag, settings.AdditionalModulePaths);
+            AppendArgumentCollection(builder, ExcludedSourcesFlag, settings.ExcludedSourcePaths);
+            AppendArgumentCollection(builder, ExcludedModulesFlag, settings.ExcludedModulePaths);
 
             foreach (var unifiedDiff in settings.UnifiedDiffs)
             {                
                 var argumentValue = unifiedDiff.UnifiedDiffPath;
-                if (unifiedDiff.OptionalRootFolder != null)
-                    argumentValue = argumentValue + UnifiedDiffSeparator + unifiedDiff.OptionalRootFolder;
-                builder.AppendArgument(UnifiedDiffFlag, argumentValue);
+                if (!string.IsNullOrWhiteSpace(argumentValue))
+                {
+                    if (!string.IsNullOrWhiteSpace(unifiedDiff.OptionalRootFolder))
+                        argumentValue = argumentValue + UnifiedDiffSeparator + unifiedDiff.OptionalRootFolder;
+                    builder.AppendArgument(UnifiedDiffFlag, argumentValue);
+                }
             }
         }
 
@@ -94,13 +99,17 @@ namespace OpenCppCoverage.VSPackage
             CommandLineBuilder builder,
             ImportExportSettings settings)
         {
-            builder.AppendArgumentCollection(InputCoverageFlag, settings.InputCoverages);
+            AppendArgumentCollection(builder, InputCoverageFlag, settings.InputCoverages);
 
             foreach (var export in settings.Exports)
             {
-                var type = export.Type.ToString().ToLowerInvariant();
-                builder.AppendArgument(ExportTypeFlag,
-                     type + ExportTypeSeparator + export.Path);
+                var path = export.Path;
+                if (!string.IsNullOrWhiteSpace(path))
+                {
+                    var type = export.Type.ToString().ToLowerInvariant();
+                    builder.AppendArgument(ExportTypeFlag,
+                         type + ExportTypeSeparator + path);
+                }
             }
 
             if (settings.CoverChildrenProcesses)
@@ -114,7 +123,7 @@ namespace OpenCppCoverage.VSPackage
             CommandLineBuilder builder,
             MiscellaneousSettings settings)
         {
-            if (settings.OptionalConfigFile != null)
+            if (!string.IsNullOrWhiteSpace(settings.OptionalConfigFile))
                 builder.AppendArgument(ConfigFileFlag, settings.OptionalConfigFile);
 
             switch (settings.LogTypeValue)
@@ -130,6 +139,16 @@ namespace OpenCppCoverage.VSPackage
 
             if (settings.ContinueAfterCppExceptions)
                 builder.AppendArgument(ContinueAfterCppExceptionFlag, null);
+        }
+
+        //---------------------------------------------------------------------
+        static void AppendArgumentCollection(
+            CommandLineBuilder builder,
+            string argumentName, 
+            IEnumerable<string> values)
+        {
+            builder.AppendArgumentCollection(argumentName,
+                values.Where(v => !string.IsNullOrWhiteSpace(v)));
         }
     }
 }
