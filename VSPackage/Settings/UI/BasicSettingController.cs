@@ -107,7 +107,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 Arguments = this.Arguments,
                 ProgramToRun = this.ProgramToRun,
                 CompileBeforeRunning = this.CompileBeforeRunning,
-                WorkingDirectory = this.OptionalWorkingDirectory,
+                WorkingDirectory = GetWorkingDirectory(),
                 ProjectName = this.CurrentProject,
                 SolutionConfigurationName = this.CurrentConfiguration
             };
@@ -195,6 +195,14 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             get { return this.currentConfiguration; }
             set { this.SetField(ref this.currentConfiguration, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string GetWorkingDirectory()
+        {
+            if (!string.IsNullOrWhiteSpace(this.OptionalWorkingDirectory))
+                return this.OptionalWorkingDirectory;
+            return Path.GetDirectoryName(this.ProgramToRun);
         }
     }
 }
