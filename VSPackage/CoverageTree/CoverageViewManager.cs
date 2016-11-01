@@ -42,10 +42,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         
         //---------------------------------------------------------------------
         readonly List<IWpfTextView> views = new List<IWpfTextView>();
+        readonly FileCoverageAggregator fileCoverageAggregator = new FileCoverageAggregator();
+
         Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
         Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>> 
             onTextChangedHanlders = new Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>>();
-
         bool showCoverage;
 
         //---------------------------------------------------------------------
@@ -78,10 +79,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         {
             set
             {
-                this.coverageByFile = value.Children
-                    .SelectMany(module => module.Children)
-                    .ToDictionary(fileCoverage => NormalizePath(fileCoverage.Path));
-
+                this.coverageByFile = fileCoverageAggregator.Aggregate(value, NormalizePath);
                 this.RemoveHighlightForAllViews();
                 AddHighlightCoverageForExistingViews();
             }

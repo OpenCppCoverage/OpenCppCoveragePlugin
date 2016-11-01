@@ -148,6 +148,7 @@
     <Compile Include="CoverageRunner.cs" />
     <Compile Include="CoverageRateBuilder\CoverageRateBuilder.cs" />
     <Compile Include="CoverageTree\BasicCoverageTreeNode.cs" />
+    <Compile Include="CoverageTree\FileCoverageAggregator.cs" />
     <Compile Include="CoverageTree\CoverageTreeControl.xaml.cs">
       <DependentUpon>CoverageTreeControl.xaml</DependentUpon>
     </Compile>
