@@ -75,9 +75,9 @@
                 Width="100" 
                 Margin="10"/>
             <Button 
-                Command="{Binding CancelCommand}" 
+                Command="{Binding CloseCommand}" 
                 Grid.Column="3" 
-                Content="Cancel" 
+                Content="Close" 
                 IsCancel="True" 
                 Width="100" 
                 Margin="10"/>

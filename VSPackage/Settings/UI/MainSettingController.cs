@@ -33,7 +33,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
             this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
-            this.CancelCommand = new RelayCommand(() => {
+            this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(UpdateStartUpProject);
@@ -105,7 +105,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public EventHandler CloseWindowEvent;
         public ICommand RunCoverageCommand { get; private set; }
-        public ICommand CancelCommand { get; private set; }
+        public ICommand CloseCommand { get; private set; }
         public ICommand ResetToDefaultCommand { get; private set; }
     }
 }

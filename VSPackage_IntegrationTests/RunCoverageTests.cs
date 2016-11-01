@@ -128,7 +128,7 @@ namespace VSPackage_IntegrationTests
             var controller = ExecuteOpenCppCoverageCommand();
 
             Assert.IsTrue(IsWindowVisible(SettingToolWindow.WindowCaption));
-            RunInUIhread(() => controller.CancelCommand.Execute(null));
+            RunInUIhread(() => controller.CloseCommand.Execute(null));
             Assert.IsFalse(IsWindowVisible(SettingToolWindow.WindowCaption));
         }
 
