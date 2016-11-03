@@ -40,7 +40,7 @@
                 Margin="0 0 5 0"/>
             <helper:FileSystemSelectionControl 
                 IsEnabled="{Binding HasConfigFile}"
-                Mode="FileSelection"
+                Mode="ExistingFileSelection"
                 FileFilter="Config Files (*.*)|*.*"
                 SelectedPath="{Binding OptionalConfigFile}"                                 
                 Grid.Row="1" Grid.Column="2"

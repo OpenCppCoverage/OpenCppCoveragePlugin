@@ -81,7 +81,7 @@
 
                 <Label Content="Program to run:" Grid.Row="3"/>
                 <helper:FileSystemSelectionControl
-                    Mode="FileSelection"
+                    Mode="ExistingFileSelection"
                     FileFilter="Executable Files (*.exe)|*.exe"
                     SelectedPath="{Binding ProgramToRun}" 
                     Grid.Row="3" Grid.ColumnSpan="2"/>

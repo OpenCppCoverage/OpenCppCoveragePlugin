@@ -50,7 +50,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 {
                     return (this.Type == ImportExportSettings.Type.Html) 
                         ? FileSystemSelectionControl.SelectionMode.FolderSelection 
-                        : FileSystemSelectionControl.SelectionMode.FileSelection;
+                        : FileSystemSelectionControl.SelectionMode.NewFileSelection;
                 }
             }
 

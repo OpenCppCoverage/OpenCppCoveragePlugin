@@ -36,7 +36,10 @@ namespace OpenCppCoverage.VSPackage.Helper
             {
                 switch (this.Mode)
                 {
-                    case SelectionMode.FileSelection: SelectFile(); break;
+                    case SelectionMode.ExistingFileSelection:
+                        SelectFile(new OpenFileDialog()); break;
+                    case SelectionMode.NewFileSelection:
+                        SelectFile(new SaveFileDialog()); break;
                     case SelectionMode.FolderSelection: SelectFolder(); break;
                 }
                 this.textBox.Focus();
@@ -71,7 +74,7 @@ namespace OpenCppCoverage.VSPackage.Helper
         //-----------------------------------------------------------------------
         public static readonly DependencyProperty ModeProperty =
             DependencyProperty.Register(nameof(Mode), typeof(SelectionMode), typeof(FileSystemSelectionControl),
-                new FrameworkPropertyMetadata(SelectionMode.FileSelection));
+                new FrameworkPropertyMetadata(SelectionMode.ExistingFileSelection));
 
         //-----------------------------------------------------------------------
         public SelectionMode Mode
@@ -83,7 +86,8 @@ namespace OpenCppCoverage.VSPackage.Helper
         //-----------------------------------------------------------------------
         public enum SelectionMode
         {
-            FileSelection,
+            NewFileSelection,
+            ExistingFileSelection,
             FolderSelection
         }
 
@@ -91,9 +95,8 @@ namespace OpenCppCoverage.VSPackage.Helper
         public ICommand BrowseCommand { get; private set; }
 
         //-----------------------------------------------------------------------
-        void SelectFile()
+        void SelectFile(FileDialog dialog)
         {
-            var dialog = new OpenFileDialog();
             dialog.Filter = this.FileFilter;
             bool? userClickedOK = dialog.ShowDialog();
 

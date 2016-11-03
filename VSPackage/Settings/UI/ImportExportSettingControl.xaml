@@ -55,7 +55,7 @@
                           Grid.Row="1" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
                         <helper:DataGridFileSystemSelectionColumn
-                            Mode="FileSelection"
+                            Mode="ExistingFileSelection"
                             FileFilter="Coverage Files (*.cov)|*.cov"
                             Header="Input Coverage" 
                             Binding="{Binding Value}" 

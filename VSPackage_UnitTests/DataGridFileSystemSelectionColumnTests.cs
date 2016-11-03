@@ -62,7 +62,7 @@ namespace VSPackage_UnitTests
                 dataGridColumn.FileFilterBinding = CreateBinding(fileFilter);
 
                 var mode = new BindableValue<FileSystemSelectionControl.SelectionMode>(
-                    FileSystemSelectionControl.SelectionMode.FileSelection);
+                    FileSystemSelectionControl.SelectionMode.ExistingFileSelection);
                 dataGridColumn.ModeBinding = CreateBinding(mode);
 
                 var control = (FileSystemSelectionControl)

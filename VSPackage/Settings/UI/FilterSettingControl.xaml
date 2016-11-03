@@ -59,7 +59,7 @@
                         Grid.Row="2" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
                         <helper:DataGridFileSystemSelectionColumn 
-                            Mode="FileSelection"
+                            Mode="ExistingFileSelection"
                             FileFilter="Diff Files (*.diff)|*.diff|All Files (*.*)|*.*"
                             Header="Unified Diff Path" 
                             Binding="{Binding UnifiedDiffPath}" 
