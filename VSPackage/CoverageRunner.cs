@@ -96,6 +96,7 @@ namespace OpenCppCoverage.VSPackage
                     string.Format(InvalidProgramToRunMsg, settings.BasicSettings.ProgramToRun));
             }
 
+            PrepareExports(settings.ImportExportSettings);
             var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
             var openCppCoverage = new OpenCppCoverage(outputWindowWriter);
             var onCoverageFinished = openCppCoverage.RunCodeCoverageAsync(settings);
@@ -161,6 +162,22 @@ namespace OpenCppCoverage.VSPackage
             });
             importExportSettings.Exports = exports;
             return coveragePath;
+        }
+
+        //---------------------------------------------------------------------        
+        static void PrepareExports(ImportExportSettings importExportSettings)
+        {
+            foreach (var export in importExportSettings.Exports)
+            {
+                // Folder for html export should not exist and so we need to
+                // delete it (Because FolderBrowserDialog returns existing folder) 
+                if (export.Type == ImportExportSettings.Type.Html
+                    && Directory.Exists(export.Path)
+                    && !Directory.EnumerateFileSystemEntries(export.Path).Any())
+                {
+                    Directory.Delete(export.Path);
+                }
+            }
         }
 
         //---------------------------------------------------------------------        

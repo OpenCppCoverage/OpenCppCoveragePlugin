@@ -17,6 +17,8 @@
 using GalaSoft.MvvmLight.Command;
 using OpenCppCoverage.VSPackage.Helper;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -32,7 +34,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
             this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
-            this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
+            this.runCoverageCommand = new RelayCommand(
+                () => OnRunCoverageCommand(),
+                () => string.IsNullOrEmpty(this.RunCoverageErrorToolTip));
+
             this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
@@ -40,6 +45,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
+            this.ImportExportSettingController.ErrorsChanged += ErrorsChangedHandler;
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
         }
 
@@ -86,6 +92,14 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        string runCoverageErrorToolTip;
+        public string RunCoverageErrorToolTip
+        {
+            get { return this.runCoverageErrorToolTip; }
+            private set { this.SetField(ref this.runCoverageErrorToolTip, value); }
+        }
+
+        //---------------------------------------------------------------------
         public static string CommandLineHeader = "Command line";
 
         public TabItem SelectedTab
@@ -99,12 +113,27 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         void OnRunCoverageCommand()
         {
-            this.CoverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
+            this.ImportExportSettingController.UpdateErrorsStatus();
+
+            if (this.runCoverageCommand.CanExecute(null))
+                this.CoverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
         }
 
         //---------------------------------------------------------------------
+        void ErrorsChangedHandler(object sender, IEnumerable<string> errors)
+        {
+            this.RunCoverageErrorToolTip = errors.FirstOrDefault();
+            this.runCoverageCommand.RaiseCanExecuteChanged();
+        }
+
+        //---------------------------------------------------------------------
+        readonly RelayCommand runCoverageCommand;
+        public ICommand RunCoverageCommand
+        {
+            get { return runCoverageCommand; }
+        }
+
         public EventHandler CloseWindowEvent;
-        public ICommand RunCoverageCommand { get; private set; }
         public ICommand CloseCommand { get; private set; }
         public ICommand ResetToDefaultCommand { get; private set; }
     }

@@ -71,7 +71,9 @@
                 Command="{Binding RunCoverageCommand}" 
                 Grid.Column="2" 
                 Content="Run Coverage" 
-                IsDefault="True" 
+                IsDefault="True"
+                ToolTip="{Binding RunCoverageErrorToolTip}"
+                ToolTipService.ShowOnDisabled="True"                    
                 Width="100" 
                 Margin="10"/>
             <Button 

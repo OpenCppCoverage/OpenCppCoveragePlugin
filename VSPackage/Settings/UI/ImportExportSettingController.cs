@@ -18,6 +18,7 @@ using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
@@ -78,12 +79,55 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        public static readonly string ExportPathExistError = 
+            "Import/Export: Export path {0} already exists. Please select a new file.";
+        public static readonly string ExportDirectoryNotEmptyError = 
+            "Import/Export: Export directory {0} is not empty. Please select an empty directory.";
+        //---------------------------------------------------------------------
+        public event EventHandler<IEnumerable<string>> ErrorsChanged;
+
+        //---------------------------------------------------------------------
+        IEnumerable<string> errors = new List<string>();
+
+        //---------------------------------------------------------------------
         public ImportExportSettingController()
         {
             this.ExportTypeValues = Enum.GetValues(typeof(ImportExportSettings.Type))
                 .Cast<ImportExportSettings.Type>();
-            this.Exports = new ObservableCollection<Export>();
+            this.Exports = new ObservableItemCollection<Export>();
+            this.Exports.CollectionOrItemChanged += CollectionOrItemChangedHandler;
             this.InputCoverages = new ObservableCollection<BindableString>();
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateErrorsStatus()
+        {
+            var newErrors = new List<string>();
+            foreach (var export in this.Exports)
+            {
+                if (!string.IsNullOrEmpty(export.Path))
+                {
+                    if (File.Exists(export.Path))
+                        newErrors.Add(string.Format(ExportPathExistError, export.Path));
+                    else if (
+                        Directory.Exists(export.Path)
+                        && Directory.EnumerateFileSystemEntries(export.Path).Any())
+                    {
+                        newErrors.Add(string.Format(ExportDirectoryNotEmptyError, export.Path));
+                    }
+                }
+            }
+            if (!newErrors.SequenceEqual(this.errors))
+            {
+                this.errors = newErrors;
+                this?.ErrorsChanged(this, this.errors);
+            }
+        }
+
+        //---------------------------------------------------------------------
+        void CollectionOrItemChangedHandler(object sender, EventArgs e)
+        {
+            UpdateErrorsStatus();
         }
 
         //---------------------------------------------------------------------
@@ -113,7 +157,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
         //---------------------------------------------------------------------
         public IEnumerable<ImportExportSettings.Type> ExportTypeValues { get; private set; }
-        public ObservableCollection<Export> Exports { get; private set; }
+        public ObservableItemCollection<Export> Exports { get; private set; }
         public ObservableCollection<BindableString> InputCoverages { get; private set; }
 
         //-----------------------------------------------------------------
