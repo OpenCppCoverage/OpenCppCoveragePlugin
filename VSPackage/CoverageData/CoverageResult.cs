@@ -28,7 +28,7 @@ namespace OpenCppCoverage.VSPackage.CoverageData
             this.Modules = modules;
         }
 
-        public ProtoBuff.CoverageData CoverageData { get; private set; }
-        public IEnumerable<ProtoBuff.ModuleCoverage> Modules { get; private set; }
+        public ProtoBuff.CoverageData CoverageData { get; }
+        public IEnumerable<ProtoBuff.ModuleCoverage> Modules { get; }
     }
 }

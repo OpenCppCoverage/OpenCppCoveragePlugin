@@ -78,10 +78,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public BasicSettingController BasicSettingController { get; private set; }
-        public FilterSettingController FilterSettingController { get; private set; }
-        public ImportExportSettingController ImportExportSettingController { get; private set; }
-        public MiscellaneousSettingController MiscellaneousSettingController { get; private set; }
+        public BasicSettingController BasicSettingController { get; }
+        public FilterSettingController FilterSettingController { get; }
+        public ImportExportSettingController ImportExportSettingController { get; }
+        public MiscellaneousSettingController MiscellaneousSettingController { get; }
 
         //---------------------------------------------------------------------
         string commandLineText;
@@ -134,7 +134,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         public EventHandler CloseWindowEvent;
-        public ICommand CloseCommand { get; private set; }
-        public ICommand ResetToDefaultCommand { get; private set; }
+        public ICommand CloseCommand { get; }
+        public ICommand ResetToDefaultCommand { get; }
     }
 }

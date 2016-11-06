@@ -42,7 +42,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //---------------------------------------------------------------------
-        public CoverageTreeController Controller { get; private set; }
+        public CoverageTreeController Controller { get; }
 
         //---------------------------------------------------------------------
         public int GetAutomationObject(string pszPropName, out object ppDisp)

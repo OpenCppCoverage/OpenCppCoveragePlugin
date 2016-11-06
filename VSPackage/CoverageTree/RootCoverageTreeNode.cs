@@ -77,6 +77,6 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         }
 
         //-----------------------------------------------------------------------
-        public FileCoverage Coverage { get; private set; }
+        public FileCoverage Coverage { get; }
     }
 }

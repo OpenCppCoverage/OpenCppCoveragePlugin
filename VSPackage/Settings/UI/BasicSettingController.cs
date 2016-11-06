@@ -33,9 +33,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.Project = project;
             this.IsSelected = true;
         }
-        public string Name { get; private set; }
-        public string FullName { get; private set; }
-        public StartUpProjectSettings.CppProject Project { get; private set; }
+        public string Name { get; }
+        public string FullName { get; }
+        public StartUpProjectSettings.CppProject Project { get; }
         public bool IsSelected { get; set; }
 
         //---------------------------------------------------------------------

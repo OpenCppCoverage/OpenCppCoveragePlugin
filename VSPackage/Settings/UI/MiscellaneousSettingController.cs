@@ -88,6 +88,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
         
         //---------------------------------------------------------------------        
-        public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; private set; }        
+        public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; }
     }
 }

@@ -40,7 +40,7 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
         }
 
         //---------------------------------------------------------------------
-        public string Name { get; private set; }
+        public string Name { get; }
 
         //---------------------------------------------------------------------
         public IEnumerable<T> Children
@@ -69,8 +69,8 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
             this.HasBeenExecuted = hasBeenExecuted;
         }
 
-        public int LineNumber { get; private set;  }
-        public bool HasBeenExecuted { get; private set; }
+        public int LineNumber { get;  }
+        public bool HasBeenExecuted { get; }
     }
     
     //-------------------------------------------------------------------------
@@ -86,10 +86,10 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
         }
 
         //---------------------------------------------------------------------
-        public string Path { get; private set; }
+        public string Path { get; }
 
         //---------------------------------------------------------------------
-        public IEnumerable<LineCoverage> LineCoverages { get; private set; }
+        public IEnumerable<LineCoverage> LineCoverages { get; }
     }
 
     //-------------------------------------------------------------------------
@@ -108,6 +108,6 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
         }
 
         //---------------------------------------------------------------------
-        public int ExitCode { get; private set; }
+        public int ExitCode { get; }
     }
 }

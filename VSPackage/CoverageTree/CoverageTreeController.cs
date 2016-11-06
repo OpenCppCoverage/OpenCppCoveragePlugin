@@ -81,7 +81,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         public RootCoverageTreeNode Root
         {
             get { return this.rootNode; }
-            private set { SetField(ref this.rootNode, value); }
+            private set { this.SetField(ref this.rootNode, value); }
         }
 
         //-----------------------------------------------------------------------

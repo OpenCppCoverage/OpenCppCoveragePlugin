@@ -92,7 +92,7 @@ namespace OpenCppCoverage.VSPackage.Helper
         }
 
         //-----------------------------------------------------------------------
-        public ICommand BrowseCommand { get; private set; }
+        public ICommand BrowseCommand { get; }
 
         //-----------------------------------------------------------------------
         void SelectFile(FileDialog dialog)

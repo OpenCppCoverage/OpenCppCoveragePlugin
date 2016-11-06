@@ -156,9 +156,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public IEnumerable<ImportExportSettings.Type> ExportTypeValues { get; private set; }
-        public ObservableItemCollection<Export> Exports { get; private set; }
-        public ObservableCollection<BindableString> InputCoverages { get; private set; }
+        public IEnumerable<ImportExportSettings.Type> ExportTypeValues { get; }
+        public ObservableItemCollection<Export> Exports { get; }
+        public ObservableCollection<BindableString> InputCoverages { get; }
 
         //-----------------------------------------------------------------
         bool coverChildrenProcesses;

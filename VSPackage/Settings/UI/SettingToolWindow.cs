@@ -47,7 +47,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public MainSettingController Controller { get; private set; }
+        public MainSettingController Controller { get; }
 
         //---------------------------------------------------------------------
         public int GetAutomationObject(string pszPropName, out object ppDisp)

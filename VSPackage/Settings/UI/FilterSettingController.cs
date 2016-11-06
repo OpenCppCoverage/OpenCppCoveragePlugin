@@ -55,10 +55,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public ObservableCollection<BindableString> AdditionalSourcePatterns { get; private set; }
-        public ObservableCollection<BindableString> AdditionalModulePatterns { get; private set; }
-        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; private set; }        
-        public ObservableCollection<BindableString> ExcludedModulePatterns { get; private set; }
-        public ObservableCollection<FilterSettings.UnifiedDiff> UnifiedDiffs { get; private set; }
+        public ObservableCollection<BindableString> AdditionalSourcePatterns { get; }
+        public ObservableCollection<BindableString> AdditionalModulePatterns { get; }
+        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; }
+        public ObservableCollection<BindableString> ExcludedModulePatterns { get; }
+        public ObservableCollection<FilterSettings.UnifiedDiff> UnifiedDiffs { get; }
     }
 }
