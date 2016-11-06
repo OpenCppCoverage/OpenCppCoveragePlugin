@@ -118,23 +118,6 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
-        public class BindableValue<T> : PropertyChangedNotifier
-        {
-            T value;
-
-            public BindableValue(T value)
-            {
-                this.value = value;
-            }
-
-            public T Value
-            {
-                get { return this.value; }
-                set { this.SetField(ref this.value, value); }
-            }
-        }
-
-        //---------------------------------------------------------------------
         Binding CreateBinding<T>(BindableValue<T> str)
         {
             var binding = new Binding();
