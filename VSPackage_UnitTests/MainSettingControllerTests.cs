@@ -27,7 +27,7 @@ using System.Reflection;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class MainSettingControllerTests
     {
         //---------------------------------------------------------------------

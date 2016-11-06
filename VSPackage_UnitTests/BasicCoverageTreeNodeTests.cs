@@ -20,7 +20,7 @@ using OpenCppCoverage.VSPackage.CoverageTree;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class BasicCoverageTreeNodeTests
     {
         //---------------------------------------------------------------------

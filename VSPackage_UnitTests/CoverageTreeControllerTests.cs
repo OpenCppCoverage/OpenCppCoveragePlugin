@@ -22,7 +22,7 @@ using System.Collections.Generic;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class CoverageTreeControllerTests
     {
         CoverageTreeController controller;

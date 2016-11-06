@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class OpenCppCoverageCmdLineTests
     {        
         readonly MainSettings mainSettings = new MainSettings();

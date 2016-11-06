@@ -24,7 +24,7 @@ using ProtoBuff = OpenCppCoverage.VSPackage.CoverageData.ProtoBuff;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class CoverageRateBuilderTests
     {
         //---------------------------------------------------------------------

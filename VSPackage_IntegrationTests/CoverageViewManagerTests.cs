@@ -30,7 +30,7 @@ using System.Windows.Shapes;
 
 namespace VSPackage_IntegrationTests
 {
-    [TestClass()]
+    [TestClass]
     public class CoverageViewManagerTests: TestHelpers
     {        
         //---------------------------------------------------------------------

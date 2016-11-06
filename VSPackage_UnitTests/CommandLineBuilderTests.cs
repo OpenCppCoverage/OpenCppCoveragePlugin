@@ -23,7 +23,7 @@ using System.Reflection;
 
 namespace VSPackage_UnitTests
 {
-    [TestClass()]
+    [TestClass]
     public class CommandLineBuilderTests
     {
         //---------------------------------------------------------------------

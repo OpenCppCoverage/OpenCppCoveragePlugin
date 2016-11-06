@@ -22,7 +22,7 @@ using System.Linq;
 
 namespace VSPackage_IntegrationTests
 {
-    [TestClass()]
+    [TestClass]
     public class PathHelperTests
     {
         //---------------------------------------------------------------------
