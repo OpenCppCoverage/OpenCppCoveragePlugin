@@ -298,6 +298,9 @@
     <Content Include="OpenCppCoverage-x64\Exporter.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="OpenCppCoverage-x64\FileFilter.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="OpenCppCoverage-x64\libctemplate.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -356,6 +359,9 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x64\Tools.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x86\FileFilter.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x86\OpenCppCoverage.exe">
