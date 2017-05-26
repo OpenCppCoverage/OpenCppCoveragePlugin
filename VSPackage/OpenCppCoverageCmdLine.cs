@@ -39,6 +39,7 @@ namespace OpenCppCoverage.VSPackage
         public static readonly string QuietFlag = "--quiet";
         public static readonly string VerboseFlag = "--verbose";
         public static readonly string ContinueAfterCppExceptionFlag = "--continue_after_cpp_exception";
+        public static readonly string OptimizedBuildFlag = "--optimized_build";
         public static readonly string PluginFlag = "--plugin";
 
         //---------------------------------------------------------------------
@@ -66,6 +67,8 @@ namespace OpenCppCoverage.VSPackage
 
             if (!string.IsNullOrWhiteSpace(settings.WorkingDirectory))
                 builder.AppendArgument(WorkingDirFlag, settings.WorkingDirectory);
+            if (settings.IsOptimizedBuildEnabled)
+                builder.AppendArgument(OptimizedBuildFlag, null);
 
             builder.Append(" " + PluginFlag + " ");
             builder.AppendArgument("--", settings.ProgramToRun);

@@ -38,6 +38,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         public bool CompileBeforeRunning { get; set; }
         public string ProjectName { get; set; }
         public string SolutionConfigurationName { get; set; }
+        public bool IsOptimizedBuildEnabled { get; set; }
     }
 
     //---------------------------------------------------------------------------

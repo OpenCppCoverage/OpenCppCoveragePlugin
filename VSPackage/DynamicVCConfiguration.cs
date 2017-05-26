@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using System;
+
 namespace OpenCppCoverage.VSPackage
 {
     class DynamicVCConfiguration
@@ -21,8 +23,23 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public DynamicVCConfiguration(dynamic configuration)
         {
-            configuration_ = configuration;
-            debugSettings_ = new DynamicVCDebugSettings(configuration_.DebugSettings);
+            this.configuration_ = configuration;
+            this.DebugSettings = new DynamicVCDebugSettings(configuration_.DebugSettings);
+
+            var compilerTool = GetTool(configuration, "VCCLCompilerTool");
+            this.VCCLCompilerTool = new DynamicVCCLCompilerTool(compilerTool);
+        }
+
+        //---------------------------------------------------------------------
+        static dynamic GetTool(dynamic configuration, string toolKind)
+        {
+            foreach (dynamic tool in configuration.Tools)
+            {
+                if (tool.ToolKind == toolKind)
+                    return tool;
+            }
+
+            throw new InvalidOperationException("Cannot find tool: " + toolKind);
         }
 
         //---------------------------------------------------------------------
@@ -50,13 +67,10 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public DynamicVCDebugSettings DebugSettings
-        {
-            get
-            {
-                return debugSettings_;
-            }
-        }
+        public DynamicVCDebugSettings DebugSettings { get; }
+
+        //---------------------------------------------------------------------
+        public DynamicVCCLCompilerTool VCCLCompilerTool { get; }
 
         //---------------------------------------------------------------------
         public string PrimaryOutput
@@ -68,6 +82,5 @@ namespace OpenCppCoverage.VSPackage
         }
 
         readonly dynamic configuration_;
-        readonly DynamicVCDebugSettings debugSettings_;
     }
 }

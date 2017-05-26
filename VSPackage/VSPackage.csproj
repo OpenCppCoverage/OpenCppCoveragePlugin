@@ -165,6 +165,7 @@
     <Compile Include="CoverageTree\DoubleMultiplyConverter.cs" />
     <Compile Include="CoverageTree\ICoverageViewManager.cs" />
     <Compile Include="CoverageTree\NullCollapsedConverter.cs" />
+    <Compile Include="DynamicVCCLCompilerTool.cs" />
     <Compile Include="Helper\DataGridFileSystemSelectionColumn.cs" />
     <Compile Include="Helper\FileSystemSelectionControl.xaml.cs">
       <DependentUpon>FileSystemSelectionControl.xaml</DependentUpon>

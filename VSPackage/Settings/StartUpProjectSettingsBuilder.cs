@@ -69,10 +69,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             var startupConfiguration = this.configurationManager.GetConfiguration(
                 activeConfiguration, startupProject);
-            var debugSettings = new DynamicVCDebugSettings(startupConfiguration.DebugSettings);
-
-            if (debugSettings == null)
-                throw new Exception("DebugSettings is null");
+            var debugSettings = startupConfiguration.DebugSettings;
 
             var settings = new StartUpProjectSettings();
             settings.WorkingDir = startupConfiguration.Evaluate(debugSettings.WorkingDirectory);
@@ -83,7 +80,9 @@ namespace OpenCppCoverage.VSPackage.Settings
             settings.ProjectName = startupProject.UniqueName;
             settings.CppProjects = BuildCppProject(
                 activeConfiguration, this.configurationManager, projects);
-            
+
+            var vcclCompilerTool = startupConfiguration.VCCLCompilerTool;
+            settings.IsOptimizedBuildEnabled = !vcclCompilerTool.IsOptimizeDisabled;
             return settings;                                                 
         }
 
