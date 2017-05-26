@@ -281,6 +281,9 @@
     <Content Include="OpenCppCoverage-x64\boost_filesystem-vc140-mt-1_59.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="OpenCppCoverage-x64\boost_iostreams-vc140-mt-1_59.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="OpenCppCoverage-x64\boost_locale-vc140-mt-1_59.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -300,6 +303,12 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x64\CppCoverage.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x64\dbgcore.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x64\dbghelp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x64\Exporter.dll">
@@ -366,6 +375,15 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x64\Tools.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x86\boost_iostreams-vc140-mt-1_59.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x86\dbgcore.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x86\dbghelp.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x86\FileFilter.dll">
