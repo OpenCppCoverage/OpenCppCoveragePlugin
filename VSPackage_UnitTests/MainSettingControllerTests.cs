@@ -21,9 +21,7 @@ using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Reflection;
 
 namespace VSPackage_UnitTests
 {
@@ -123,56 +121,7 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
-        [TestMethod]
-        public void ExportPathExistError()
-        {
-            TestHelper.RunInUIhread(() =>
-            {
-                var controller = new MainSettingController(s => string.Empty);
-                var export = AddExport(
-                    controller,
-                    ImportExportSettings.Type.Binary,
-                    Path.GetRandomFileName());
-
-                CheckRunCoverageCommand(controller, true, null);
-
-                export.Path = Assembly.GetExecutingAssembly().Location;
-                CheckRunCoverageCommand(controller, false,
-                    string.Format(ImportExportSettingController.ExportPathExistError, export.Path));
-            });
-        }
-
-        //---------------------------------------------------------------------
-        [TestMethod]
-        public void ExportDirectoryNotEmptyError()
-        {
-            TestHelper.RunInUIhread(() =>
-            {
-                var controller = new MainSettingController(s => string.Empty);
-                var emptyFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-                Directory.CreateDirectory(emptyFolder);
-
-                try
-                {
-                    var export = AddExport(controller, ImportExportSettings.Type.Html, emptyFolder);
-                    CheckRunCoverageCommand(controller, true, null);
-
-                    export.Path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    CheckRunCoverageCommand(
-                        controller, 
-                        false,
-                        string.Format(ImportExportSettingController.ExportDirectoryNotEmptyError, 
-                        export.Path));
-                }
-                finally
-                {
-                    Directory.Delete(emptyFolder);
-                }
-            });
-        }
-
-        //---------------------------------------------------------------------
-        static MainSettingController CreateController(
+        MainSettingController CreateController(
             StartUpProjectSettings settings,
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
@@ -182,32 +131,6 @@ namespace VSPackage_UnitTests
             builder.Setup(b => b.ComputeSettings()).Returns(settings);
             controller.StartUpProjectSettingsBuilder = builder.Object;
             return controller;
-        }
-
-        //---------------------------------------------------------------------
-        static ImportExportSettingController.Export AddExport(
-            MainSettingController controller,
-            ImportExportSettings.Type type,
-            string path)
-        {
-            var export = new ImportExportSettingController.Export
-            {
-                Type = type,
-                Path = path
-            };
-
-            controller.ImportExportSettingController.Exports.Add(export);
-            return export;
-        }
-
-        //---------------------------------------------------------------------
-        static void CheckRunCoverageCommand(
-            MainSettingController controller,
-            bool expectedCanExecute,
-            string expectedRunCoverageErrorToolTip)
-        {
-            Assert.AreEqual(expectedCanExecute, controller.RunCoverageCommand.CanExecute(null));
-            Assert.AreEqual(expectedRunCoverageErrorToolTip, controller.RunCoverageErrorToolTip);
         }
     }
 }
