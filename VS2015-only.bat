@@ -1,1 +1,0 @@
-powershell.exe -ExecutionPolicy ByPass -File ./VS2015-only.ps1
