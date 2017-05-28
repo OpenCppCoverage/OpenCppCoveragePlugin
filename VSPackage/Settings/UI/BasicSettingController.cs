@@ -73,7 +73,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
 
             this.Arguments = settings.Arguments;
-            this.IsOptimizedBuildEnabled = settings.IsOptimizedBuildEnabled;
+            this.OptimizedBuild = settings.IsOptimizedBuildEnabled;
 
             if (String.IsNullOrEmpty(settings.ProjectName) 
              || String.IsNullOrEmpty(settings.SolutionConfigurationName))
@@ -83,6 +83,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.IsCompileBeforeRunningEnabled = false;
                 this.CompileBeforeRunningToolTip = "Nothing to build (No startup project set).";
                 this.CompileBeforeRunning = false;
+                this.IsOptimizedBuildCheckBoxEnabled = true;
             }
             else
             {
@@ -91,6 +92,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.IsCompileBeforeRunningEnabled = true;
                 this.CompileBeforeRunningToolTip = null;
                 this.CompileBeforeRunning = true;
+                this.IsOptimizedBuildCheckBoxEnabled = false;
+                this.OptimizedBuildToolTip = "This value is set according to your optimization setting.";
             }
         }
 
@@ -111,7 +114,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 WorkingDirectory = GetWorkingDirectory(),
                 ProjectName = this.CurrentProject,
                 SolutionConfigurationName = this.CurrentConfiguration,
-                IsOptimizedBuildEnabled = this.IsOptimizedBuildEnabled
+                IsOptimizedBuildEnabled = this.OptimizedBuild
             };
         }
 
@@ -184,6 +187,30 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
+        bool optimizedBuild;
+        public bool OptimizedBuild
+        {
+            get { return this.optimizedBuild; }
+            set { this.SetField(ref this.optimizedBuild, value); }
+        }
+
+        //---------------------------------------------------------------------
+        bool isOptimizedBuildCheckBoxEnabled;
+        public bool IsOptimizedBuildCheckBoxEnabled
+        {
+            get { return this.isOptimizedBuildCheckBoxEnabled; }
+            set { this.SetField(ref this.isOptimizedBuildCheckBoxEnabled, value); }
+        }
+
+        //---------------------------------------------------------------------
+        string optimizedBuildToolTip;
+        public string OptimizedBuildToolTip
+        {
+            get { return this.optimizedBuildToolTip; }
+            set { this.SetField(ref this.optimizedBuildToolTip, value); }
+        }
+
+        //---------------------------------------------------------------------
         string currentProject;
         public string CurrentProject
         {
@@ -206,8 +233,5 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 return this.OptionalWorkingDirectory;
             return Path.GetDirectoryName(this.ProgramToRun);
         }
-
-        //---------------------------------------------------------------------
-        public bool IsOptimizedBuildEnabled { get; set; }
     }
 }

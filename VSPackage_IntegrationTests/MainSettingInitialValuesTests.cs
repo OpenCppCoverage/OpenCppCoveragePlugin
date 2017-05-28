@@ -38,6 +38,7 @@ namespace VSPackage_IntegrationTests
                 controller.BasicSettingController.CurrentConfiguration);
             Assert.AreEqual(BasicSettingController.None,
                 controller.BasicSettingController.CurrentProject);
+            Assert.IsTrue(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
         }
 
         //---------------------------------------------------------------------
@@ -110,6 +111,22 @@ namespace VSPackage_IntegrationTests
                     expectedProjects,
                     basicSettings.SelectableProjects.Select(p => p.FullName).ToList());
             }
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void OptimizedBuild()
+        {
+            OpenSolution(CppConsoleApplicationDll, ConfigurationName.Debug);
+            var controller = ExecuteOpenCppCoverageCommand();
+            Assert.IsFalse(controller.BasicSettingController.OptimizedBuild);
+            Assert.IsFalse(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
+
+            OpenSolution(CppConsoleApplicationDll, ConfigurationName.Release);
+            controller = ExecuteOpenCppCoverageCommand();
+            Assert.IsTrue(controller.BasicSettingController.OptimizedBuild);
+            Assert.IsFalse(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
         }
     }
 }
