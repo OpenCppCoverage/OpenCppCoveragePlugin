@@ -52,12 +52,28 @@ namespace OpenCppCoverage.VSPackage
                     process.StartInfo.FileName = fileName;
                     process.StartInfo.Arguments = arguments;
                     process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = false;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.RedirectStandardError = true;
+                    process.StartInfo.RedirectStandardInput = true;
+                    process.StartInfo.RedirectStandardOutput = true;
+                    process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    process.ErrorDataReceived += (sender, e) => this.outputWindowWriter.WriteLine(e.Data);
+                    process.OutputDataReceived += (sender, e) => this.outputWindowWriter.WriteLine(e.Data);
+                    process.EnableRaisingEvents = true;
 
                     if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
                         process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
                     process.Start();
+                    process.BeginOutputReadLine();
+                    process.BeginErrorReadLine();
+
+                    using (StreamWriter sr = process.StandardInput)
+                    {
+                        sr.WriteLine(" ");
+                        sr.Close();
+                    }
                     process.WaitForExit();
+                    process.Close();
                 }
             });
         }
@@ -67,8 +83,8 @@ namespace OpenCppCoverage.VSPackage
         {
             var assemblyLocation = System.Reflection.Assembly.GetExecutingAssembly().Location;
             var assemblyFolder = Path.GetDirectoryName(assemblyLocation);
-            var openCppCovergeFolder = 
-                Is64bitsExecutable(commandPath) ? 
+            var openCppCovergeFolder =
+                Is64bitsExecutable(commandPath) ?
                     "OpenCppCoverage-x64" : "OpenCppCoverage-x86";
 
             return Path.Combine(assemblyFolder, openCppCovergeFolder, "OpenCppCoverage.exe");
