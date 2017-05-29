@@ -49,13 +49,17 @@ namespace OpenCppCoverage.VSPackage
             {
                 using (var process = new Process())
                 {
-                    process.StartInfo.FileName = fileName;
-                    process.StartInfo.Arguments = arguments;
-                    process.StartInfo.UseShellExecute = false;
-                    process.StartInfo.CreateNoWindow = false;
+                    var startInfo = process.StartInfo;
+                    startInfo.FileName = fileName;
+                    startInfo.Arguments = arguments;
+                    startInfo.UseShellExecute = false;
+                    startInfo.CreateNoWindow = false;
+
+                    foreach (var environment in basicSettings.EnvironmentVariables)
+                        startInfo.EnvironmentVariables.Add(environment.Key, environment.Value);
 
                     if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
-                        process.StartInfo.WorkingDirectory = basicSettings.WorkingDirectory;
+                        startInfo.WorkingDirectory = basicSettings.WorkingDirectory;
                     process.Start();
                     process.WaitForExit();
                 }

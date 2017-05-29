@@ -39,6 +39,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         public string ProjectName { get; set; }
         public string SolutionConfigurationName { get; set; }
         public bool IsOptimizedBuildEnabled { get; set; }
+        public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; set; }
     }
 
     //---------------------------------------------------------------------------

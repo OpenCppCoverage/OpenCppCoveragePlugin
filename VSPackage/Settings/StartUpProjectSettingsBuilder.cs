@@ -83,7 +83,30 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             var vcclCompilerTool = startupConfiguration.VCCLCompilerTool;
             settings.IsOptimizedBuildEnabled = !vcclCompilerTool.IsOptimizeDisabled;
+            settings.EnvironmentVariables = GetEnvironmentVariables(startupConfiguration);
+
             return settings;                                                 
+        }
+
+        //---------------------------------------------------------------------
+        static IEnumerable<KeyValuePair<string, string>> 
+            GetEnvironmentVariables(DynamicVCConfiguration configuration)
+        {
+            var environmentVariables = new List<KeyValuePair<string, string>>();
+            string environmentStr = configuration.Evaluate("$(LocalDebuggerEnvironment)");
+
+            foreach (var str in environmentStr.Split('\n'))
+            {
+                var equalIndex = str.IndexOf('=');
+                if (equalIndex != -1)
+                {
+                    var key = str.Substring(0, equalIndex);
+                    var value = str.Substring(equalIndex + 1);
+
+                    environmentVariables.Add(new KeyValuePair<string, string>(key, value));
+                }
+            }
+            return environmentVariables;
         }
 
         //---------------------------------------------------------------------

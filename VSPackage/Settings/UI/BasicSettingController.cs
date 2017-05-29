@@ -74,6 +74,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
             this.Arguments = settings.Arguments;
             this.OptimizedBuild = settings.IsOptimizedBuildEnabled;
+            this.EnvironmentVariables = settings.EnvironmentVariables;
+
+            if (this.EnvironmentVariables == null)
+                this.EnvironmentVariables = new List<KeyValuePair<string, string>>();
 
             if (String.IsNullOrEmpty(settings.ProjectName) 
              || String.IsNullOrEmpty(settings.SolutionConfigurationName))
@@ -114,7 +118,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 WorkingDirectory = GetWorkingDirectory(),
                 ProjectName = this.CurrentProject,
                 SolutionConfigurationName = this.CurrentConfiguration,
-                IsOptimizedBuildEnabled = this.OptimizedBuild
+                IsOptimizedBuildEnabled = this.OptimizedBuild,
+                EnvironmentVariables = this.EnvironmentVariables
             };
         }
 
@@ -233,5 +238,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 return this.OptionalWorkingDirectory;
             return Path.GetDirectoryName(this.ProgramToRun);
         }
+
+        //---------------------------------------------------------------------
+        public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; private set; }
     }
 }
