@@ -34,6 +34,10 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         readonly TreeNodeVisibilityManager visibilityManager;
 
         //-----------------------------------------------------------------------
+        public readonly static string WarningMessage 
+            = "Warning: Your program has exited with error code: ";
+
+        //-----------------------------------------------------------------------
         public CoverageTreeController()
         {
             this.visibilityManager = new TreeNodeVisibilityManager();
@@ -55,8 +59,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 this.Warning = null;
             else
             {
-                this.Warning = "Warning: Your program has exited with error code: "
-                                    + coverageRate.ExitCode;
+                this.Warning = WarningMessage + coverageRate.ExitCode;
             }
         }
 

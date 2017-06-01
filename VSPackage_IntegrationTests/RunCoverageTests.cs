@@ -17,7 +17,9 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using OpenCppCoverage.VSPackage;
+using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings.UI;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace VSPackage_IntegrationTests
@@ -130,6 +132,40 @@ namespace VSPackage_IntegrationTests
             Assert.IsTrue(IsWindowVisible(SettingToolWindow.WindowCaption));
             RunInUIhread(() => controller.CloseCommand.Execute(null));
             Assert.IsFalse(IsWindowVisible(SettingToolWindow.WindowCaption));
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void EnvironmentVariable()
+        {
+            OpenSolution(CppConsoleApplication);
+            using (var debugSettings = SolutionConfigurationHelpers.GetCurrentDebugSettings(CppConsoleApplication))
+            {
+                const string exitCode = "EXIT_CODE";
+                const string exitCodeValue = "42";
+                const string testEnv = "TEST_ENV";
+                const string testEnvValue = "1";
+                
+                var env = string.Format("{0}={1}\n{2}={3}",
+                        exitCode, exitCodeValue, testEnv, testEnvValue); ;
+                debugSettings.Value.Environment = env;
+                var controller = ExecuteOpenCppCoverageCommand();
+                RunInUIhread(() =>
+                {
+                    controller.BasicSettingController.Arguments = "TestEnvVariable";
+                    CollectionAssert.AreEquivalent(
+                        new List<KeyValuePair<string, string>>{
+                        new KeyValuePair<string, string>(exitCode, exitCodeValue),
+                        new KeyValuePair<string, string>(testEnv, testEnvValue)},
+                        controller.BasicSettingController.EnvironmentVariables.ToList());
+                });
+                var coverageTreeController = RunCoverageCommandAndWait(controller);
+
+                Assert.AreEqual(
+                    coverageTreeController.Warning,
+                    CoverageTreeController.WarningMessage + exitCodeValue);
+            }
         }
 
         //---------------------------------------------------------------------
