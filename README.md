@@ -17,7 +17,9 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 
 ### Compilation
 
-Visual Studio 2015 Update 2 is required. If Visual Studio 2013 is not also installed, you must run *VS2015-only.bat* before loading the solution.
+Visual Studio 2017 is required. You have 2 Visual Studio solution files: 
+* CppCoveragePlugin.sln: Require only Visual Studio 2017.
+* CppCoveragePluginVS2013.sln: Require Visual Studio 2017 and Visual Studio 2013.
 
 You should install the latest version of [OpenCppCoverage](https://opencppcoverage.codeplex.com/releases):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
@@ -32,12 +34,12 @@ You also need to compile [SharpTreeView](https://github.com/icsharpcode/SharpDev
 
 * Set *VSPackage* as *StartUp Project*.
 * In *VSPackage Properties*, tab *Debug*:
-  * Select *Start external program* and set value to `C:\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\devenv.exe` (Update this path if you installed Visual Studio to another location).
+  * Select *Start external program* and set value to `C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe` (Update this path if you installed Visual Studio to another location).
   * Add `/RootSuffix Exp` as *Command line arguments*.
 
 If you have an issue when running the plugin, you can try to reset Visual Studio Experimental instance:
 
-`"%VS140COMNTOOLS%\..\..\VSSDK\VisualStudioIntegration\Tools\Bin\CreateExpInstance" /Reset /VSInstance=14.0 /RootSuffix=Exp`
+`"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VSSDK\VisualStudioIntegration\Tools\Bin\CreateExpInstance.exe" /Reset /VSInstance=15.0 /RootSuffix=Exp`
 
 ### Run unit tests
 
