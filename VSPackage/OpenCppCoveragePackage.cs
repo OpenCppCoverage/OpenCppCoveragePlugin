@@ -140,11 +140,13 @@ namespace OpenCppCoverage.VSPackage
             if (!IsVCRedistInstalled("x86")
               || (Environment.Is64BitOperatingSystem && !IsVCRedistInstalled("x64")))
             {
-                throw new VSPackageException("Cannot start OpenCppCoverage. " +
-                        "You need to install Visual Studio 2015 redistributable " +
+                throw new VSPackageException("Cannot start OpenCppCoverage.\n" +
+                        "You need to install Visual Studio 2015 redistributable Update 3 " +
                         "vc_redist.x86.exe and vc_redist.x64.exe (for 64 bits operating system) " +
-                        "and restart Visual Studio: " +
-                        "https://www.microsoft.com/en-US/download/details.aspx?id=48145");
+                        "and restart Visual Studio. Download link: " +
+                        "https://www.microsoft.com/en-us/download/details.aspx?id=53587.\n" +
+                        "You can also install both OpenCppCoverageSetup-x86-0.9.6.1.exe and " +
+                        "OpenCppCoverageSetup-x64-0.9.6.1.exe.");
             }
         }
 
@@ -159,7 +161,15 @@ namespace OpenCppCoverage.VSPackage
                 {
                     var installedValueObject = subKey.GetValue("Installed");
                     int installedValue = Convert.ToInt32(installedValueObject);
-                    return installedValue == 1;
+                    if (installedValue == 1)
+                    {
+                        var major = Convert.ToInt32(subKey.GetValue("Major"));
+                        var minor = Convert.ToInt32(subKey.GetValue("Minor"));
+                        var bld = Convert.ToInt32(subKey.GetValue("Bld"));
+
+                        // Check we have at least Update 3
+                        return major >= 14 && minor >= 10 && bld >= 25008; 
+                    }
                 }
             }
 
