@@ -166,9 +166,15 @@ namespace OpenCppCoverage.VSPackage
                         var major = Convert.ToInt32(subKey.GetValue("Major"));
                         var minor = Convert.ToInt32(subKey.GetValue("Minor"));
                         var bld = Convert.ToInt32(subKey.GetValue("Bld"));
+                        const int expectedMajor = 14;
+                        const int expectedMinor = 0;
+                        const int expectedBld = 24212;
 
-                        // Check we have at least Update 3
-                        return major >= 14 && minor >= 10 && bld >= 25008; 
+                        if (major != expectedMajor)
+                            return major > expectedMajor;
+                        if (minor != expectedMinor)
+                            return minor > expectedMinor;
+                        return bld >= expectedBld;
                     }
                 }
             }
