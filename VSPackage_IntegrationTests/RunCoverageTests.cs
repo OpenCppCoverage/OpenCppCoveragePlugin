@@ -147,7 +147,7 @@ namespace VSPackage_IntegrationTests
                 const string testEnv = "TEST_ENV";
                 const string testEnvValue = "1";
                 
-                var env = string.Format("{0}={1}\n{2}={3}",
+                var env = string.Format("{0}={1}\n{2}={3}\nIgnoredValue=",
                         exitCode, exitCodeValue, testEnv, testEnvValue); ;
                 debugSettings.Value.Environment = env;
                 var controller = ExecuteOpenCppCoverageCommand();

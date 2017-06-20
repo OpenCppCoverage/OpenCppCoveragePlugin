@@ -98,7 +98,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             foreach (var str in environmentStr.Split('\n'))
             {
                 var equalIndex = str.IndexOf('=');
-                if (equalIndex != -1)
+                if (equalIndex != -1 && equalIndex != str.Length - 1)
                 {
                     var key = str.Substring(0, equalIndex);
                     var value = str.Substring(equalIndex + 1);
