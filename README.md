@@ -10,6 +10,8 @@ This repository contains only the Visual Studio plugin sources.
 To install and use this plugin, please see the [Visual Studio Gallery page](https://visualstudiogallery.msdn.microsoft.com/f45b8e13-f847-4b3b-92df-984df633b60e).
 You can also install the NuGet package **OpenCppCoverage Plugin**.
 
+**Documentation is available [here](https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/wiki)**.
+
 For questions, you can create a discussion [here](https://opencppcoverage.codeplex.com/discussions).
 If you find a bug, you can create an issue [here](https://opencppcoverage.codeplex.com/workitem/list/basic).
 
