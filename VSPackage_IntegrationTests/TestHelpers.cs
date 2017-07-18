@@ -170,9 +170,9 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         internal string GetIntegrationTestsSolutionFolder()
         {
-            var currentLocation = typeof(TestHelpers).Assembly.Location;
-            var currentDirectory = Path.GetDirectoryName(currentLocation);
-            return Path.Combine(currentDirectory, "IntegrationTestsSolution");
+            var assemblyLocation = typeof(TestHelpers).Assembly.Location;
+            var assemblyDirectory = Path.GetDirectoryName(assemblyLocation);
+            return Path.Combine(assemblyDirectory, "..", "..", "IntegrationTestsSolution");
         }
 
         //---------------------------------------------------------------------
