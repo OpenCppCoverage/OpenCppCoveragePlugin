@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-
 namespace OpenCppCoverage.VSPackage
 {
     class DynamicVCConfiguration
@@ -27,19 +25,20 @@ namespace OpenCppCoverage.VSPackage
             this.DebugSettings = new DynamicVCDebugSettings(configuration_.DebugSettings);
 
             var compilerTool = GetTool(configuration, "VCCLCompilerTool");
-            this.VCCLCompilerTool = new DynamicVCCLCompilerTool(compilerTool);
+            if (compilerTool != null)
+                this.OptionalVCCLCompilerTool = new DynamicVCCLCompilerTool(compilerTool);
         }
 
         //---------------------------------------------------------------------
-        static dynamic GetTool(dynamic configuration, string toolKind)
+        static dynamic GetTool(dynamic configuration, string toolKindToFind)
         {
             foreach (dynamic tool in configuration.Tools)
             {
-                if (tool.ToolKind == toolKind)
+                if (tool.ToolKind == toolKindToFind)
                     return tool;
             }
 
-            throw new InvalidOperationException("Cannot find tool: " + toolKind);
+            return null;
         }
 
         //---------------------------------------------------------------------
@@ -70,7 +69,7 @@ namespace OpenCppCoverage.VSPackage
         public DynamicVCDebugSettings DebugSettings { get; }
 
         //---------------------------------------------------------------------
-        public DynamicVCCLCompilerTool VCCLCompilerTool { get; }
+        public DynamicVCCLCompilerTool OptionalVCCLCompilerTool { get; }
 
         //---------------------------------------------------------------------
         public string PrimaryOutput

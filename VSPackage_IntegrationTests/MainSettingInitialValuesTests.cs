@@ -128,5 +128,17 @@ namespace VSPackage_IntegrationTests
             Assert.IsTrue(controller.BasicSettingController.OptimizedBuild);
             Assert.IsFalse(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
         }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void NoVCCLCompilerTool()
+        {
+            OpenSolution(ZeroCheck);
+            var controller = ExecuteOpenCppCoverageCommand();
+            var settings = controller.BasicSettingController;
+            Assert.AreEqual(BasicSettingController.None, settings.CurrentConfiguration);
+            Assert.AreEqual(BasicSettingController.None, settings.CurrentProject);
+        }
     }
 }

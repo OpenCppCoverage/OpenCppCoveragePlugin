@@ -81,7 +81,9 @@ namespace OpenCppCoverage.VSPackage.Settings
             settings.CppProjects = BuildCppProject(
                 activeConfiguration, this.configurationManager, projects);
 
-            var vcclCompilerTool = startupConfiguration.VCCLCompilerTool;
+            var vcclCompilerTool = startupConfiguration.OptionalVCCLCompilerTool;
+            if (vcclCompilerTool == null)
+                return null;
             settings.IsOptimizedBuildEnabled = !vcclCompilerTool.IsOptimizeDisabled;
             settings.EnvironmentVariables = GetEnvironmentVariables(startupConfiguration);
 
