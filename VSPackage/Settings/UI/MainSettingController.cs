@@ -36,7 +36,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
-            this.ResetToDefaultCommand = new RelayCommand(UpdateStartUpProject);
+            this.ResetToDefaultCommand = new RelayCommand(
+                () => UpdateStartUpProject(ProjectSelectionKind.StartUpProject));
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
@@ -47,12 +48,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
 
         //---------------------------------------------------------------------
-        public void UpdateStartUpProject()
+        public void UpdateStartUpProject(ProjectSelectionKind kind)
         {
             if (this.StartUpProjectSettingsBuilder == null)
                 throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
 
-            var settings = this.StartUpProjectSettingsBuilder.ComputeSettings();
+            var settings = this.StartUpProjectSettingsBuilder.ComputeSettings(kind);
             this.BasicSettingController.UpdateStartUpProject(settings);
             this.FilterSettingController.UpdateStartUpProject();
             this.ImportExportSettingController.UpdateStartUpProject();

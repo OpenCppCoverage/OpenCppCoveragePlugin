@@ -16,8 +16,16 @@
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
+    //---------------------------------------------------------------------
+    public enum ProjectSelectionKind
+    {
+        StartUpProject,
+        SelectedProject
+    }
+
+    //---------------------------------------------------------------------
     interface IStartUpProjectSettingsBuilder
     {
-        StartUpProjectSettings ComputeSettings();
+        StartUpProjectSettings ComputeSettings(ProjectSelectionKind kind);
     }
 }

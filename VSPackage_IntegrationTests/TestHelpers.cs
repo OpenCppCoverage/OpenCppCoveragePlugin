@@ -15,9 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using EnvDTE;
+using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
-
+using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
@@ -77,22 +78,13 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         internal MainSettingController ExecuteOpenCppCoverageCommand()
         {
-            MainSettingController controller = null;
-            RunInUIhread(() =>
-            {
-                object Customin = null;
-                object Customout = null;
-                var commandGuid = OpenCppCoverage.VSPackage.GuidList.guidVSPackageCmdSet;
-                string guidString = commandGuid.ToString("B").ToUpper();
-                int cmdId = (int)OpenCppCoverage.VSPackage.PkgCmdIDList.RunOpenCppCoverageCommand;
-                DTE dte = VsIdeTestHostContext.Dte;
+            return ExecuteCommand((int)PkgCmdIDList.RunOpenCppCoverageCommand);
+        }
 
-                dte.Commands.Raise(guidString, cmdId, ref Customin, ref Customout);
-
-                controller = GetController<MainSettingController>();
-            });
-
-            return controller;
+        //---------------------------------------------------------------------
+        internal MainSettingController ExecuteOpenCppCoverageCommandFromSelectedProject()
+        {
+            return ExecuteCommand((int)PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand);
         }
 
         //---------------------------------------------------------------------
@@ -127,6 +119,36 @@ namespace VSPackage_IntegrationTests
         internal void CloseAllDocuments()
         {
             VsIdeTestHostContext.Dte.Documents.CloseAll();
+        }
+
+        //---------------------------------------------------------------------
+        internal void SelectProject(string projectName)
+        {
+            var dte2 = (DTE2)VsIdeTestHostContext.Dte;
+            var solutionExplorer = dte2.ToolWindows.SolutionExplorer;
+
+            var project = solutionExplorer.GetItem(string.Format("{0}\\{1}", SolutionName, projectName));
+            project.Select(vsUISelectionType.vsUISelectionTypeSelect);
+        }
+
+        //---------------------------------------------------------------------
+        MainSettingController ExecuteCommand(int commandId)
+        {
+            MainSettingController controller = null;
+
+            RunInUIhread(() =>
+            {
+                object Customin = null;
+                object Customout = null;
+                var commandGuid = OpenCppCoverage.VSPackage.GuidList.guidVSPackageCmdSet;
+                string guidString = commandGuid.ToString("B").ToUpper();
+                DTE dte = VsIdeTestHostContext.Dte;
+
+                dte.Commands.Raise(guidString, commandId, ref Customin, ref Customout);
+                controller = GetController<MainSettingController>();
+            });
+
+            return controller;
         }
 
         //---------------------------------------------------------------------
@@ -210,13 +232,15 @@ namespace VSPackage_IntegrationTests
             return SolutionConfigurationHelpers.SetActiveSolutionConfiguration(configurationName, platformName);
         }
 
+        string SolutionName = "IntegrationTestsSolution";
+
         //---------------------------------------------------------------------
         void OpenDefaultSolution()
         {
             RunInUIhread(() =>
             {
                var solutionService = GetService<IVsSolution>();
-               var solutionPath = Path.Combine(GetIntegrationTestsSolutionFolder(), "IntegrationTestsSolution.sln");
+               var solutionPath = Path.Combine(GetIntegrationTestsSolutionFolder(), SolutionName + ".sln");
 
                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(
                    solutionService.OpenSolutionFile((uint)__VSSLNOPENOPTIONS.SLNOPENOPT_Silent, solutionPath));

@@ -36,7 +36,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public StartUpProjectSettings ComputeSettings()
+        public StartUpProjectSettings ComputeSettings(ProjectSelectionKind kind)
         {
             var solution = (Solution2)dte.Solution;
             var solutionBuild = (SolutionBuild2)solution.SolutionBuild;
@@ -44,7 +44,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             if (activeConfiguration != null)
             {
-                var settings = ComputeOptionalSettings(activeConfiguration);
+                var settings = ComputeOptionalSettings(activeConfiguration, kind);
 
                 if (settings != null)
                     return settings;
@@ -58,17 +58,37 @@ namespace OpenCppCoverage.VSPackage.Settings
 
         //---------------------------------------------------------------------
         StartUpProjectSettings ComputeOptionalSettings(
-            SolutionConfiguration2 activeConfiguration)
+            SolutionConfiguration2 activeConfiguration,
+            ProjectSelectionKind kind)
         {
             var solution = (Solution2)dte.Solution;
             var projects = GetProjects(solution);
-            var startupProject = GetOptionalStartupProject(solution, projects);
+            ExtendedProject project = null;
 
-            if (startupProject == null)
+            switch (kind)
+            {
+                case ProjectSelectionKind.StartUpProject:
+                    project = GetOptionalStartupProject(solution, projects);
+                break;
+                case ProjectSelectionKind.SelectedProject:
+                    project = GetOptionalSelectedProject(projects);
+                break;
+            }
+
+            if (project == null) 
                 return null;
 
+            return ComputeOptionalSettings(activeConfiguration, projects, project);
+        }
+
+        //---------------------------------------------------------------------
+        StartUpProjectSettings ComputeOptionalSettings(
+            SolutionConfiguration2 activeConfiguration,
+            List<ExtendedProject> projects,
+            ExtendedProject project)
+        { 
             var startupConfiguration = this.configurationManager.GetConfiguration(
-                activeConfiguration, startupProject);
+                activeConfiguration, project);
             var debugSettings = startupConfiguration.DebugSettings;
 
             var settings = new StartUpProjectSettings();
@@ -77,7 +97,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             settings.Command = startupConfiguration.Evaluate(debugSettings.Command);
             settings.SolutionConfigurationName = 
                 this.configurationManager.GetSolutionConfigurationName(activeConfiguration);
-            settings.ProjectName = startupProject.UniqueName;
+            settings.ProjectName = project.UniqueName;
             settings.CppProjects = BuildCppProject(
                 activeConfiguration, this.configurationManager, projects);
 
@@ -155,7 +175,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public ExtendedProject GetOptionalStartupProject(
+        ExtendedProject GetOptionalStartupProject(
             Solution2 solution,
             List<ExtendedProject> projects)
         {            
@@ -169,6 +189,18 @@ namespace OpenCppCoverage.VSPackage.Settings
                 startupProjectsSet.Add(projectName);
 
             return projects.Where(p => startupProjectsSet.Contains(p.UniqueName)).FirstOrDefault();
+        }
+
+        //---------------------------------------------------------------------
+        ExtendedProject GetOptionalSelectedProject(List<ExtendedProject> projects)
+        {
+            var selectedProjects = ((Array)this.dte.ActiveSolutionProjects).Cast<Project>();
+            
+            if (selectedProjects.Count() != 1)
+                return null;
+
+            var projectName = selectedProjects.First().UniqueName;
+            return projects.Where(p => p.UniqueName == projectName).FirstOrDefault();
         }
 
         //---------------------------------------------------------------------

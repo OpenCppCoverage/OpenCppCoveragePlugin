@@ -96,9 +96,19 @@ namespace OpenCppCoverage.VSPackage
             if ( null != mcs )
             {
                 // Create the command for the menu item.
-                CommandID menuCommandID = new CommandID(GuidList.guidVSPackageCmdSet, (int)PkgCmdIDList.RunOpenCppCoverageCommand);
-                MenuCommand menuItem = new MenuCommand(MenuItemCallback, menuCommandID );
+                CommandID menuCommandID = new CommandID(
+                    GuidList.guidVSPackageCmdSet, 
+                    (int)PkgCmdIDList.RunOpenCppCoverageCommand);
+                MenuCommand menuItem = new MenuCommand(
+                    RunCoverageForStartUpProject, menuCommandID );
                 mcs.AddCommand( menuItem );
+
+                CommandID menuSelectedProjCommandID = new CommandID(
+                    GuidList.guidVSPackageCmdSet, 
+                    (int)PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand);
+                MenuCommand selectedProjMenuItem = new MenuCommand(
+                    RunCoverageForSelectedProject, menuSelectedProjCommandID);
+                mcs.AddCommand(selectedProjMenuItem);
             }
         }
         #endregion
@@ -108,11 +118,23 @@ namespace OpenCppCoverage.VSPackage
         /// See the Initialize method to see how the menu item is associated to this function using
         /// the OleMenuCommandService service and the MenuCommand class.
         /// </summary>
-        private void MenuItemCallback(object sender, EventArgs e)
+        void RunCoverageForStartUpProject(object sender, EventArgs e)
+        {
+            RunCoverage(ProjectSelectionKind.StartUpProject);
+        }
+
+        //---------------------------------------------------------------------
+        void RunCoverageForSelectedProject(object sender, EventArgs e)
+        {
+            RunCoverage(ProjectSelectionKind.SelectedProject);
+        }
+
+        //---------------------------------------------------------------------
+        void RunCoverage(ProjectSelectionKind kind)
         {
             IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-            
-            var errorHandler = new ErrorHandler(uiShell);                      
+
+            var errorHandler = new ErrorHandler(uiShell);
             errorHandler.Execute(() =>
             {
                 var dte = (DTE2)GetService(typeof(EnvDTE.DTE));
@@ -126,12 +148,12 @@ namespace OpenCppCoverage.VSPackage
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var deserializer = new CoverageDataDeserializer();
                 var openCppCoverageRunner = new CoverageRunner(
-                    dte, outputWriter, coverageTreeManager, projectBuilder, 
+                    dte, outputWriter, coverageTreeManager, projectBuilder,
                     coverageViewManager, deserializer, errorHandler);
 
                 CheckVCRedistInstalled();
-                mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner);
-            });                                             
+                mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner, kind);
+            });
         }
 
         //---------------------------------------------------------------------

@@ -69,7 +69,13 @@
         </Strings>
       </Button>
 
-
+      <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageFromSelectedProjectCommand" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Run OpenCppCoverage</ButtonText>
+        </Strings>
+      </Button>
 
     </Buttons>
    
@@ -101,6 +107,7 @@
 
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="RunOpenCppCoverageCommand" value="0x0100" />
+      <IDSymbol name="RunOpenCppCoverageFromSelectedProjectCommand" value="0x0200" />
     </GuidSymbol>
     
     

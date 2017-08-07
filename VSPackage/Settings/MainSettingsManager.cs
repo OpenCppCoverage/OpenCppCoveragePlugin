@@ -35,7 +35,9 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        public void ShowSettingsWindows(CoverageRunner coverageRunner)
+        public void ShowSettingsWindows(
+            CoverageRunner coverageRunner, 
+            ProjectSelectionKind kind)
         {
             var configurationManager = new ConfigurationManager();
             var settingsBuilder = new StartUpProjectSettingsBuilder(this.dte, configurationManager);
@@ -47,7 +49,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
             window.Controller.CoverageRunner = coverageRunner;
-            window.Controller.UpdateStartUpProject();
+            window.Controller.UpdateStartUpProject(kind);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());

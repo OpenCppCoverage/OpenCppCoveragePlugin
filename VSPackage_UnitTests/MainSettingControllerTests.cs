@@ -42,7 +42,7 @@ namespace VSPackage_UnitTests
                 CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateStartUpProject();
+            controller.UpdateStartUpProject(ProjectSelectionKind.StartUpProject);
 
             var selectableProject = controller.BasicSettingController.SelectableProjects.First();
             selectableProject.IsSelected = false;
@@ -65,7 +65,7 @@ namespace VSPackage_UnitTests
             };
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateStartUpProject();
+            controller.UpdateStartUpProject(ProjectSelectionKind.StartUpProject);
 
             controller.BasicSettingController.OptionalWorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();
@@ -128,7 +128,7 @@ namespace VSPackage_UnitTests
             var controller = new MainSettingController(buildOpenCppCoverageCmdLine);
             var builder = new Mock<IStartUpProjectSettingsBuilder>();
 
-            builder.Setup(b => b.ComputeSettings()).Returns(settings);
+            builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.StartUpProject)).Returns(settings);
             controller.StartUpProjectSettingsBuilder = builder.Object;
             return controller;
         }

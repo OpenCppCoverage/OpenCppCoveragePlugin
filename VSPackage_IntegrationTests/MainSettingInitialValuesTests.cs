@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace VSPackage_IntegrationTests
@@ -139,6 +140,22 @@ namespace VSPackage_IntegrationTests
             var settings = controller.BasicSettingController;
             Assert.AreEqual(BasicSettingController.None, settings.CurrentConfiguration);
             Assert.AreEqual(BasicSettingController.None, settings.CurrentProject);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        [HostType("VS IDE")]
+        public void OpenSettingsFromSelectedProject()
+        {
+            OpenSolution(ZeroCheck);
+
+            SelectProject(Path.GetFileNameWithoutExtension(CppConsoleApplication2));
+            var controller = ExecuteOpenCppCoverageCommandFromSelectedProject();
+            Assert.AreEqual(CppConsoleApplication2, controller.BasicSettingController.CurrentProject);
+
+            SelectProject(Path.GetFileNameWithoutExtension(ZeroCheck));
+            controller = ExecuteOpenCppCoverageCommandFromSelectedProject();
+            Assert.AreEqual(BasicSettingController.None, controller.BasicSettingController.CurrentProject);
         }
     }
 }
