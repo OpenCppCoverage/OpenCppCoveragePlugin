@@ -18,11 +18,20 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 ## Development
 
 ### Compilation
+You have 2 Visual Studio solution files but **Visual Studio 2017 is always required**.
 
-Visual Studio 2017 is required. You have 2 Visual Studio solution files: 
-* CppCoveragePlugin.sln: Require only Visual Studio 2017.
-* CppCoveragePluginVS2013.sln: Require Visual Studio 2017 and Visual Studio 2013.
+#### CppCoveragePlugin.sln
+This is the default solution file and it requires only Visual Studio 2017.
 
+#### CppCoveragePluginVS2013.sln
+**This is a Visual Studio 2017 solution file** but it also requires:
+ * Visual Studio 2013 Update 5.
+ * [Microsoft Visual Studio 2013 SDK](https://visualstudiogallery.msdn.microsoft.com/842766ba-1f32-40cf-8617-39365ebfc134/view/). If you have any trouble to install the SDK, [this stack overflow question](https://stackoverflow.com/questions/22949411/visual-studio-2012-install-fails-program-compatibility-mode-is-on/23114542) can help.
+ * Visual Studio 2015 Update 3 may be required.
+ 
+This solution should be used only to generate a plugin compatible with Visual Studio 2013, 2015 and 2017.
+
+#### OpenCppCoverage
 You should install the latest version of [OpenCppCoverage](https://opencppcoverage.codeplex.com/releases):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
 * *OpenCppCoverageSetup-x86-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x86*
