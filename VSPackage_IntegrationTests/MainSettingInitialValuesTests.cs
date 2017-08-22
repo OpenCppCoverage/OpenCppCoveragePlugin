@@ -107,7 +107,8 @@ namespace VSPackage_IntegrationTests
                     CppConsoleApplication,
                     CppConsoleApplication2,
                     CppConsoleApplicationDll,
-                    ConsoleApplicationInFolder };
+                    ConsoleApplicationInFolder,
+                    ZeroCheck};
                 CollectionAssert.AreEquivalent(
                     expectedProjects,
                     basicSettings.SelectableProjects.Select(p => p.FullName).ToList());
