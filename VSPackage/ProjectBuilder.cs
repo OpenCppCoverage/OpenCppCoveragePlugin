@@ -26,6 +26,7 @@ namespace OpenCppCoverage.VSPackage
         readonly DTE2 dte;
         readonly ErrorHandler errorHandler;
         readonly OutputWindowWriter outputWindowWriter;
+        readonly BuildEvents buildEvents;
 
         //---------------------------------------------------------------------
         public ProjectBuilder(
@@ -36,6 +37,7 @@ namespace OpenCppCoverage.VSPackage
             this.dte = dte;
             this.errorHandler = errorHandler;
             this.outputWindowWriter = outputWindowWriter;
+            this.buildEvents = this.dte.Events.BuildEvents;
         }
 
         //---------------------------------------------------------------------
@@ -45,7 +47,9 @@ namespace OpenCppCoverage.VSPackage
             Action<bool> userCallBack)
         {
             var buildHandler = CreateBuildHandler(solutionConfigurationName, projectName, userCallBack);
-            this.dte.Events.BuildEvents.OnBuildProjConfigDone += buildHandler;
+
+            // buildEvents need to be a member to avoid a garbage collector issue.
+            this.buildEvents.OnBuildProjConfigDone += buildHandler;
             
             this.outputWindowWriter.WriteLine(
                 "Start building " + projectName 
@@ -104,7 +108,7 @@ namespace OpenCppCoverage.VSPackage
                 if (project == buildContext.ProjectName 
                 && solutionConfig == buildContext.SolutionConfigurationName)
                 {
-                    this.dte.Events.BuildEvents.OnBuildProjConfigDone -= buildContext.OnBuildDone;
+                    this.buildEvents.OnBuildProjConfigDone -= buildContext.OnBuildDone;
                     buildContext.UserCallBack(success);
                 }
             });
