@@ -22,6 +22,7 @@
     <ProjectGuid>{64E59850-55DD-496D-B9B5-D548FC75F4E2}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>CppConsoleApplicationDll</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

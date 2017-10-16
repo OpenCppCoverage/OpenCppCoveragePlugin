@@ -144,7 +144,7 @@ namespace VSPackage_IntegrationTests
             {
                 const string exitCode = "EXIT_CODE";
                 const string exitCodeValue = "42";
-                const string testEnv = "TEST_ENV";
+                const string testEnv = "PATH";
                 const string testEnvValue = "1";
                 
                 var env = string.Format("{0}={1}\n{2}={3}\nIgnoredValue=",

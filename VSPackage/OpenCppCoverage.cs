@@ -55,8 +55,9 @@ namespace OpenCppCoverage.VSPackage
                     startInfo.UseShellExecute = false;
                     startInfo.CreateNoWindow = false;
 
+                    var environmentVariables = startInfo.EnvironmentVariables;
                     foreach (var environment in basicSettings.EnvironmentVariables)
-                        startInfo.EnvironmentVariables.Add(environment.Key, environment.Value);
+                        environmentVariables[environment.Key] = environment.Value;
 
                     if (!String.IsNullOrEmpty(basicSettings.WorkingDirectory))
                         startInfo.WorkingDirectory = basicSettings.WorkingDirectory;
