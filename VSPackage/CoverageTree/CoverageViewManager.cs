@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
 using Microsoft.VisualStudio.Utilities;
+using Microsoft.VisualStudio.PlatformUI;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using System;
 using System.Collections.Generic;
@@ -60,6 +61,8 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 (sender, e) => OnTextChanged(textView, e);
             onTextChangedHanlders.Add(textView, onTextChanged);
             textView.TextBuffer.Changed += onTextChanged;
+
+            VSColorTheme.ThemeChanged += OnColorThemeChanged;
         }
 
         //---------------------------------------------------------------------
@@ -172,9 +175,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 
                         if (coverage.TryGetValue(lineNumber, out lineCoverage))
                         {
-                            var color = lineCoverage.HasBeenExecuted ? CoveredBrush : UncoveredBrush;
+                            var color = lineCoverage.HasBeenExecuted ? VSColorTheme.GetThemedColor(VSColor.VSColors.CodeCoveredBrushKey)
+                                : VSColorTheme.GetThemedColor(VSColor.VSColors.CodeNotCoveredBrushKey);
+                            var brush = new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
 
-                            AddAdornment(adornmentLayer, textView, line, color);
+                            AddAdornment(adornmentLayer, textView, line, brush);
                         }
                     }
                 }
@@ -224,6 +229,13 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 if (this.coverageByFile.Remove(optionalFilePath))
                     RemoveHighlight(textView);
             }
+        }
+
+        void OnColorThemeChanged(ThemeChangedEventArgs e)
+        {
+            this.RemoveHighlightForAllViews();
+            if (this.showCoverage)
+                this.AddHighlightCoverageForExistingViews();
         }
     }
 }
