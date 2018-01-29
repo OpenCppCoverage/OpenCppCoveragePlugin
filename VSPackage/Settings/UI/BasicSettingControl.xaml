@@ -20,8 +20,11 @@
             </Style>
         </Grid.Resources>
 
-        <ScrollViewer VerticalScrollBarVisibility="Auto">
-            <Grid>
+        <ScrollViewer
+            VerticalScrollBarVisibility="Auto" 
+            HorizontalAlignment="Stretch"
+            Padding="0 0 5 0">
+            <Grid Height="{Binding RelativeSource={RelativeSource AncestorType={x:Type Window}}, Path=ActualHeight}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="auto"/>
                     <ColumnDefinition Width="auto"/>
@@ -30,6 +33,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
+                    <RowDefinition Height="*"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
                     <RowDefinition Height="auto"/>
@@ -46,7 +50,7 @@
                     IsReadOnlyCaretVisible="True"
                     VerticalContentAlignment="Center"
                     Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"/>
-            
+
                 <Label Content="Current configuration:" Grid.Row="1" Grid.Column="0"/>
                 <TextBox 
                     Text="{Binding CurrentConfiguration}" 
@@ -55,7 +59,7 @@
                     IsReadOnlyCaretVisible="True"
                     VerticalContentAlignment="Center"
                     Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="2"/>
-            
+
                 <Label Content="Selected projects:" Grid.Row="2" Grid.Column="0"/>
                 <DataGrid 
                     ItemsSource="{Binding SelectableProjects}" 
@@ -66,7 +70,7 @@
                     CanUserAddRows="False"
                     HeadersVisibility="Column"
                     MinHeight="50"
-                    MaxHeight="120"
+                    HorizontalAlignment="Stretch" 
                     Margin="0 0 0 6">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Name" Binding="{Binding Name}" Width="*">
@@ -80,50 +84,58 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <Label Content="Program to run:" Grid.Row="3"/>
+                <Button 
+                    Content="Toggle projects selection"
+                    Command="{Binding ToggleSelectAllCommand}"
+                    Grid.Row="3"  Grid.Column="2"
+                    HorizontalAlignment="Right"
+                    Padding="5 5 5 5"
+                    Margin="0 5 0 5"/>
+                
+                <Label Content="Program to run:" Grid.Row="4"/>
                 <helper:FileSystemSelectionControl
                     Mode="ExistingFileSelection"
                     FileFilter="Executable Files (*.exe)|*.exe"
-                    SelectedPath="{Binding ProgramToRun}" 
-                    Grid.Row="3" Grid.ColumnSpan="2"/>
+                    SelectedPath="{Binding ProgramToRun}"
+                    Grid.Row="4" Grid.ColumnSpan="2"/>
 
-                <Label Content="Arguments:" Grid.Row="4"/>
+                <Label Content="Arguments:" Grid.Row="5"/>
                 <TextBox 
                     Text="{Binding Arguments}" 
-                    Grid.Row="4" Grid.Column="1" Grid.ColumnSpan="2"
+                    Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
                     ToolTip="{Binding Arguments}"
                     Margin="0 5 0 5"
                     VerticalContentAlignment="Center"/>
 
-                <Label Content="Working Directory:" Grid.Row="5"/>
+                <Label Content="Working Directory:" Grid.Row="6"/>
                 <CheckBox 
                     IsChecked="{Binding HasWorkingDirectory}"
                     VerticalAlignment="Center" 
-                    Grid.Row="5" Grid.Column="1" 
+                    Grid.Row="6" Grid.Column="1" 
                     Margin="0 0 5 0"/>
                 <helper:FileSystemSelectionControl
                     Mode="FolderSelection"
                     IsEnabled="{Binding HasWorkingDirectory}"
-                    SelectedPath="{Binding OptionalWorkingDirectory}" 
-                    Grid.Row="5" Grid.Column="2"/>
+                    SelectedPath="{Binding OptionalWorkingDirectory}"
+                    Grid.Row="6" Grid.Column="2"/>
 
-                <Label Content="Optimized Build:" Grid.Row="6"/>
+                <Label Content="Optimized Build:" Grid.Row="7"/>
                 <CheckBox 
                     IsChecked="{Binding OptimizedBuild}" 
                     IsEnabled="{Binding IsOptimizedBuildCheckBoxEnabled}"
                     ToolTip="{Binding OptimizedBuildToolTip}"
                     ToolTipService.ShowOnDisabled="True"
                     VerticalAlignment="Center" 
-                    Grid.Row="6" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"/>
 
-                <Label Content="Compile before running:" Grid.Row="7"/>
+                <Label Content="Compile before running:" Grid.Row="8"/>
                 <CheckBox 
                     IsChecked="{Binding CompileBeforeRunning}" 
                     IsEnabled="{Binding IsCompileBeforeRunningEnabled}"
                     ToolTip="{Binding CompileBeforeRunningToolTip}"
                     ToolTipService.ShowOnDisabled="True"
                     VerticalAlignment="Center" 
-                    Grid.Row="7" Grid.Column="1" Grid.ColumnSpan="2"/>
+                    Grid.Row="8" Grid.Column="1" Grid.ColumnSpan="2"/>
             </Grid>
         </ScrollViewer>
     </Grid>

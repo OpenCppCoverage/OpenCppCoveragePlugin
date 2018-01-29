@@ -14,9 +14,11 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using GalaSoft.MvvmLight.Command;
 using OpenCppCoverage.VSPackage.Helper;
 using System;
 using System.Collections.Generic;
+using System.Windows.Input;
 using System.IO;
 using System.Linq;
 
@@ -37,7 +39,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public string FullName { get; }
         public StartUpProjectSettings.CppProject Project { get; }
         public bool IsSelected { get; set; }
-
         //---------------------------------------------------------------------
         public override string ToString()
         {
@@ -50,11 +51,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     {
         //---------------------------------------------------------------------
         public static string None = "None";
-
+        private bool isAllSelected = true;
         //---------------------------------------------------------------------
         public BasicSettingController()
         {
             this.SelectableProjects = new List<SelectableProject>();
+            this.ToggleSelectAllCommand = new RelayCommand(() => OnToggleSelectAll());
         }
 
         //---------------------------------------------------------------------
@@ -239,7 +241,18 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             return Path.GetDirectoryName(this.ProgramToRun);
         }
 
+        public void OnToggleSelectAll()
+        {
+            this.isAllSelected = !this.isAllSelected;
+            foreach (SelectableProject project in this.SelectableProjects)
+            {
+                project.IsSelected = this.isAllSelected;
+            }
+            this.SelectableProjects = new List<SelectableProject>(this.SelectableProjects);
+        }
+
         //---------------------------------------------------------------------
         public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; private set; }
+        public ICommand ToggleSelectAllCommand { get; }
     }
 }
