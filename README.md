@@ -19,7 +19,7 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 
 ### Compilation
 You have 2 Visual Studio solution files but **Visual Studio 2017 is always required**.
-Please also make sure you have Visual Studio 2017 **version 15.3.X**.
+Please also make sure you have Visual Studio 2017 **version 15.5.X**.
 
 #### CppCoveragePlugin.sln
 This is the default solution file and it requires only Visual Studio 2017.
