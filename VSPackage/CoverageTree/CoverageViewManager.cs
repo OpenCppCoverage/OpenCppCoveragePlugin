@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Formatting;
@@ -35,18 +37,45 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     sealed class CoverageViewManager : IWpfTextViewCreationListener, ICoverageViewManager
     {
         //---------------------------------------------------------------------
+        static CoverageViewManager()
+        {
+            LoadBrushes();
+        }
+
+        //---------------------------------------------------------------------
+        static void LoadBrushes()
+        {
+            CoveredBrush = LoadBrush("CoveredLineColor");
+            UncoveredBrush = LoadBrush("UnCoveredLineColor");
+        }
+
+        //---------------------------------------------------------------------
+        static SolidColorBrush LoadBrush(string keyName)
+        {
+            var key = new ThemeResourceKey(openCppCoverageCategory, keyName, ThemeResourceKeyType.BackgroundBrush);
+            var color = VSColorTheme.GetThemedColor(key);
+            return new SolidColorBrush(Color.FromArgb(color.A, color.R, color.G, color.B));
+        }
+
+        //---------------------------------------------------------------------
+        static Guid openCppCoverageCategory = new Guid("F50C7A34-815C-4FCB-BE28-7EDBB3185A04");
         public const string HighlightLinesAdornment = "HighlightLines";
         public static object CoverageTag = new object();
-        public static Brush CoveredBrush = Brushes.PaleGreen;
-        public static Brush UncoveredBrush = Brushes.LightCoral;
+        public static Brush CoveredBrush;
+        public static Brush UncoveredBrush;
         
         //---------------------------------------------------------------------
         readonly List<IWpfTextView> views = new List<IWpfTextView>();
         readonly FileCoverageAggregator fileCoverageAggregator = new FileCoverageAggregator();
 
         Dictionary<string, FileCoverage> coverageByFile = new Dictionary<string, FileCoverage>();
-        Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>> 
-            onTextChangedHanlders = new Dictionary<IWpfTextView, EventHandler<TextContentChangedEventArgs>>();
+        class Handler
+        {
+            public EventHandler<TextContentChangedEventArgs> OnTextChanged { get; set; }
+            public ThemeChangedEventHandler OnThemeChanged { get; set; }
+        }
+
+        Dictionary<IWpfTextView, Handler> handlers = new Dictionary<IWpfTextView, Handler>();
         bool showCoverage;
 
         //---------------------------------------------------------------------
@@ -58,8 +87,14 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             
             EventHandler<TextContentChangedEventArgs> onTextChanged = 
                 (sender, e) => OnTextChanged(textView, e);
-            onTextChangedHanlders.Add(textView, onTextChanged);
+            ThemeChangedEventHandler onThemeChanged = e => OnThemeChangedEvent(textView, e);
+            handlers.Add(textView, new Handler
+            {
+                OnTextChanged = onTextChanged,
+                OnThemeChanged = onThemeChanged
+            });
             textView.TextBuffer.Changed += onTextChanged;
+            VSColorTheme.ThemeChanged += onThemeChanged;
         }
 
         //---------------------------------------------------------------------
@@ -137,10 +172,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 textView.Closed -= OnTextViewClosed;
                 textView.LayoutChanged -= OnLayoutChanged;
 
-                var onTextChangedHandler = this.onTextChangedHanlders[textView];
-                this.onTextChangedHanlders.Remove(textView);
+                var handler = this.handlers[textView];
+                this.handlers.Remove(textView);
 
-                textView.TextBuffer.Changed -= onTextChangedHandler;
+                textView.TextBuffer.Changed -= handler.OnTextChanged;
+                VSColorTheme.ThemeChanged -= handler.OnThemeChanged;
             }
         }
 
@@ -224,6 +260,15 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 if (this.coverageByFile.Remove(optionalFilePath))
                     RemoveHighlight(textView);
             }
+        }
+
+        //---------------------------------------------------------------------
+        void OnThemeChangedEvent(IWpfTextView textView, ThemeChangedEventArgs e)
+        {
+            LoadBrushes();
+            RemoveHighlight(textView);
+            if (this.showCoverage)
+                AddNewHighlightCoverage(textView, textView.TextViewLines);
         }
     }
 }

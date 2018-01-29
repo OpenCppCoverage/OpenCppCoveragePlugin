@@ -16,3 +16,6 @@ VSPackage/OpenCppCoverage-x86
 
 # ProtBuff file
 VSPackage/CoverageData/CoverageData.cs
+
+# Generated files
+Themes.pkgdef
