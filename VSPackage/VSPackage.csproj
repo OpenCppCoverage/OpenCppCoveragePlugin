@@ -147,6 +147,7 @@
     </COMReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Color\Colors.cs" />
     <Compile Include="CommandLineBuilder.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="CoverageData\CoverageData.cs" />
@@ -258,6 +259,9 @@
     <None Include="Resources\Images.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Color\Colors.pkgdef">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="gpl-3.0.txt">
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
