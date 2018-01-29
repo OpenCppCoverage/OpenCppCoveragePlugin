@@ -241,7 +241,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             return Path.GetDirectoryName(this.ProgramToRun);
         }
 
-        public void OnToggleSelectAll()
+        //---------------------------------------------------------------------
+        void OnToggleSelectAll()
         {
             this.isAllSelected = !this.isAllSelected;
             foreach (SelectableProject project in this.SelectableProjects)
