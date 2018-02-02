@@ -33,8 +33,16 @@ namespace OpenCppCoverage.VSPackage
             {
                 var configurations = new List<DynamicVCConfiguration>();
                 foreach (var configuration in project_.Configurations)
-                    configurations.Add(new DynamicVCConfiguration(configuration));
-
+                {
+                    try
+                    {
+                        configurations.Add(new DynamicVCConfiguration(configuration));
+                    }
+                    catch (System.Exception /*exception*/)
+                    {
+                        // skip failed configuration
+                    }
+                }
                 return configurations;
             }
         }
