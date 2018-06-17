@@ -69,7 +69,7 @@
         </Strings>
       </Button>
 
-      <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageFromSelectedProjectCommand" priority="0x0100" type="Button">
+      <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageFromSelectedProjectCommand" priority="0x1000" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
