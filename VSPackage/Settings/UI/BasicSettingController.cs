@@ -253,7 +253,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; private set; }
+        public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; set; }
         public ICommand ToggleSelectAllCommand { get; }
     }
 }

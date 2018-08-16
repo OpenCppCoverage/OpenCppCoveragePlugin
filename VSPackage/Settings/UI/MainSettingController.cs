@@ -15,8 +15,10 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using GalaSoft.MvvmLight.Command;
+using Newtonsoft.Json;
 using OpenCppCoverage.VSPackage.Helper;
 using System;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -47,17 +49,67 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public CoverageRunner CoverageRunner { get; set; }
         public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
 
+        string settingsFile = "OpenCppCoverage.settings";
+
+        // for serialize
+        public class AllControllers
+        {
+            public BasicSettingController basicSettingController;
+            public FilterSettingController filterSettingController;
+            public ImportExportSettingController importExportSettingController;
+            public MiscellaneousSettingController miscellaneousSettingController;
+        }
+
         //---------------------------------------------------------------------
-        public void UpdateStartUpProject(ProjectSelectionKind kind)
+        public void SaveSettings()
+        {
+            File.WriteAllText(settingsFile, JsonConvert.SerializeObject(new AllControllers
+            {
+                basicSettingController = this.BasicSettingController,
+                filterSettingController = this.FilterSettingController,
+                importExportSettingController = this.ImportExportSettingController,
+                miscellaneousSettingController = this.MiscellaneousSettingController
+            }));
+        }
+
+        //---------------------------------------------------------------------
+        public void RecoverSettings(AllControllers allControllers)
+        {
+            this.BasicSettingController = allControllers.basicSettingController;
+            this.FilterSettingController = allControllers.filterSettingController;
+            this.ImportExportSettingController = allControllers.importExportSettingController;
+            this.MiscellaneousSettingController = allControllers.miscellaneousSettingController;
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateSettings(ProjectSelectionKind kind)
         {
             if (this.StartUpProjectSettingsBuilder == null)
                 throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
 
+            if (File.Exists(settingsFile))
+            {
+                AllControllers allControllers = JsonConvert.DeserializeObject<AllControllers>(File.ReadAllText(settingsFile));
+                if (allControllers.basicSettingController.CurrentProject.Equals(this.StartUpProjectSettingsBuilder.ComputeSettings(kind).ProjectName))
+                {
+                    RecoverSettings(allControllers);
+                    return;
+                }
+            }
+
+            UpdateStartUpProject(kind);
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateStartUpProject(ProjectSelectionKind kind)
+        {
             var settings = this.StartUpProjectSettingsBuilder.ComputeSettings(kind);
             this.BasicSettingController.UpdateStartUpProject(settings);
             this.FilterSettingController.UpdateStartUpProject();
             this.ImportExportSettingController.UpdateStartUpProject();
             this.MiscellaneousSettingController.UpdateStartUpProject();
+
+            SaveSettings();
         }
 
         //---------------------------------------------------------------------
@@ -73,10 +125,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public BasicSettingController BasicSettingController { get; }
-        public FilterSettingController FilterSettingController { get; }
-        public ImportExportSettingController ImportExportSettingController { get; }
-        public MiscellaneousSettingController MiscellaneousSettingController { get; }
+        public BasicSettingController BasicSettingController { get; set; }
+        public FilterSettingController FilterSettingController { get; set; }
+        public ImportExportSettingController ImportExportSettingController { get; set; }
+        public MiscellaneousSettingController MiscellaneousSettingController { get; set; }
 
         //---------------------------------------------------------------------
         string commandLineText;

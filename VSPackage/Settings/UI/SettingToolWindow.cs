@@ -61,6 +61,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             var frame = (IVsWindowFrame)this.Frame;
             frame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+
+            this.Controller.SaveSettings();
         }
     }
 }

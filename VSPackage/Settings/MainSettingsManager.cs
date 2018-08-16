@@ -49,7 +49,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
             window.Controller.CoverageRunner = coverageRunner;
-            window.Controller.UpdateStartUpProject(kind);
+            window.Controller.UpdateSettings(kind);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
