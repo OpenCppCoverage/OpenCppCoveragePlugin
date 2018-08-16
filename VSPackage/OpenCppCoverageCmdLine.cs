@@ -16,7 +16,9 @@
 
 using OpenCppCoverage.VSPackage.Settings;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -127,7 +129,7 @@ namespace OpenCppCoverage.VSPackage
             MiscellaneousSettings settings)
         {
             if (!string.IsNullOrWhiteSpace(settings.OptionalConfigFile))
-                builder.AppendArgument(ConfigFileFlag, settings.OptionalConfigFile);
+                builder.AppendArgument(ConfigFileFlag, CovertToDirectPath(settings.OptionalConfigFile));
 
             switch (settings.LogTypeValue)
             {
@@ -142,6 +144,40 @@ namespace OpenCppCoverage.VSPackage
 
             if (settings.ContinueAfterCppExceptions)
                 builder.AppendArgument(ContinueAfterCppExceptionFlag, null);
+        }
+
+        //---------------------------------------------------------------------
+        static string CovertToDirectPath(string path)
+        {
+            string content = "";
+            using (StreamReader reader = new StreamReader(path))
+            {
+                string line;
+                while ((line = reader.ReadLine()) != null)
+                    content += line + "\r\n";
+            }
+
+            // change current directory and replace relative path to direct path, write to new config file and return it.
+            string oldDirectory = Directory.GetCurrentDirectory();
+            string configDirectory = Path.GetDirectoryName(path);
+            string newConfigFile = configDirectory + @"\tmp.txt";
+            Directory.SetCurrentDirectory(configDirectory);
+
+            foreach (Match match in Regex.Matches(content, @"=(.*)\r\n"))
+            {
+                string dict = match.Groups[1].Value;
+                string ndict = Path.GetFullPath(dict);
+                content = content.Replace(dict, ndict);
+            }
+
+            using (StreamWriter writer = new StreamWriter(newConfigFile))
+            {
+                writer.Write(content);
+                writer.Flush();
+            }
+
+            Directory.SetCurrentDirectory(oldDirectory);
+            return newConfigFile;
         }
 
         //---------------------------------------------------------------------
