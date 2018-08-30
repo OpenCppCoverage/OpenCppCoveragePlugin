@@ -324,6 +324,9 @@
     <Content Include="OpenCppCoverage-x64\msdia140.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="OpenCppCoverage-x64\msvcp140.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="OpenCppCoverage-x64\OpenCppCoverage.exe">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -378,6 +381,9 @@
     <Content Include="OpenCppCoverage-x64\Tools.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="OpenCppCoverage-x64\vcruntime140.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="OpenCppCoverage-x64\zlib1.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
@@ -399,7 +405,13 @@
     <Content Include="OpenCppCoverage-x86\msdia140.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="OpenCppCoverage-x86\msvcp140.dll">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="OpenCppCoverage-x86\OpenCppCoverage.exe">
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="OpenCppCoverage-x86\vcruntime140.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="OpenCppCoverage-x86\zlib1.dll">

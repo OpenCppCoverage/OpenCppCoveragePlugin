@@ -151,57 +151,8 @@ namespace OpenCppCoverage.VSPackage
                     dte, outputWriter, coverageTreeManager, projectBuilder,
                     coverageViewManager, deserializer, errorHandler);
 
-                CheckVCRedistInstalled();
                 mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner, kind);
             });
-        }
-
-        //---------------------------------------------------------------------
-        static void CheckVCRedistInstalled()
-        {
-            if (!IsVCRedistInstalled("x86")
-              || (Environment.Is64BitOperatingSystem && !IsVCRedistInstalled("x64")))
-            {
-                throw new VSPackageException("Cannot start OpenCppCoverage.\n" +
-                        "You need to install Visual Studio 2015 redistributable Update 3 " +
-                        "vc_redist.x86.exe and vc_redist.x64.exe (for 64 bits operating system) " +
-                        "and restart Visual Studio. Download link: " +
-                        "https://www.microsoft.com/en-us/download/details.aspx?id=53587.\n" +
-                        "You can also install both OpenCppCoverageSetup-x86-0.9.6.1.exe and " +
-                        "OpenCppCoverageSetup-x64-0.9.6.1.exe.");
-            }
-        }
-
-        //---------------------------------------------------------------------
-        static bool IsVCRedistInstalled(string architecture)
-        {
-            const string runtimeKey = @"SOFTWARE\Microsoft\VisualStudio\14.0\VC\Runtimes\";
-
-            using (var subKey = Registry.LocalMachine.OpenSubKey(runtimeKey + architecture))
-            {
-                if (subKey != null)
-                {
-                    var installedValueObject = subKey.GetValue("Installed");
-                    int installedValue = Convert.ToInt32(installedValueObject);
-                    if (installedValue == 1)
-                    {
-                        var major = Convert.ToInt32(subKey.GetValue("Major"));
-                        var minor = Convert.ToInt32(subKey.GetValue("Minor"));
-                        var bld = Convert.ToInt32(subKey.GetValue("Bld"));
-                        const int expectedMajor = 14;
-                        const int expectedMinor = 0;
-                        const int expectedBld = 24212;
-
-                        if (major != expectedMajor)
-                            return major > expectedMajor;
-                        if (minor != expectedMinor)
-                            return minor > expectedMinor;
-                        return bld >= expectedBld;
-                    }
-                }
-            }
-
-            return false;
         }
 
         //---------------------------------------------------------------------
