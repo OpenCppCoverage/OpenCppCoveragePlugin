@@ -19,7 +19,7 @@ If you find a bug, you can create an issue [here](https://opencppcoverage.codepl
 
 ### Compilation
 You have 2 Visual Studio solution files but **Visual Studio 2017 is always required**.
-Please also make sure you have Visual Studio 2017 **version 15.5.X**.
+Please also make sure you have Visual Studio 2017 **version 15.8.X**.
 
 #### CppCoveragePlugin.sln
 This is the default solution file and it requires only Visual Studio 2017.
@@ -33,7 +33,7 @@ This is the default solution file and it requires only Visual Studio 2017.
 This solution should be used only to generate a plugin compatible with Visual Studio 2013, 2015 and 2017.
 
 #### OpenCppCoverage
-You should install the latest version of [OpenCppCoverage](https://opencppcoverage.codeplex.com/releases):
+You should install the latest version of [OpenCppCoverage](https://github.com/OpenCppCoverage/OpenCppCoverage/releases/tag/release-0.9.7.0):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
 * *OpenCppCoverageSetup-x86-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x86*
 
