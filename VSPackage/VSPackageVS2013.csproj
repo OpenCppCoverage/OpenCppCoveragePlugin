@@ -550,7 +550,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup>
-    <PreBuildEvent>"$(SolutionDir)packages\Google.ProtocolBuffers.2.4.1.555\tools\ProtoGen.exe" --proto_path=$(SolutionDir)VSPackage\CoverageData -namespace=OpenCppCoverage.VSPackage.CoverageData.ProtoBuff -output_directory=$(ProjectDir)CoverageData CoverageData.proto
+    <PreBuildEvent>"$(SolutionDir)packages\Google.ProtocolBuffers.2.4.1.555\tools\ProtoGen.exe" --proto_path="$(SolutionDir)VSPackage\CoverageData" -namespace=OpenCppCoverage.VSPackage.CoverageData.ProtoBuff -output_directory="$(ProjectDir)CoverageData" CoverageData.proto
 "$(DevEnvDir)..\..\VSSDK\VisualStudioIntegration\Tools\Bin\VsixColorCompiler.exe" "$(ProjectDir)\Themes.xml" "$(ProjectDir)\Themes.pkgdef" /noLogo</PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
