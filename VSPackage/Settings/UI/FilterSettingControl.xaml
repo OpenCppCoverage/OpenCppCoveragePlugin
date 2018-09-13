@@ -9,13 +9,7 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <Grid>
         <Grid.Resources>
-            <Style TargetType="{x:Type DataGrid}">
-                <Setter Property="AlternationCount" Value="2"/>
-                <Setter Property="AlternatingRowBackground" Value="AliceBlue"/>
-                <Setter Property="AutoGenerateColumns" Value="False"/>
-                <Setter Property="HeadersVisibility" Value="Column"/>
-                <Setter Property="Margin" Value="5"/>
-            </Style>
+            <ResourceDictionary Source="../../Styles/AllStyles.xaml"/>
         </Grid.Resources>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto">
