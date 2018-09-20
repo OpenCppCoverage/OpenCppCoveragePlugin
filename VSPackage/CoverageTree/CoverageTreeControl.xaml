@@ -14,9 +14,16 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.Resources>
-            <local:DoubleMultiplyConverter x:Key="MultiplyConverter"/>
-            <local:NullCollapsedConverter x:Key="NullCollapsedConverter"/>
-            <sys:Double x:Key="CoverageRectangleRate">50.0</sys:Double>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="../Styles/AllStyles.xaml"/>
+                    <ResourceDictionary>
+                        <local:DoubleMultiplyConverter x:Key="MultiplyConverter"/>
+                        <local:NullCollapsedConverter x:Key="NullCollapsedConverter"/>
+                        <sys:Double x:Key="CoverageRectangleRate">50.0</sys:Double>
+                    </ResourceDictionary>
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
         </Grid.Resources>
         <TextBlock 
             Text="{Binding Warning}" 
@@ -43,6 +50,7 @@
                 Grid.Column="1"
                 Grid.Row="2"
                 Root="{Binding Root}"
+                ItemContainerStyle="{StaticResource SharpTreeViewItemContainerStyle}"
                 Margin="5 0 5 5">
             <ListView.View>
                 <sd:SharpGridView>
