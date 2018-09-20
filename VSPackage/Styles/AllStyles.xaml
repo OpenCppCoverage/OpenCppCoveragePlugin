@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+                    xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Styles">
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="ButtonStyle.xaml"/>
         <ResourceDictionary Source="TabItemStyle.xaml"/>
@@ -8,40 +8,40 @@
         <ResourceDictionary Source="ComboBoxItemStyle.xaml"/>
         <ResourceDictionary>
             <Style TargetType="{x:Type TextBox}">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.CaptionTextKey}}" />
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.CaptionTextKey}}" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowBackgroundKey}}" />
             </Style>
 
             <!-- Named the theme to allow override. -->
             <Style x:Key="VsThemedLabel" TargetType="{x:Type Label}">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.CaptionTextKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.CaptionTextKey}}" />
             </Style>
 
             <Style TargetType="{x:Type Label}" BasedOn="{StaticResource VsThemedLabel}"/>
 
             <Style TargetType="{x:Type TabControl}">
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowBackgroundKey}}" />
             </Style>
 
             <Style TargetType="{x:Type DataGrid}">
                 <Setter Property="AlternationCount" Value="2"/>
-                <Setter Property="AlternatingRowBackground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ButtonFaceKey}}"/>
-                <Setter Property="RowBackground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}"/>
+                <Setter Property="AlternatingRowBackground" Value="{DynamicResource {x:Static local:VsBrushes.ButtonFaceKey}}"/>
+                <Setter Property="RowBackground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowBackgroundKey}}"/>
                 <Setter Property="AutoGenerateColumns" Value="False"/>
                 <Setter Property="HeadersVisibility" Value="Column"/>
                 <Setter Property="Margin" Value="5"/>
-                <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.GridLineKey}}"/>
-                <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static vsshell:VsBrushes.GridLineKey}}"/>
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowBackgroundKey}}" />
+                <Setter Property="HorizontalGridLinesBrush" Value="{DynamicResource {x:Static local:VsBrushes.GridLineKey}}"/>
+                <Setter Property="VerticalGridLinesBrush" Value="{DynamicResource {x:Static local:VsBrushes.GridLineKey}}"/>
+                <Setter Property="Background" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowBackgroundKey}}" />
             </Style>
 
             <Style TargetType="{x:Type DataGridColumnHeader}">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.GridHeadingTextKey}}" />
-                <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.GridHeadingBackgroundKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.GridHeadingTextKey}}" />
+                <Setter Property="Background" Value="{DynamicResource {x:Static local:VsBrushes.GridHeadingBackgroundKey}}" />
             </Style>
 
             <Style TargetType="{x:Type DataGridRow}">
-                <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.CaptionTextKey}}" />
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.CaptionTextKey}}" />
             </Style>
         </ResourceDictionary>
     </ResourceDictionary.MergedDictionaries>

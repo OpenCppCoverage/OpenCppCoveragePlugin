@@ -223,6 +223,8 @@
     <Compile Include="Settings\StartUpProjectSettings.cs" />
     <Compile Include="Settings\StartUpProjectSettingsBuilder.cs" />
     <Compile Include="CoverageTree\CoverageViewManager.cs" />
+    <Compile Include="Styles\VsBrushes.cs" />
+    <Compile Include="Styles\VsColors.cs" />
     <Compile Include="VSPackageException.cs" />
     <Compile Include="OpenCppCoveragePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

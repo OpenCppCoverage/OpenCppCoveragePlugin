@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.15.0">
+                    xmlns:local="clr-namespace:OpenCppCoverage.VSPackage.Styles">
     <!--UPDATED-->
     <Style x:Key="FocusVisual" TargetType="{x:Type Control}">
         <Setter Property="Template">
@@ -29,9 +29,9 @@
     <Style TargetType="{x:Type TabItem}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
         <!--UPDATED-->
-        <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabTextKey}}"/>
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabTextKey}}"/>
         <!--UPDATED-->
-        <Setter Property="Background" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabGradientBeginKey}}"/>
+        <Setter Property="Background" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabGradientBeginKey}}"/>
         <Setter Property="BorderBrush" Value="{StaticResource TabItem.Static.Border}"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="Padding" Value="6,2,6,2"/>
@@ -43,7 +43,7 @@
                     <Grid x:Name="templateRoot" SnapsToDevicePixels="true">
                         <Border x:Name="mainBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="1,1,1,0" Background="{TemplateBinding Background}" Margin="0">
                             <!--UPDATED-->
-                            <Border x:Name="innerBorder" BorderBrush="{StaticResource TabItem.Selected.Border}" BorderThickness="1,1,1,0" Background="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabGradientBeginKey}}" Margin="-1" Opacity="0"/>
+                            <Border x:Name="innerBorder" BorderBrush="{StaticResource TabItem.Selected.Border}" BorderThickness="1,1,1,0" Background="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabGradientBeginKey}}" Margin="-1" Opacity="0"/>
                         </Border>
                         <ContentPresenter x:Name="contentPresenter" ContentSource="Header" Focusable="False" HorizontalAlignment="{Binding HorizontalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{Binding VerticalContentAlignment, RelativeSource={RelativeSource AncestorType={x:Type ItemsControl}}}"/>
                     </Grid>
@@ -54,9 +54,9 @@
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Left"/>
                             </MultiDataTrigger.Conditions>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
                         </MultiDataTrigger>
@@ -66,9 +66,9 @@
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Bottom"/>
                             </MultiDataTrigger.Conditions>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
                         </MultiDataTrigger>
@@ -78,9 +78,9 @@
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Right"/>
                             </MultiDataTrigger.Conditions>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
                         </MultiDataTrigger>
@@ -90,9 +90,9 @@
                                 <Condition Binding="{Binding TabStripPlacement, RelativeSource={RelativeSource AncestorType={x:Type TabControl}}}" Value="Top"/>
                             </MultiDataTrigger.Conditions>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBackgroundBeginKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
+                            <Setter Property="BorderBrush" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabMouseOverBorderKey}}"/>
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
                         </MultiDataTrigger>
@@ -159,9 +159,9 @@
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,0,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,0,1"/>
                             <!--UPDATED-->
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -182,9 +182,9 @@
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,0,1,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,0,1,1"/>
                             <!--UPDATED-->
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -205,9 +205,9 @@
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="0,1,1,1"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="0,1,1,1"/>
                             <!--UPDATED-->
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
                         </MultiDataTrigger>
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
@@ -228,9 +228,9 @@
                             <Setter Property="BorderThickness" TargetName="innerBorder" Value="1,1,1,0"/>
                             <Setter Property="BorderThickness" TargetName="mainBorder" Value="1,1,1,0"/>
                             <!--UPDATED-->
-                            <Setter Property="Foreground" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
+                            <Setter Property="Foreground" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTextKey}}"/>
                             <!--UPDATED-->
-                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static vsshell:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
+                            <Setter Property="Background" TargetName="mainBorder" Value="{DynamicResource {x:Static local:VsBrushes.ToolWindowTabSelectedTabKey}}"/>
                         </MultiDataTrigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
