@@ -1,3 +1,9 @@
+Version 0.9.6.0
+	- Update OpenCppCoverage 0.9.6.1 to 0.9.7.0.
+	- Use theme colors (https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/issues/16).
+	- Move "Run OpenCppCoverage" button down in project menu (https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/issues/15).
+	- Always use OpenCppCoverage 64 bits on Windows 64 bits (https://github.com/OpenCppCoverage/OpenCppCoverage/issues/55).
+
 Version 0.9.4.2
 	- Add a button to select and deselect all projects (https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/pull/9)
 	- Add better colors for different themes for covered and not covered lines (https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/pull/10)
