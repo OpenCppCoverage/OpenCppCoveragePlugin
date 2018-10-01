@@ -1,3 +1,6 @@
+Version 0.9.6.1
+	- Remove the reference to PresentationFramework.Aero2 (Not available on Windows 7).
+
 Version 0.9.6.0
 	- Update OpenCppCoverage 0.9.6.1 to 0.9.7.0.
 	- Use theme colors (https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/issues/16).
