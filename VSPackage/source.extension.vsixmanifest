@@ -4,9 +4,9 @@
         <Identity Id="c6a77aca-f53c-4cd1-97d7-0ed595751347" Version="0.9.6.0" Language="en-US" Publisher="OpenCppCoverage" />
         <DisplayName>OpenCppCoverage Plugin</DisplayName>
         <Description xml:space="preserve">Visual Studio plugin for OpenCppCoverage to compute code coverage for C++ application.</Description>
-        <MoreInfo>https://opencppcoverage.codeplex.com/</MoreInfo>
+        <MoreInfo>https://github.com/OpenCppCoverage/OpenCppCoveragePlugin</MoreInfo>
         <License>gpl-3.0.txt</License>
-        <GettingStartedGuide>https://opencppcoverage.codeplex.com/wikipage?title=Visual%20Studio%20Extension</GettingStartedGuide>
+        <GettingStartedGuide>https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/wiki</GettingStartedGuide>
         <Tags>C++, Code Coverage</Tags>
     </Metadata>
     <Installation InstalledByMsi="false">
