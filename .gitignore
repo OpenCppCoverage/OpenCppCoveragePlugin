@@ -11,8 +11,11 @@ TestResults/
 LastCoverageResults.log
 
 # Template files / OpenCppCoverage binaries
-VSPackage/OpenCppCoverage-x64
-VSPackage/OpenCppCoverage-x86
+VSPackage/OpenCppCoverage-x64/*
+!VSPackage/OpenCppCoverage-x64/Plugins
+
+VSPackage/OpenCppCoverage-x86/*
+!VSPackage/OpenCppCoverage-x86/Plugins
 
 # ProtBuff file
 VSPackage/CoverageData/CoverageData.cs
