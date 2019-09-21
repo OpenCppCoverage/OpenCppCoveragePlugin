@@ -26,7 +26,7 @@
                 </Grid.ColumnDefinitions>
 
                 <DataGrid 
-                    ItemsSource="{Binding Exports}" Grid.Row="0" Grid.ColumnSpan="2">
+                    ItemsSource="{Binding Settings.Exports}" Grid.Row="0" Grid.ColumnSpan="2">
                     <DataGrid.Resources>
                         <!-- We need this line because DataGridComboBoxColumn bind to the underlying type and not controller-->
                         <CollectionViewSource x:Key="ExportTypeValues" Source="{Binding ExportTypeValues}"/>
@@ -45,7 +45,7 @@
                     </DataGrid.Columns>
                 </DataGrid>
 
-                <DataGrid ItemsSource="{Binding InputCoverages}" 
+                <DataGrid ItemsSource="{Binding Settings.InputCoverages}" 
                           Grid.Row="1" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
                         <helper:DataGridFileSystemSelectionColumn
@@ -58,10 +58,10 @@
                 </DataGrid>
 
                 <Label Content="Cover children processes:" Grid.Row="2" Grid.Column="0"/>
-                <CheckBox IsChecked="{Binding CoverChildrenProcesses}" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"/>
+                <CheckBox IsChecked="{Binding Settings.CoverChildrenProcesses}" VerticalAlignment="Center" Grid.Row="2" Grid.Column="1"/>
 
                 <Label Content="Aggregate by file" Grid.Row="3" Grid.Column="0"/>
-                <CheckBox IsChecked="{Binding AggregateByFile}"  VerticalAlignment="Center" Grid.Row="3" Grid.Column="1"/>
+                <CheckBox IsChecked="{Binding Settings.AggregateByFile}"  VerticalAlignment="Center" Grid.Row="3" Grid.Column="1"/>
             </Grid>
         </ScrollViewer>
     </Grid>

@@ -22,23 +22,47 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class FilterSettingController
     {
         //---------------------------------------------------------------------
+        public class SettingsData
+        {
+            public SettingsData()
+            {
+                this.AdditionalSourcePatterns = new ObservableCollection<BindableString>();
+                this.AdditionalModulePatterns = new ObservableCollection<BindableString>();
+                this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();
+                this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
+                this.UnifiedDiffs = new ObservableCollection<FilterSettings.UnifiedDiff>();
+            }
+
+            public ObservableCollection<BindableString> AdditionalSourcePatterns { get; }
+            public ObservableCollection<BindableString> AdditionalModulePatterns { get; }
+            public ObservableCollection<BindableString> ExcludedSourcePatterns { get; }
+            public ObservableCollection<BindableString> ExcludedModulePatterns { get; }
+            public ObservableCollection<FilterSettings.UnifiedDiff> UnifiedDiffs { get; }
+        }
+
+
+        //---------------------------------------------------------------------
         public FilterSettingController()
         {
-            this.AdditionalSourcePatterns = new ObservableCollection<BindableString>();
-            this.AdditionalModulePatterns = new ObservableCollection<BindableString>();
-            this.ExcludedSourcePatterns = new ObservableCollection<BindableString>();            
-            this.ExcludedModulePatterns = new ObservableCollection<BindableString>();
-            this.UnifiedDiffs = new ObservableCollection<FilterSettings.UnifiedDiff>();            
+            this.Settings = new SettingsData();
         }
+
+        public SettingsData Settings { get; private set; }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject()
         {
-            this.AdditionalSourcePatterns.Clear();
-            this.AdditionalModulePatterns.Clear();
-            this.ExcludedSourcePatterns.Clear();
-            this.ExcludedModulePatterns.Clear();
-            this.UnifiedDiffs.Clear();
+            this.Settings.AdditionalSourcePatterns.Clear();
+            this.Settings.AdditionalModulePatterns.Clear();
+            this.Settings.ExcludedSourcePatterns.Clear();
+            this.Settings.ExcludedModulePatterns.Clear();
+            this.Settings.UnifiedDiffs.Clear();
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateSettings(SettingsData settings)
+        {
+            this.Settings = settings;
         }
 
         //---------------------------------------------------------------------
@@ -46,19 +70,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             return new FilterSettings
             {
-                AdditionalSourcePaths = this.AdditionalSourcePatterns.ToStringList(),
-                AdditionalModulePaths = this.AdditionalModulePatterns.ToStringList(),
-                ExcludedSourcePaths = this.ExcludedSourcePatterns.ToStringList(),
-                ExcludedModulePaths = this.ExcludedModulePatterns.ToStringList(),
-                UnifiedDiffs = this.UnifiedDiffs
+                AdditionalSourcePaths = this.Settings.AdditionalSourcePatterns.ToStringList(),
+                AdditionalModulePaths = this.Settings.AdditionalModulePatterns.ToStringList(),
+                ExcludedSourcePaths = this.Settings.ExcludedSourcePatterns.ToStringList(),
+                ExcludedModulePaths = this.Settings.ExcludedModulePatterns.ToStringList(),
+                UnifiedDiffs = this.Settings.UnifiedDiffs
             };
         }
-
-        //---------------------------------------------------------------------
-        public ObservableCollection<BindableString> AdditionalSourcePatterns { get; }
-        public ObservableCollection<BindableString> AdditionalModulePatterns { get; }
-        public ObservableCollection<BindableString> ExcludedSourcePatterns { get; }
-        public ObservableCollection<BindableString> ExcludedModulePatterns { get; }
-        public ObservableCollection<FilterSettings.UnifiedDiff> UnifiedDiffs { get; }
     }
 }

@@ -23,7 +23,7 @@ using System.Linq;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class ImportExportSettingController: PropertyChangedNotifier
+    class ImportExportSettingController
     {
         //---------------------------------------------------------------------
         public class Export : PropertyChangedNotifier
@@ -77,22 +77,58 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
         }
 
+        public class SettingsData: PropertyChangedNotifier
+        {
+            public SettingsData()
+            {
+                this.Exports = new ObservableCollection<Export>();
+                this.InputCoverages = new ObservableCollection<BindableString>();
+            }
+
+            public ObservableCollection<Export> Exports { get; }
+            public ObservableCollection<BindableString> InputCoverages { get; }
+
+            //-----------------------------------------------------------------
+            bool coverChildrenProcesses;
+            public bool CoverChildrenProcesses
+            {
+                get { return this.coverChildrenProcesses; }
+                set { SetField(ref this.coverChildrenProcesses, value); }
+            }
+
+            //-----------------------------------------------------------------
+            bool aggregateByFile;
+            public bool AggregateByFile
+            {
+                get { return this.aggregateByFile; }
+                set { SetField(ref this.aggregateByFile, value); }
+            }
+        }
+
         //---------------------------------------------------------------------
         public ImportExportSettingController()
         {
             this.ExportTypeValues = Enum.GetValues(typeof(ImportExportSettings.Type))
                 .Cast<ImportExportSettings.Type>();
-            this.Exports = new ObservableCollection<Export>();
-            this.InputCoverages = new ObservableCollection<BindableString>();
+            this.Settings = new SettingsData();
         }
 
         //---------------------------------------------------------------------
+        public SettingsData Settings { get; private set; }
+        
+        //---------------------------------------------------------------------
         public void UpdateStartUpProject()
         {
-            this.Exports.Clear();
-            this.InputCoverages.Clear();
-            this.CoverChildrenProcesses = false;
-            this.AggregateByFile = true;
+            this.Settings.Exports.Clear();
+            this.Settings.InputCoverages.Clear();
+            this.Settings.CoverChildrenProcesses = false;
+            this.Settings.AggregateByFile = true;
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateSettings(SettingsData settings)
+        {
+            this.Settings = settings;
         }
 
         //---------------------------------------------------------------------
@@ -100,36 +136,18 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             return new ImportExportSettings
             {
-                Exports = this.Exports.Select(e => new ImportExportSettings.Export
+                Exports = this.Settings.Exports.Select(e => new ImportExportSettings.Export
                 {
                     Path = e.Path,
                     Type = e.Type
                 }),
-                InputCoverages = this.InputCoverages.ToStringList(),
-                AggregateByFile = this.AggregateByFile,
-                CoverChildrenProcesses = this.CoverChildrenProcesses  
+                InputCoverages = this.Settings.InputCoverages.ToStringList(),
+                AggregateByFile = this.Settings.AggregateByFile,
+                CoverChildrenProcesses = this.Settings.CoverChildrenProcesses  
             };
         }
 
         //---------------------------------------------------------------------
         public IEnumerable<ImportExportSettings.Type> ExportTypeValues { get; }
-        public ObservableCollection<Export> Exports { get; }
-        public ObservableCollection<BindableString> InputCoverages { get; }
-
-        //-----------------------------------------------------------------
-        bool coverChildrenProcesses;
-        public bool CoverChildrenProcesses
-        {
-            get { return this.coverChildrenProcesses; }
-            set { SetField(ref this.coverChildrenProcesses, value); }
-        }
-
-        //-----------------------------------------------------------------
-        bool aggregateByFile;
-        public bool AggregateByFile
-        {
-            get { return this.aggregateByFile; }
-            set { SetField(ref this.aggregateByFile, value); }
-        }
     }
 }

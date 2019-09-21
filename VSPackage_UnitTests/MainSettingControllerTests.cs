@@ -113,10 +113,10 @@ namespace VSPackage_UnitTests
             {
                 var controller = new MiscellaneousSettingController();
                 controller.HasConfigFile = true;
-                controller.OptionalConfigFile = "configFile";
+                controller.Settings.OptionalConfigFile = "configFile";
 
                 controller.HasConfigFile = false;
-                Assert.IsNull(controller.OptionalConfigFile);
+                Assert.IsNull(controller.Settings.OptionalConfigFile);
             });
         }
 

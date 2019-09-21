@@ -24,20 +24,59 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     //-------------------------------------------------------------------------
     class MiscellaneousSettingController: PropertyChangedNotifier
     {
+        public class SettingsData: PropertyChangedNotifier
+        {
+            //---------------------------------------------------------------------
+            string optionalConfigFile;
+            public string OptionalConfigFile
+            {
+                get { return this.optionalConfigFile; }
+                set { this.SetField(ref this.optionalConfigFile, value); }
+            }
+
+            //---------------------------------------------------------------------
+            MiscellaneousSettings.LogType logTypeValue;
+            public MiscellaneousSettings.LogType LogTypeValue
+            {
+                get { return this.logTypeValue; }
+                set { this.SetField(ref this.logTypeValue, value); }
+            }
+
+            //---------------------------------------------------------------------
+            bool continueAfterCppExceptions;
+            public bool ContinueAfterCppExceptions
+            {
+                get { return this.continueAfterCppExceptions; }
+                set { this.SetField(ref this.continueAfterCppExceptions, value); }
+            }
+
+        }
+
         //---------------------------------------------------------------------
         public MiscellaneousSettingController()
         {
             this.LogTypeValues = Enum.GetValues(typeof(MiscellaneousSettings.LogType))
                 .Cast<MiscellaneousSettings.LogType>();
+            this.Settings = new SettingsData();
         }
+
+        //---------------------------------------------------------------------
+        public SettingsData Settings { get; private set; }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject()
         {
             this.HasConfigFile = false;
-            this.OptionalConfigFile = null;
-            this.LogTypeValue = MiscellaneousSettings.LogType.Normal;
-            this.ContinueAfterCppExceptions = false;
+            this.Settings.OptionalConfigFile = null;
+            this.Settings.LogTypeValue = MiscellaneousSettings.LogType.Normal;
+            this.Settings.ContinueAfterCppExceptions = false;
+        }
+
+        //---------------------------------------------------------------------
+        public void UpdateSettings(SettingsData settings)
+        {
+            this.Settings = settings;
+            this.HasConfigFile = !string.IsNullOrEmpty(this.Settings.OptionalConfigFile);
         }
 
         //---------------------------------------------------------------------
@@ -45,9 +84,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             return new MiscellaneousSettings
             {
-                OptionalConfigFile = this.OptionalConfigFile,
-                LogTypeValue = this.LogTypeValue,
-                ContinueAfterCppExceptions = this.ContinueAfterCppExceptions
+                OptionalConfigFile = this.Settings.OptionalConfigFile,
+                LogTypeValue = this.Settings.LogTypeValue,
+                ContinueAfterCppExceptions = this.Settings.ContinueAfterCppExceptions
             };
         }
 
@@ -59,34 +98,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             set
             {
                 if (this.SetField(ref this.hasConfigFile, value) && !value)
-                    this.OptionalConfigFile = null;
+                    this.Settings.OptionalConfigFile = null;
             }
         }
 
-        //---------------------------------------------------------------------
-        string optionalConfigFile;
-        public string OptionalConfigFile
-        {
-            get { return this.optionalConfigFile; }
-            set { this.SetField(ref this.optionalConfigFile, value); }
-        }
-
-        //---------------------------------------------------------------------
-        MiscellaneousSettings.LogType logTypeValue;
-        public MiscellaneousSettings.LogType LogTypeValue
-        {
-            get { return this.logTypeValue; }
-            set { this.SetField(ref this.logTypeValue, value); }
-        }
-
-        //---------------------------------------------------------------------
-        bool continueAfterCppExceptions;
-        public bool ContinueAfterCppExceptions
-        {
-            get { return this.continueAfterCppExceptions; }
-            set { this.SetField(ref this.continueAfterCppExceptions, value); }
-        }
-        
         //---------------------------------------------------------------------        
         public IEnumerable<MiscellaneousSettings.LogType> LogTypeValues { get; }
     }

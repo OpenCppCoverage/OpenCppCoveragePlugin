@@ -35,7 +35,7 @@
             <Label Content="Log verbosity" Grid.Row="0"/>
             <ComboBox 
                 ItemsSource="{Binding LogTypeValues}" 
-                SelectedValue="{Binding LogTypeValue}"
+                SelectedValue="{Binding Settings.LogTypeValue}"
                 Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                 Margin="0 5 0 5"/>
 
@@ -49,13 +49,13 @@
                 IsEnabled="{Binding HasConfigFile}"
                 Mode="ExistingFileSelection"
                 FileFilter="Config Files (*.*)|*.*"
-                SelectedPath="{Binding OptionalConfigFile}"                                 
+                SelectedPath="{Binding Settings.OptionalConfigFile}"
                 Grid.Row="1" Grid.Column="2"
                 Margin="0 5 0 5"/>
 
             <Label Content="Continue after C++ exceptions" Grid.Row="2"/>
             <CheckBox 
-                IsChecked="{Binding ContinueAfterCppExceptions}" 
+                IsChecked="{Binding Settings.ContinueAfterCppExceptions}" 
                 VerticalAlignment="Center" 
                 Grid.Row="2" Grid.Column="1"
                 Margin="0 5 0 5"/>

@@ -79,13 +79,13 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         void Update(FilterSettingController controller)
         {
-            controller.AdditionalSourcePatterns.Add(new BindableString("Test"));
-            controller.AdditionalModulePatterns.Add(new BindableString("Test"));
-            controller.ExcludedSourcePatterns.Add(new BindableString("Test"));
-            controller.ExcludedModulePatterns.Add(new BindableString("Test"));
+            controller.Settings.AdditionalSourcePatterns.Add(new BindableString("Test"));
+            controller.Settings.AdditionalModulePatterns.Add(new BindableString("Test"));
+            controller.Settings.ExcludedSourcePatterns.Add(new BindableString("Test"));
+            controller.Settings.ExcludedModulePatterns.Add(new BindableString("Test"));
 
             var unifiedDiff = GetEmptyFile(PathKind.UnifiedDiff);
-            controller.UnifiedDiffs.Add(new FilterSettings.UnifiedDiff
+            controller.Settings.UnifiedDiffs.Add(new FilterSettings.UnifiedDiff
             {
                 OptionalRootFolder = Path.GetDirectoryName(unifiedDiff),
                 UnifiedDiffPath = unifiedDiff
@@ -95,25 +95,25 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         void Update(ImportExportSettingController controller, string binaryOutput)
         {
-            controller.Exports.Clear();
-            controller.Exports.Add(new ImportExportSettingController.Export
+            controller.Settings.Exports.Clear();
+            controller.Settings.Exports.Add(new ImportExportSettingController.Export
                 {   Type = ImportExportSettings.Type.Cobertura,
                     Path = GetTemporaryPath(PathKind.Cobertura) });
-            controller.Exports.Add(new ImportExportSettingController.Export
+            controller.Settings.Exports.Add(new ImportExportSettingController.Export
                 {   Type = ImportExportSettings.Type.Html,
                     Path = GetTemporaryPath(PathKind.Html) });
 
-            controller.InputCoverages.Add(new BindableString(binaryOutput));
-            controller.CoverChildrenProcesses = !controller.CoverChildrenProcesses;
-            controller.AggregateByFile = !controller.AggregateByFile;
+            controller.Settings.InputCoverages.Add(new BindableString(binaryOutput));
+            controller.Settings.CoverChildrenProcesses = !controller.Settings.CoverChildrenProcesses;
+            controller.Settings.AggregateByFile = !controller.Settings.AggregateByFile;
         }
 
         //---------------------------------------------------------------------
         void Update(MiscellaneousSettingController controller)
         {
-            controller.OptionalConfigFile = GetEmptyFile(PathKind.ConfigFile);
-            controller.LogTypeValue = MiscellaneousSettings.LogType.Verbose;
-            controller.ContinueAfterCppExceptions = !controller.ContinueAfterCppExceptions;        
+            controller.Settings.OptionalConfigFile = GetEmptyFile(PathKind.ConfigFile);
+            controller.Settings.LogTypeValue = MiscellaneousSettings.LogType.Verbose;
+            controller.Settings.ContinueAfterCppExceptions = !controller.Settings.ContinueAfterCppExceptions;        
         }
 
         //---------------------------------------------------------------------
@@ -140,10 +140,10 @@ namespace VSPackage_IntegrationTests
             string path = GetTemporaryPath(PathKind.Binary);
             RunInUIhread(() =>
             {
-                controller.ImportExportSettingController.Exports.Add(new ImportExportSettingController.Export
+                controller.ImportExportSettingController.Settings.Exports.Add(new ImportExportSettingController.Export
                 { Type = ImportExportSettings.Type.Binary, Path = path });
 
-                controller.MiscellaneousSettingController.LogTypeValue = MiscellaneousSettings.LogType.Quiet;                
+                controller.MiscellaneousSettingController.Settings.LogTypeValue = MiscellaneousSettings.LogType.Quiet;                
             });
             RunCoverageAndCheckExitCode(controller);
             return path;
