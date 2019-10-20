@@ -108,6 +108,9 @@
     <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=16.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
@@ -198,6 +201,7 @@
     <Compile Include="Settings\IStartUpProjectSettingsBuilder.cs" />
     <Compile Include="Settings\MainSettings.cs" />
     <Compile Include="Settings\MainSettingsManager.cs" />
+    <Compile Include="Settings\SettingsStorage.cs" />
     <Compile Include="Settings\UI\BasicSettingControl.xaml.cs">
       <DependentUpon>BasicSettingControl.xaml</DependentUpon>
     </Compile>
@@ -223,6 +227,7 @@
     <Compile Include="Settings\StartUpProjectSettings.cs" />
     <Compile Include="Settings\StartUpProjectSettingsBuilder.cs" />
     <Compile Include="CoverageTree\CoverageViewManager.cs" />
+    <Compile Include="Settings\UI\UserInterfaceSettings.cs" />
     <Compile Include="Styles\VsBrushes.cs" />
     <Compile Include="Styles\VsColors.cs" />
     <Compile Include="VSPackageException.cs" />

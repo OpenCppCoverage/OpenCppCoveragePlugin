@@ -101,6 +101,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="PathHelperTests.cs" />
+    <Compile Include="Settings\SettingsStorageTests.cs" />
+    <Compile Include="TemporayPath.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="TreeNodeVisibilityManagerTests.cs" />
   </ItemGroup>
