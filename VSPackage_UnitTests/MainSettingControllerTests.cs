@@ -67,11 +67,11 @@ namespace VSPackage_UnitTests
             var controller = CreateController(startUpProjectSettings, null);
             controller.UpdateStartUpProject(ProjectSelectionKind.StartUpProject);
 
-            controller.BasicSettingController.OptionalWorkingDirectory = "WorkingDirectory2";
+            controller.BasicSettingController.BasicSettings.OptionalWorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();
 
             Assert.AreEqual(
-                controller.BasicSettingController.OptionalWorkingDirectory,
+                controller.BasicSettingController.BasicSettings.OptionalWorkingDirectory,
                 settings.BasicSettings.WorkingDirectory);
 
             controller.ResetToDefaultCommand.Execute(null);

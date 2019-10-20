@@ -99,14 +99,14 @@
                 <helper:FileSystemSelectionControl
                     Mode="ExistingFileSelection"
                     FileFilter="Executable Files (*.exe)|*.exe"
-                    SelectedPath="{Binding ProgramToRun}"
+                    SelectedPath="{Binding BasicSettings.ProgramToRun}"
                     Grid.Row="4" Grid.ColumnSpan="2"/>
 
                 <Label Content="Arguments:" Grid.Row="5"/>
                 <TextBox 
-                    Text="{Binding Arguments}" 
+                    Text="{Binding BasicSettings.Arguments}" 
                     Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2"
-                    ToolTip="{Binding Arguments}"
+                    ToolTip="{Binding BasicSettings.Arguments}"
                     Margin="0 5 0 5"
                     VerticalContentAlignment="Center"/>
 
@@ -119,12 +119,12 @@
                 <helper:FileSystemSelectionControl
                     Mode="FolderSelection"
                     IsEnabled="{Binding HasWorkingDirectory}"
-                    SelectedPath="{Binding OptionalWorkingDirectory}"
+                    SelectedPath="{Binding BasicSettings.OptionalWorkingDirectory}"
                     Grid.Row="6" Grid.Column="2"/>
 
                 <Label Content="Optimized Build:" Grid.Row="7"/>
                 <CheckBox 
-                    IsChecked="{Binding OptimizedBuild}" 
+                    IsChecked="{Binding BasicSettings.OptimizedBuild}" 
                     IsEnabled="{Binding IsOptimizedBuildCheckBoxEnabled}"
                     ToolTip="{Binding OptimizedBuildToolTip}"
                     ToolTipService.ShowOnDisabled="True"
@@ -133,7 +133,7 @@
 
                 <Label Content="Compile before running:" Grid.Row="8"/>
                 <CheckBox 
-                    IsChecked="{Binding CompileBeforeRunning}" 
+                    IsChecked="{Binding BasicSettings.CompileBeforeRunning}" 
                     IsEnabled="{Binding IsCompileBeforeRunningEnabled}"
                     ToolTip="{Binding CompileBeforeRunningToolTip}"
                     ToolTipService.ShowOnDisabled="True"

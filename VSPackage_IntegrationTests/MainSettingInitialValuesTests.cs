@@ -98,10 +98,10 @@ namespace VSPackage_IntegrationTests
                 settings.WorkingDirectory = ".";
 
                 var controller = ExecuteOpenCppCoverageCommand();
-                var basicSettings = controller.BasicSettingController;
-                Assert.AreEqual(settings.Command, basicSettings.ProgramToRun);
-                Assert.AreEqual(settings.CommandArguments, basicSettings.Arguments);
-                Assert.AreEqual(settings.WorkingDirectory, basicSettings.OptionalWorkingDirectory);
+                var basicSettingsController = controller.BasicSettingController;
+                Assert.AreEqual(settings.Command, basicSettingsController.BasicSettings.ProgramToRun);
+                Assert.AreEqual(settings.CommandArguments, basicSettingsController.BasicSettings.Arguments);
+                Assert.AreEqual(settings.WorkingDirectory, basicSettingsController.BasicSettings.OptionalWorkingDirectory);
 
                 var expectedProjects = new List<string> {
                     CppConsoleApplication,
@@ -111,7 +111,7 @@ namespace VSPackage_IntegrationTests
                     ZeroCheck};
                 CollectionAssert.AreEquivalent(
                     expectedProjects,
-                    basicSettings.SelectableProjects.Select(p => p.FullName).ToList());
+                    basicSettingsController.SelectableProjects.Select(p => p.FullName).ToList());
             }
         }
 
@@ -122,12 +122,12 @@ namespace VSPackage_IntegrationTests
         {
             OpenSolution(CppConsoleApplicationDll, ConfigurationName.Debug);
             var controller = ExecuteOpenCppCoverageCommand();
-            Assert.IsFalse(controller.BasicSettingController.OptimizedBuild);
+            Assert.IsFalse(controller.BasicSettingController.BasicSettings.OptimizedBuild);
             Assert.IsFalse(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
 
             OpenSolution(CppConsoleApplicationDll, ConfigurationName.Release);
             controller = ExecuteOpenCppCoverageCommand();
-            Assert.IsTrue(controller.BasicSettingController.OptimizedBuild);
+            Assert.IsTrue(controller.BasicSettingController.BasicSettings.OptimizedBuild);
             Assert.IsFalse(controller.BasicSettingController.IsOptimizedBuildCheckBoxEnabled);
         }
 

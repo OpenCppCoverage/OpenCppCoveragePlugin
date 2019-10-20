@@ -35,6 +35,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.Project = project;
             this.IsSelected = true;
         }
+
+        //---------------------------------------------------------------------
+        public SelectableProject()
+        {
+        }
+
         public string Name { get; }
         public string FullName { get; }
         public StartUpProjectSettings.CppProject Project { get; }
@@ -49,6 +55,50 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     //-------------------------------------------------------------------------
     class BasicSettingController: PropertyChangedNotifier
     {
+        public class BasicSettingsData : PropertyChangedNotifier
+        {
+            //---------------------------------------------------------------------
+            string programToRun;
+            public string ProgramToRun
+            {
+                get { return this.programToRun; }
+                set { this.SetField(ref this.programToRun, value); }
+            }
+
+            //---------------------------------------------------------------------
+            string optionalWorkingDirectory;
+
+            public string OptionalWorkingDirectory
+            {
+                get { return this.optionalWorkingDirectory; }
+                set { this.SetField(ref this.optionalWorkingDirectory, value); }
+            }
+
+            //---------------------------------------------------------------------
+            string arguments;
+            public string Arguments
+            {
+                get { return this.arguments; }
+                set { this.SetField(ref this.arguments, value); }
+            }
+
+            //---------------------------------------------------------------------
+            bool compileBeforeRunning;
+            public bool CompileBeforeRunning
+            {
+                get { return this.compileBeforeRunning; }
+                set { this.SetField(ref this.compileBeforeRunning, value); }
+            }
+
+            //---------------------------------------------------------------------
+            bool optimizedBuild;
+            public bool OptimizedBuild
+            {
+                get { return this.optimizedBuild; }
+                set { this.SetField(ref this.optimizedBuild, value); }
+            }
+        }
+
         //---------------------------------------------------------------------
         public static string None = "None";
         private bool isAllSelected = true;
@@ -57,25 +107,28 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             this.SelectableProjects = new List<SelectableProject>();
             this.ToggleSelectAllCommand = new RelayCommand(() => OnToggleSelectAll());
+            this.BasicSettings = new BasicSettingsData();
         }
+
+        public BasicSettingsData BasicSettings { get; private set; }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject(StartUpProjectSettings settings)
         {
             this.SelectableProjects = settings.CppProjects.Select(
                 project => new SelectableProject(project)).ToList();
-            this.ProgramToRun = settings.Command;
+            this.BasicSettings.ProgramToRun = settings.Command;
 
             if (String.IsNullOrEmpty(settings.WorkingDir))
                 this.HasWorkingDirectory = false;
             else
             {
                 this.HasWorkingDirectory = true;
-                this.OptionalWorkingDirectory = settings.WorkingDir;
+                this.BasicSettings.OptionalWorkingDirectory = settings.WorkingDir;
             }
 
-            this.Arguments = settings.Arguments;
-            this.OptimizedBuild = settings.IsOptimizedBuildEnabled;
+            this.BasicSettings.Arguments = settings.Arguments;
+            this.BasicSettings.OptimizedBuild = settings.IsOptimizedBuildEnabled;
             this.EnvironmentVariables = settings.EnvironmentVariables;
 
             if (this.EnvironmentVariables == null)
@@ -88,8 +141,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CurrentConfiguration = None;
                 this.IsCompileBeforeRunningEnabled = false;
                 this.CompileBeforeRunningToolTip = "Nothing to build (No startup project set).";
-                this.CompileBeforeRunning = false;
+                this.BasicSettings.CompileBeforeRunning = false;
                 this.IsOptimizedBuildCheckBoxEnabled = true;
+                this.OptimizedBuildToolTip = null;
             }
             else
             {
@@ -97,10 +151,43 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CurrentConfiguration = settings.SolutionConfigurationName;
                 this.IsCompileBeforeRunningEnabled = true;
                 this.CompileBeforeRunningToolTip = null;
-                this.CompileBeforeRunning = true;
+                this.BasicSettings.CompileBeforeRunning = true;
                 this.IsOptimizedBuildCheckBoxEnabled = false;
                 this.OptimizedBuildToolTip = "This value is set according to your optimization setting.";
             }
+        }
+
+        //-----------------------------------------------------------------
+        public class SettingsData
+        {
+            public BasicSettingsData Data { get; set; }
+            public Dictionary<string, bool> IsSelectedByProjectPath { get; set; }
+        }
+
+        //-----------------------------------------------------------------
+        public void UpdateSettings(SettingsData settings)
+        {
+            this.BasicSettings = settings.Data;
+            foreach (var project in this.SelectableProjects)
+            {
+                if (settings.IsSelectedByProjectPath.TryGetValue(project.FullName, out bool isSelected))
+                    project.IsSelected = isSelected;
+            }
+            this.HasWorkingDirectory = !string.IsNullOrEmpty(this.BasicSettings.OptionalWorkingDirectory);
+            if (!this.IsCompileBeforeRunningEnabled)
+                this.BasicSettings.CompileBeforeRunning = false;
+            if (!this.IsOptimizedBuildCheckBoxEnabled)
+                this.BasicSettings.OptimizedBuild = false;
+        }
+
+        //---------------------------------------------------------------------
+        public SettingsData BuildJsonSettings()
+        {
+            return new SettingsData
+            {
+                Data = this.BasicSettings,
+                IsSelectedByProjectPath = this.selectableProjects.ToDictionary(p => p.FullName, p => p.IsSelected)
+            };
         }
 
         //---------------------------------------------------------------------
@@ -114,13 +201,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             {
                 ModulePaths = selectedProjects.Select(project => project.ModulePath),
                 SourcePaths = selectedProjects.SelectMany(project => project.SourcePaths),
-                Arguments = this.Arguments,
-                ProgramToRun = this.ProgramToRun,
-                CompileBeforeRunning = this.CompileBeforeRunning,
+                Arguments = this.BasicSettings.Arguments,
+                ProgramToRun = this.BasicSettings.ProgramToRun,
+                CompileBeforeRunning = this.BasicSettings.CompileBeforeRunning,
                 WorkingDirectory = GetWorkingDirectory(),
                 ProjectName = this.CurrentProject,
                 SolutionConfigurationName = this.CurrentConfiguration,
-                IsOptimizedBuildEnabled = this.OptimizedBuild,
+                IsOptimizedBuildEnabled = this.BasicSettings.OptimizedBuild,
                 EnvironmentVariables = this.EnvironmentVariables
             };
         }
@@ -134,22 +221,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        string programToRun;
-        public string ProgramToRun
-        {
-            get { return this.programToRun; }
-            set { this.SetField(ref this.programToRun, value); }
-        }
-
-        //---------------------------------------------------------------------
-        string optionalWorkingDirectory;
-        public string OptionalWorkingDirectory
-        {
-            get { return this.optionalWorkingDirectory; }
-            set { this.SetField(ref this.optionalWorkingDirectory, value); }
-        }
-
-        //---------------------------------------------------------------------
         bool hasWorkingDirectory;
         public bool HasWorkingDirectory
         {
@@ -157,26 +228,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             set
             {
                 if (this.SetField(ref this.hasWorkingDirectory, value) && !value)
-                    this.OptionalWorkingDirectory = null;
+                    this.BasicSettings.OptionalWorkingDirectory = null;
             }
         }
-
-        //---------------------------------------------------------------------
-        string arguments;
-        public string Arguments
-        {
-            get { return this.arguments; }
-            set { this.SetField(ref this.arguments, value); }
-        }
-
-        //---------------------------------------------------------------------
-        bool compileBeforeRunning;
-        public bool CompileBeforeRunning
-        {
-            get { return this.compileBeforeRunning; }
-            set { this.SetField(ref this.compileBeforeRunning, value); }
-        }
-
         //---------------------------------------------------------------------
         bool isCompileBeforeRunningEnabled;
         public bool IsCompileBeforeRunningEnabled
@@ -191,14 +245,6 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             get { return this.compileBeforeRunningToolTip; }
             set { this.SetField(ref this.compileBeforeRunningToolTip, value); }
-        }
-
-        //---------------------------------------------------------------------
-        bool optimizedBuild;
-        public bool OptimizedBuild
-        {
-            get { return this.optimizedBuild; }
-            set { this.SetField(ref this.optimizedBuild, value); }
         }
 
         //---------------------------------------------------------------------
@@ -236,9 +282,9 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         string GetWorkingDirectory()
         {
-            if (!string.IsNullOrWhiteSpace(this.OptionalWorkingDirectory))
-                return this.OptionalWorkingDirectory;
-            return Path.GetDirectoryName(this.ProgramToRun);
+            if (!string.IsNullOrWhiteSpace(this.BasicSettings.OptionalWorkingDirectory))
+                return this.BasicSettings.OptionalWorkingDirectory;
+            return Path.GetDirectoryName(this.BasicSettings.ProgramToRun);
         }
 
         //---------------------------------------------------------------------

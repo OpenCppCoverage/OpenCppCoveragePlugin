@@ -77,14 +77,17 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             }
         }
 
+        //---------------------------------------------------------------------
         public class SettingsData: PropertyChangedNotifier
         {
+            //-----------------------------------------------------------------
             public SettingsData()
             {
                 this.Exports = new ObservableCollection<Export>();
                 this.InputCoverages = new ObservableCollection<BindableString>();
             }
 
+            //-----------------------------------------------------------------
             public ObservableCollection<Export> Exports { get; }
             public ObservableCollection<BindableString> InputCoverages { get; }
 

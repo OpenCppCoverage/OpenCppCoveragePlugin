@@ -70,7 +70,7 @@ namespace VSPackage_IntegrationTests
         //---------------------------------------------------------------------
         void SetMainSettingValue(MainSettingController controller, string binaryOutput)
         {
-            controller.BasicSettingController.Arguments = "Test";
+            controller.BasicSettingController.BasicSettings.Arguments = "Test";
             Update(controller.FilterSettingController);
             Update(controller.ImportExportSettingController, binaryOutput);
             Update(controller.MiscellaneousSettingController);

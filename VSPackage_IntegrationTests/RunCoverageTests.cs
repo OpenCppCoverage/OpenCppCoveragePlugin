@@ -66,7 +66,7 @@ namespace VSPackage_IntegrationTests
             OpenSolution(CppConsoleApplication);
             SolutionConfigurationHelpers.CleanSolution();
             var controller = ExecuteOpenCppCoverageCommand();
-            controller.BasicSettingController.CompileBeforeRunning = false;
+            controller.BasicSettingController.BasicSettings.CompileBeforeRunning = false;
                 
             RunInUIhread(() => 
             {
@@ -153,7 +153,7 @@ namespace VSPackage_IntegrationTests
                 var controller = ExecuteOpenCppCoverageCommand();
                 RunInUIhread(() =>
                 {
-                    controller.BasicSettingController.Arguments = "TestEnvVariable";
+                    controller.BasicSettingController.BasicSettings.Arguments = "TestEnvVariable";
                     CollectionAssert.AreEquivalent(
                         new List<KeyValuePair<string, string>>{
                         new KeyValuePair<string, string>(exitCode, exitCodeValue),
