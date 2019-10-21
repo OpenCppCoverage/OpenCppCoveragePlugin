@@ -69,6 +69,14 @@
         </Strings>
       </Button>
 
+      <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageSettingsCommand" priority="0x0100" type="Button">
+        <Parent guid="guidVSPackageCmdSet" id="MyMenuGroup" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>OpenCppCoverage Settings</ButtonText>
+        </Strings>
+      </Button>
+      
       <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageFromSelectedProjectCommand" priority="0x1000" type="Button">
         <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
         <Icon guid="guidImages" id="bmpPic1" />
@@ -77,6 +85,14 @@
         </Strings>
       </Button>
 
+      <Button guid="guidVSPackageCmdSet" id="RunOpenCppCoverageFromSelectedProjectSettingsCommand" priority="0x1000" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_CTXT_PROJECT_BUILD" />
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>OpenCppCoverage Settings</ButtonText>
+        </Strings>
+      </Button>
+      
     </Buttons>
    
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -95,6 +111,7 @@
 
   <KeyBindings>
     <KeyBinding guid="guidVSPackageCmdSet" id="RunOpenCppCoverageCommand" editor="guidVSStd97" key1="R" mod1="CONTROL" key2="C" mod2="CONTROL"/>
+    <KeyBinding guid="guidVSPackageCmdSet" id="RunOpenCppCoverageSettingsCommand" editor="guidVSStd97" key1="R" mod1="CONTROL" key2="S" mod2="CONTROL"/>    
   </KeyBindings>
 
 
@@ -107,7 +124,10 @@
 
       <IDSymbol name="MyMenuGroup" value="0x1020" />
       <IDSymbol name="RunOpenCppCoverageCommand" value="0x0100" />
+      <IDSymbol name="RunOpenCppCoverageSettingsCommand" value="0x0101" />
+      
       <IDSymbol name="RunOpenCppCoverageFromSelectedProjectCommand" value="0x0200" />
+      <IDSymbol name="RunOpenCppCoverageFromSelectedProjectSettingsCommand" value="0x0201" />
     </GuidSymbol>
     
     

@@ -94,12 +94,20 @@ namespace OpenCppCoverage.VSPackage
                 // Create the commands for the menu item.
                 this.AddCommand(
                     PkgCmdIDList.RunOpenCppCoverageCommand, 
-                    RunCoverageForStartUpProject, 
+                    (s, o) => this.commandRunner.RunCoverage(ProjectSelectionKind.StartUpProject), 
                     mcs);
+                this.AddCommand(
+                    PkgCmdIDList.RunOpenCppCoverageSettingsCommand,
+                    (s, o) => this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.StartUpProject),
+                    mcs);                
 
                 this.AddCommand(
-                    PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand, 
-                    RunCoverageForSelectedProject, 
+                    PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand,
+                    (s, o) => this.commandRunner.RunCoverage(ProjectSelectionKind.SelectedProject), 
+                    mcs);
+                this.AddCommand(
+                    PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectSettingsCommand,
+                    (s, o) => this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.SelectedProject),
                     mcs);
             }
         }
@@ -112,22 +120,6 @@ namespace OpenCppCoverage.VSPackage
             mcs.AddCommand(menuItem);
         }
 
-        #endregion
-
-        /// <summary>
-        /// This function is the callback used to execute a command when the a menu item is clicked.
-        /// See the Initialize method to see how the menu item is associated to this function using
-        /// the OleMenuCommandService service and the MenuCommand class.
-        /// </summary>
-        void RunCoverageForStartUpProject(object sender, EventArgs e)
-        {
-            this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.StartUpProject);
-        }
-
-        //---------------------------------------------------------------------
-        void RunCoverageForSelectedProject(object sender, EventArgs e)
-        {
-            this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.SelectedProject);
-        }        
+        #endregion       
     }
 }
