@@ -26,47 +26,48 @@ namespace OpenCppCoverage.VSPackage.Settings
     {
         readonly IWindowFinder windowFinder;
         readonly DTE2 dte;
+        readonly CoverageRunner coverageRunner;
+        readonly StartUpProjectSettingsBuilder settingsBuilder;
 
         //---------------------------------------------------------------------
-        public MainSettingsManager(IWindowFinder windowFinder, DTE2 dte)
+        public MainSettingsManager(
+            IWindowFinder windowFinder, 
+            DTE2 dte, 
+            CoverageRunner coverageRunner, 
+            StartUpProjectSettingsBuilder settingsBuilder)
         {
             this.windowFinder = windowFinder;
             this.dte = dte;
+            this.coverageRunner = coverageRunner;
+            this.settingsBuilder = settingsBuilder;
         }
 
         //---------------------------------------------------------------------
-        SettingToolWindow ConfigureSettingsWindows(
-            CoverageRunner coverageRunner,
-            ProjectSelectionKind kind)
+        SettingToolWindow ConfigureSettingsWindows(ProjectSelectionKind kind)
         {
-            var configurationManager = new ConfigurationManager();
-            var settingsBuilder = new StartUpProjectSettingsBuilder(this.dte, configurationManager);
-
             var window = this.windowFinder.FindToolWindow<SettingToolWindow>();
-            
-            window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
-            window.Controller.CoverageRunner = coverageRunner;
+
+            // Inject via properties because these objects require DTE which is not
+            // available to MainSettingController contructor
+            window.Controller.StartUpProjectSettingsBuilder = this.settingsBuilder;
+            window.Controller.CoverageRunner = this.coverageRunner;
             window.Controller.UpdateFields(kind);
             return window;
         }
 
         //---------------------------------------------------------------------
-        public void OpenSettingsWindow(
-            CoverageRunner coverageRunner,
-            ProjectSelectionKind kind)
+        public void OpenSettingsWindow(ProjectSelectionKind kind)
         {
-            var window = ConfigureSettingsWindows(coverageRunner, kind);
+            var window = ConfigureSettingsWindows(kind);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }
 
         //---------------------------------------------------------------------
-        public void RunCoverage(
-            CoverageRunner coverageRunner,
-            ProjectSelectionKind kind)
+        public void RunCoverage(ProjectSelectionKind kind)
         {
-            var window = ConfigureSettingsWindows(coverageRunner, kind);
+            var window = ConfigureSettingsWindows(kind);
             window.Controller.RunCoverageCommand.Execute(null);
         }
     }

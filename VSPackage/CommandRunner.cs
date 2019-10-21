@@ -41,24 +41,24 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public void OpenSettingsWindow(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, (mainSettingsManager, openCppCoverageRunner) => 
-                mainSettingsManager.OpenSettingsWindow(openCppCoverageRunner, kind)
+            this.RunCommand(serviceProvider, windowFinder, mainSettingsManager => 
+                mainSettingsManager.OpenSettingsWindow(kind)
             );
         }
 
         //---------------------------------------------------------------------
         public void RunCoverage(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, (mainSettingsManager, openCppCoverageRunner) => {
-                mainSettingsManager.RunCoverage(openCppCoverageRunner, kind);                
-            });
+            this.RunCommand(serviceProvider, windowFinder, mainSettingsManager => 
+                mainSettingsManager.RunCoverage(kind)
+            );
         }
 
         //---------------------------------------------------------------------
         void RunCommand(
             IServiceProvider serviceProvider,
             IWindowFinder windowFinder,
-            Action<MainSettingsManager, CoverageRunner> action)
+            Action<MainSettingsManager> action)
         {
             IVsUIShell uiShell = (IVsUIShell)serviceProvider.GetService(typeof(SVsUIShell));
 
@@ -70,7 +70,6 @@ namespace OpenCppCoverage.VSPackage
                 var outputWriter = new OutputWindowWriter(dte, outputWindow);
 
                 errorHandler.OutputWriter = outputWriter;
-                var mainSettingsManager = new MainSettingsManager(windowFinder, dte);
                 var coverageViewManager = GetCoverageViewManager(serviceProvider);
                 var coverageTreeManager = new CoverageTreeManager(windowFinder, dte, coverageViewManager);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
@@ -79,7 +78,11 @@ namespace OpenCppCoverage.VSPackage
                     dte, outputWriter, coverageTreeManager, projectBuilder,
                     coverageViewManager, deserializer, errorHandler);
 
-                action(mainSettingsManager, openCppCoverageRunner);
+                var configurationManager = new ConfigurationManager();
+                var settingsBuilder = new StartUpProjectSettingsBuilder(dte, configurationManager);
+                var mainSettingsManager = new MainSettingsManager(windowFinder, dte, openCppCoverageRunner, settingsBuilder);
+
+                action(mainSettingsManager);
             });
         }
 
