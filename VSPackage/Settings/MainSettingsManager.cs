@@ -24,35 +24,50 @@ namespace OpenCppCoverage.VSPackage.Settings
 {
     class MainSettingsManager
     {
-        readonly Package package;
+        readonly IWindowFinder windowFinder;
         readonly DTE2 dte;
 
         //---------------------------------------------------------------------
-        public MainSettingsManager(Package package, DTE2 dte)
+        public MainSettingsManager(IWindowFinder windowFinder, DTE2 dte)
         {
-            this.package = package;
+            this.windowFinder = windowFinder;
             this.dte = dte;
         }
 
         //---------------------------------------------------------------------
-        public void ShowSettingsWindows(
-            CoverageRunner coverageRunner, 
+        SettingToolWindow ConfigureSettingsWindows(
+            CoverageRunner coverageRunner,
             ProjectSelectionKind kind)
         {
             var configurationManager = new ConfigurationManager();
             var settingsBuilder = new StartUpProjectSettingsBuilder(this.dte, configurationManager);
 
-            var window = this.package.FindToolWindow(
-                    typeof(SettingToolWindow), 0, true) as SettingToolWindow;
-            if (window == null || window.Frame == null)
-                throw new NotSupportedException("Cannot create tool window");
-
+            var window = this.windowFinder.FindToolWindow<SettingToolWindow>();
+            
             window.Controller.StartUpProjectSettingsBuilder = settingsBuilder;
             window.Controller.CoverageRunner = coverageRunner;
             window.Controller.UpdateFields(kind);
+            return window;
+        }
+
+        //---------------------------------------------------------------------
+        public void OpenSettingsWindow(
+            CoverageRunner coverageRunner,
+            ProjectSelectionKind kind)
+        {
+            var window = ConfigureSettingsWindows(coverageRunner, kind);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
+        }
+
+        //---------------------------------------------------------------------
+        public void RunCoverage(
+            CoverageRunner coverageRunner,
+            ProjectSelectionKind kind)
+        {
+            var window = ConfigureSettingsWindows(coverageRunner, kind);
+            window.Controller.RunCoverageCommand.Execute(null);
         }
     }
 }

@@ -24,17 +24,17 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
 {
     class CoverageTreeManager
     {
-        readonly Package package;
+        readonly IWindowFinder windowFinder;
         readonly DTE2 dte;
         readonly ICoverageViewManager coverageViewManager;
 
         //---------------------------------------------------------------------        
         public CoverageTreeManager(
-            Package package, 
+            IWindowFinder windowFinder, 
             DTE2 dte,
             ICoverageViewManager coverageViewManager)
         {
-            this.package = package;
+            this.windowFinder = windowFinder;
             this.dte = dte;
             this.coverageViewManager = coverageViewManager;
         }
@@ -42,10 +42,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------        
         public void ShowTreeCoverage(CoverageRate coverageRate)
         {
-            var window = this.package.FindToolWindow(
-                typeof(CoverageTreeToolWindow), 0, true) as CoverageTreeToolWindow;
-            if (window == null || window.Frame == null)
-                throw new NotSupportedException("Cannot create tool window");
+            var window = this.windowFinder.FindToolWindow<CoverageTreeToolWindow>();
 
             window.Controller.UpdateCoverageRate(
                 coverageRate, dte, this.coverageViewManager);

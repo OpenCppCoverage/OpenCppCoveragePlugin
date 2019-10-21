@@ -14,13 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using EnvDTE80;
-using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.Win32;
-using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
@@ -28,7 +22,6 @@ using System;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace OpenCppCoverage.VSPackage
@@ -64,6 +57,8 @@ namespace OpenCppCoverage.VSPackage
     [ProvideBindingPath]
     public sealed class OpenCppCoveragePackage : Package
     {
+        CommandRunner commandRunner;
+
         /// <summary>
         /// Default constructor of the package.
         /// Inside this method you can place any initialization code that does not require 
@@ -75,8 +70,6 @@ namespace OpenCppCoverage.VSPackage
         {
             Debug.WriteLine(string.Format(CultureInfo.CurrentCulture, "Entering constructor for: {0}", this.ToString()));
         }
-
-
 
         /////////////////////////////////////////////////////////////////////////////
         // Overridden Package Implementation
@@ -90,6 +83,9 @@ namespace OpenCppCoverage.VSPackage
         {
             Debug.WriteLine (string.Format(CultureInfo.CurrentCulture, "Entering Initialize() of: {0}", this.ToString()));
             base.Initialize();
+
+            var package = new PackageInterfaces(this, type => this.GetService(type));
+            this.commandRunner = new CommandRunner(package, package);
 
             // Add our command handlers for menu (commands must exist in the .vsct file)
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
@@ -120,50 +116,13 @@ namespace OpenCppCoverage.VSPackage
         /// </summary>
         void RunCoverageForStartUpProject(object sender, EventArgs e)
         {
-            RunCoverage(ProjectSelectionKind.StartUpProject);
+            this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.StartUpProject);
         }
 
         //---------------------------------------------------------------------
         void RunCoverageForSelectedProject(object sender, EventArgs e)
         {
-            RunCoverage(ProjectSelectionKind.SelectedProject);
-        }
-
-        //---------------------------------------------------------------------
-        void RunCoverage(ProjectSelectionKind kind)
-        {
-            IVsUIShell uiShell = (IVsUIShell)GetService(typeof(SVsUIShell));
-
-            var errorHandler = new ErrorHandler(uiShell);
-            errorHandler.Execute(() =>
-            {
-                var dte = (DTE2)GetService(typeof(EnvDTE.DTE));
-                var outputWindow = (IVsOutputWindow)GetService(typeof(SVsOutputWindow));
-                var outputWriter = new OutputWindowWriter(dte, outputWindow);
-
-                errorHandler.OutputWriter = outputWriter;
-                var mainSettingsManager = new MainSettingsManager(this, dte);
-                var coverageViewManager = GetCoverageViewManager();
-                var coverageTreeManager = new CoverageTreeManager(this, dte, coverageViewManager);
-                var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
-                var deserializer = new CoverageDataDeserializer();
-                var openCppCoverageRunner = new CoverageRunner(
-                    dte, outputWriter, coverageTreeManager, projectBuilder,
-                    coverageViewManager, deserializer, errorHandler);
-
-                mainSettingsManager.ShowSettingsWindows(openCppCoverageRunner, kind);
-            });
-        }
-
-        //---------------------------------------------------------------------
-        CoverageViewManager GetCoverageViewManager()
-        {
-            var componentModel = (IComponentModel)GetService(typeof(SComponentModel));
-            var exporterProvider = componentModel.DefaultExportProvider;
-            var listeners = exporterProvider.GetExportedValues<IWpfTextViewCreationListener>();
-            var listener = listeners.First(l => l is CoverageViewManager);
-
-            return (CoverageViewManager)listener;
-        }
+            this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.SelectedProject);
+        }        
     }
 }
