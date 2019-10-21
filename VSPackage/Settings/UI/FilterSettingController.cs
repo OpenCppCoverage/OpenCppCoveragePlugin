@@ -14,12 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using OpenCppCoverage.VSPackage.Helper;
 using System.Collections.ObjectModel;
 
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class FilterSettingController
+    class FilterSettingController: PropertyChangedNotifier
     {
         //---------------------------------------------------------------------
         public class SettingsData
@@ -47,7 +48,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.Settings = new SettingsData();
         }
 
-        public SettingsData Settings { get; private set; }
+        //---------------------------------------------------------------------
+        SettingsData settings;
+        public SettingsData Settings
+        {
+            get { return this.settings; }
+            private set { this.SetField(ref this.settings, value); }
+        }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject()

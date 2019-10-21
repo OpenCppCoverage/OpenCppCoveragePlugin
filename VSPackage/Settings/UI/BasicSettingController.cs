@@ -109,8 +109,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.ToggleSelectAllCommand = new RelayCommand(() => OnToggleSelectAll());
             this.BasicSettings = new BasicSettingsData();
         }
-
-        public BasicSettingsData BasicSettings { get; private set; }
+        //---------------------------------------------------------------------
+        BasicSettingsData basicSettings;
+        public BasicSettingsData BasicSettings
+        {
+            get { return this.basicSettings; }
+            private set { this.SetField(ref this.basicSettings, value); }
+        }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject(StartUpProjectSettings settings)

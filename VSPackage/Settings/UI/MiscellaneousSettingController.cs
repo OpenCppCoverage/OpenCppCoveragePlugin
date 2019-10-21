@@ -61,7 +61,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public SettingsData Settings { get; private set; }
+        SettingsData settings;
+        public SettingsData Settings
+        {
+            get { return this.settings; }
+            private set { this.SetField(ref this.settings, value); }
+        }
 
         //---------------------------------------------------------------------
         public void UpdateStartUpProject()
