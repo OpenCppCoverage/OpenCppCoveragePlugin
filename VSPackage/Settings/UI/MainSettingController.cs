@@ -26,18 +26,20 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class MainSettingController: PropertyChangedNotifier
     {
         readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
+        readonly SettingsStorage settingsStorage;
 
         //---------------------------------------------------------------------
         public MainSettingController(
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
             this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
+            this.settingsStorage = new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
             this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(
-                () => UpdateStartUpProject(ProjectSelectionKind.StartUpProject));
+                () => UpdateStartUpProject(ComputeStartUpProjectSettings(ProjectSelectionKind.StartUpProject)));
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
@@ -48,16 +50,51 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
 
         //---------------------------------------------------------------------
-        public void UpdateStartUpProject(ProjectSelectionKind kind)
+        public void UpdateFields(ProjectSelectionKind kind)
+        {
+            var settings = ComputeStartUpProjectSettings(kind);
+            this.UpdateStartUpProject(settings);
+
+            var uiSettings = this.settingsStorage.TryLoad(null, null);
+
+            if (uiSettings != null)
+            {
+                this.BasicSettingController.UpdateSettings(uiSettings.BasicSettingController);
+                this.FilterSettingController.UpdateSettings(uiSettings.FilterSettingController);
+                this.ImportExportSettingController.UpdateSettings(uiSettings.ImportExportSettingController);
+                this.MiscellaneousSettingController.UpdateSettings(uiSettings.MiscellaneousSettingController);
+            }
+        }
+
+        //---------------------------------------------------------------------
+        StartUpProjectSettings ComputeStartUpProjectSettings(ProjectSelectionKind kind)
         {
             if (this.StartUpProjectSettingsBuilder == null)
                 throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
 
-            var settings = this.StartUpProjectSettingsBuilder.ComputeSettings(kind);
+            return this.StartUpProjectSettingsBuilder.ComputeSettings(kind);
+        }
+
+        //---------------------------------------------------------------------
+        void UpdateStartUpProject(StartUpProjectSettings settings)
+        {
             this.BasicSettingController.UpdateStartUpProject(settings);
             this.FilterSettingController.UpdateStartUpProject();
             this.ImportExportSettingController.UpdateStartUpProject();
             this.MiscellaneousSettingController.UpdateStartUpProject();
+        }
+
+        //---------------------------------------------------------------------
+        public void SaveSettins()
+        {
+            var uiSettings = new UserInterfaceSettings
+            {
+                BasicSettingController = this.BasicSettingController.BuildJsonSettings(),
+                FilterSettingController = this.FilterSettingController.Settings,
+                ImportExportSettingController = this.ImportExportSettingController.Settings,
+                MiscellaneousSettingController = this.MiscellaneousSettingController.Settings
+            };
+            this.settingsStorage.Save(null, null, uiSettings);
         }
 
         //---------------------------------------------------------------------
@@ -105,6 +142,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
 
         //---------------------------------------------------------------------
         public EventHandler CloseWindowEvent;
+
+        //---------------------------------------------------------------------
         public ICommand CloseCommand { get; }
         public ICommand RunCoverageCommand { get; }
         public ICommand ResetToDefaultCommand { get; }

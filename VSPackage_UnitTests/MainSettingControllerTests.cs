@@ -35,14 +35,15 @@ namespace VSPackage_UnitTests
             var project = new StartUpProjectSettings.CppProject
             {
                 ModulePath = "ModulePath1",
-                SourcePaths = new List<string> { "Source1" }
+                SourcePaths = new List<string> { "Source1" },
+                Path = "Path"
             };
 
             var startUpProjectSettings = new StartUpProjectSettings {
                 CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateStartUpProject(ProjectSelectionKind.StartUpProject);
+            controller.UpdateFields(ProjectSelectionKind.StartUpProject);
 
             var selectableProject = controller.BasicSettingController.SelectableProjects.First();
             selectableProject.IsSelected = false;
@@ -50,7 +51,7 @@ namespace VSPackage_UnitTests
             var settings = controller.GetMainSettings();
             Assert.AreEqual(project.ModulePath, settings.BasicSettings.ModulePaths.Single());
             CollectionAssert.AreEqual(
-                project.SourcePaths.ToList(), 
+                project.SourcePaths.ToList(),
                 settings.BasicSettings.SourcePaths.ToList());
         }
 
@@ -65,7 +66,7 @@ namespace VSPackage_UnitTests
             };
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateStartUpProject(ProjectSelectionKind.StartUpProject);
+            controller.UpdateFields(ProjectSelectionKind.StartUpProject);
 
             controller.BasicSettingController.BasicSettings.OptionalWorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();

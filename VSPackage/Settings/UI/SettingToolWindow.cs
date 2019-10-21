@@ -22,7 +22,7 @@ using System.Runtime.InteropServices;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     [Guid("1305E50A-2B2B-4168-83A7-0D57ED1EF76A")]
-    class SettingToolWindow : ToolWindowPane, IVsExtensibleObject
+    class SettingToolWindow : ToolWindowPane, IVsExtensibleObject, IVsWindowFrameNotify2
     {
         //---------------------------------------------------------------------
         public static readonly string WindowCaption = "Settings";
@@ -61,6 +61,20 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             var frame = (IVsWindowFrame)this.Frame;
             frame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
+        }
+
+        //---------------------------------------------------------------------
+        // This method is called when closing Visual Studio
+        protected override void OnClose()
+        {
+            this.Controller.SaveSettins();
+        }
+
+        //---------------------------------------------------------------------
+        public int OnClose(ref uint pgrfSaveOptions)
+        {
+            this.Controller.SaveSettins();
+            return Microsoft.VisualStudio.VSConstants.S_OK;
         }
     }
 }
