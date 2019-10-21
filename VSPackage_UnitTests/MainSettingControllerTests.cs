@@ -86,39 +86,33 @@ namespace VSPackage_UnitTests
         [TestMethod]
         public void CommandLineText()
         {
-            TestHelper.RunInUIhread(() =>
+            string commandLine = "commandLine";
+            var startUpProjectSettings = new StartUpProjectSettings()
             {
-                string commandLine = "commandLine";
-                var startUpProjectSettings = new StartUpProjectSettings()
-                {
-                    CppProjects = new List<StartUpProjectSettings.CppProject>()
-                };
+                CppProjects = new List<StartUpProjectSettings.CppProject>()
+            };
 
-                var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
-                Assert.IsNull(controller.CommandLineText);
+            var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
+            Assert.IsNull(controller.CommandLineText);
 
-                controller.SelectedTab = new System.Windows.Controls.TabItem();
-                Assert.IsNull(controller.CommandLineText);
+            controller.SelectedTab = new System.Windows.Controls.TabItem();
+            Assert.IsNull(controller.CommandLineText);
 
-                controller.SelectedTab = new System.Windows.Controls.TabItem()
+            controller.SelectedTab = new System.Windows.Controls.TabItem()
                 { Header = MainSettingController.CommandLineHeader };
-                Assert.AreEqual(commandLine, controller.CommandLineText);
-            });
+            Assert.AreEqual(commandLine, controller.CommandLineText);
         }
 
         //---------------------------------------------------------------------
         [TestMethod]
         public void MiscellaneousSettingControllerHasConfigFile()
         {
-            TestHelper.RunInUIhread(() =>
-            {
-                var controller = new MiscellaneousSettingController();
-                controller.HasConfigFile = true;
-                controller.Settings.OptionalConfigFile = "configFile";
+            var controller = new MiscellaneousSettingController();
+            controller.HasConfigFile = true;
+            controller.Settings.OptionalConfigFile = "configFile";
 
-                controller.HasConfigFile = false;
-                Assert.IsNull(controller.Settings.OptionalConfigFile);
-            });
+            controller.HasConfigFile = false;
+            Assert.IsNull(controller.Settings.OptionalConfigFile);
         }
 
         //---------------------------------------------------------------------
@@ -126,7 +120,8 @@ namespace VSPackage_UnitTests
             StartUpProjectSettings settings,
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
-            var controller = new MainSettingController(buildOpenCppCoverageCmdLine);
+            var settingsStorage = new Mock<ISettingsStorage>();
+            var controller = new MainSettingController(settingsStorage.Object, buildOpenCppCoverageCmdLine);
             var builder = new Mock<IStartUpProjectSettingsBuilder>();
 
             builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.StartUpProject)).Returns(settings);

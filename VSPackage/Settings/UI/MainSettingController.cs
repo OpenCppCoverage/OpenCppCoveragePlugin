@@ -26,16 +26,17 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     class MainSettingController: PropertyChangedNotifier
     {
         readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
-        readonly SettingsStorage settingsStorage;
+        readonly ISettingsStorage settingsStorage;
         string selectedProjectPath;
         string solutionConfigurationName;
 
         //---------------------------------------------------------------------
         public MainSettingController(
+            ISettingsStorage settingsStorage,
             Func<MainSettings, string> buildOpenCppCoverageCmdLine)
         {
+            this.settingsStorage = settingsStorage;
             this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
-            this.settingsStorage = new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData));
             this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
             this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);

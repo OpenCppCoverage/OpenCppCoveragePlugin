@@ -20,7 +20,7 @@ using System.IO;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
-    class SettingsStorage
+    class SettingsStorage: ISettingsStorage
     {
         readonly string applicationDataFolder;
 
