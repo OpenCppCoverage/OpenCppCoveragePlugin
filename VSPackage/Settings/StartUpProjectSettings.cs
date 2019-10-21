@@ -33,6 +33,8 @@ namespace OpenCppCoverage.VSPackage.Settings
         public IEnumerable<CppProject> CppProjects { get; set; }
         public string SolutionConfigurationName { get; set; }
         public string ProjectName { get; set; }
+        public string ProjectPath { get; set; }
+
         public bool IsOptimizedBuildEnabled { get; set; }
         public IEnumerable<KeyValuePair<string, string>> EnvironmentVariables { get; set; }
     }

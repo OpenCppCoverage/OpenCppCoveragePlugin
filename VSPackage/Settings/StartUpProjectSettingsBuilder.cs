@@ -98,6 +98,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             settings.SolutionConfigurationName = 
                 this.configurationManager.GetSolutionConfigurationName(activeConfiguration);
             settings.ProjectName = project.UniqueName;
+            settings.ProjectPath = project.Path;
             settings.CppProjects = BuildCppProject(
                 activeConfiguration, this.configurationManager, projects);
 

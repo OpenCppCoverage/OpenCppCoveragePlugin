@@ -27,6 +27,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     {
         readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
         readonly SettingsStorage settingsStorage;
+        string selectedProjectPath;
+        string solutionConfigurationName;
 
         //---------------------------------------------------------------------
         public MainSettingController(
@@ -54,8 +56,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         {
             var settings = ComputeStartUpProjectSettings(kind);
             this.UpdateStartUpProject(settings);
+            this.selectedProjectPath = settings.ProjectPath;
+            this.solutionConfigurationName = settings.SolutionConfigurationName;
 
-            var uiSettings = this.settingsStorage.TryLoad(null, null);
+            var uiSettings = this.settingsStorage.TryLoad(this.selectedProjectPath, this.solutionConfigurationName);
 
             if (uiSettings != null)
             {
@@ -94,7 +98,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 ImportExportSettingController = this.ImportExportSettingController.Settings,
                 MiscellaneousSettingController = this.MiscellaneousSettingController.Settings
             };
-            this.settingsStorage.Save(null, null, uiSettings);
+            this.settingsStorage.Save(this.selectedProjectPath, this.solutionConfigurationName, uiSettings);
         }
 
         //---------------------------------------------------------------------

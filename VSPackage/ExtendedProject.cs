@@ -36,7 +36,16 @@ namespace OpenCppCoverage.VSPackage
                 return project_.UniqueName;
             }
         }
-        
+
+        //---------------------------------------------------------------------
+        public string Path
+        {
+            get
+            {
+                return project_.FullName;
+            }
+        }
+
         //---------------------------------------------------------------------
         public List<DynamicVCConfiguration> Configurations
         {
