@@ -91,22 +91,27 @@ namespace OpenCppCoverage.VSPackage
             OleMenuCommandService mcs = GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if ( null != mcs )
             {
-                // Create the command for the menu item.
-                CommandID menuCommandID = new CommandID(
-                    GuidList.guidVSPackageCmdSet, 
-                    (int)PkgCmdIDList.RunOpenCppCoverageCommand);
-                MenuCommand menuItem = new MenuCommand(
-                    RunCoverageForStartUpProject, menuCommandID );
-                mcs.AddCommand( menuItem );
+                // Create the commands for the menu item.
+                this.AddCommand(
+                    PkgCmdIDList.RunOpenCppCoverageCommand, 
+                    RunCoverageForStartUpProject, 
+                    mcs);
 
-                CommandID menuSelectedProjCommandID = new CommandID(
-                    GuidList.guidVSPackageCmdSet, 
-                    (int)PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand);
-                MenuCommand selectedProjMenuItem = new MenuCommand(
-                    RunCoverageForSelectedProject, menuSelectedProjCommandID);
-                mcs.AddCommand(selectedProjMenuItem);
+                this.AddCommand(
+                    PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectCommand, 
+                    RunCoverageForSelectedProject, 
+                    mcs);
             }
         }
+
+        //---------------------------------------------------------------------
+        void AddCommand(uint commandId, EventHandler eventHandler, OleMenuCommandService mcs)
+        {
+            var menuCommandID = new CommandID(GuidList.guidVSPackageCmdSet, (int)commandId);
+            var menuItem = new MenuCommand(eventHandler, menuCommandID);
+            mcs.AddCommand(menuItem);
+        }
+
         #endregion
 
         /// <summary>
