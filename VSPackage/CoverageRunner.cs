@@ -97,7 +97,7 @@ namespace OpenCppCoverage.VSPackage
             }
 
             var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
-            var openCppCoverage = new OpenCppCoverage(outputWindowWriter);
+            var openCppCoverage = new OpenCppCoverageRunner(outputWindowWriter);
             var onCoverageFinished = openCppCoverage.RunCodeCoverageAsync(settings);
 
             onCoverageFinished.ContinueWith(task => 

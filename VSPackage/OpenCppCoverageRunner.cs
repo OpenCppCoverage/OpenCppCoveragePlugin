@@ -23,12 +23,12 @@ using System.Threading.Tasks;
 
 namespace OpenCppCoverage.VSPackage
 {
-    class OpenCppCoverage
+    class OpenCppCoverageRunner
     {
         readonly OutputWindowWriter outputWindowWriter;
 
         //---------------------------------------------------------------------
-        public OpenCppCoverage(OutputWindowWriter outputWindowWriter)
+        public OpenCppCoverageRunner(OutputWindowWriter outputWindowWriter)
         {
             this.outputWindowWriter = outputWindowWriter;
         }
