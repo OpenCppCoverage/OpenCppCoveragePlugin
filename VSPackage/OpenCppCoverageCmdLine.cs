@@ -52,7 +52,7 @@ namespace OpenCppCoverage.VSPackage
             AppendMiscellaneousSettings(builder, settings.MiscellaneousSettings);
 
             // Should be last settings for program to run.
-            AppendBasicSettings(builder, settings.BasicSettings);
+            AppendBasicSettings(builder, settings.BasicSettings, settings.DisplayProgramOutput);
 
             return builder.GetCommandLine(lineSeparator);
         }
@@ -60,7 +60,8 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         static void AppendBasicSettings(
             CommandLineBuilder builder,
-            BasicSettings settings)
+            BasicSettings settings,
+            bool waitAfterExit)
         {
             AppendArgumentCollection(builder, SourcesFlag, settings.SourcePaths);
             AppendArgumentCollection(builder, ModulesFlag, settings.ModulePaths);
@@ -70,7 +71,8 @@ namespace OpenCppCoverage.VSPackage
             if (settings.IsOptimizedBuildEnabled)
                 builder.AppendArgument(OptimizedBuildFlag, null);
 
-            builder.Append(" " + PluginFlag + " ");
+            if (waitAfterExit)
+                builder.Append(" " + PluginFlag + " ");
             builder.AppendArgument("--", settings.ProgramToRun);
             builder.Append(settings.Arguments);
         }

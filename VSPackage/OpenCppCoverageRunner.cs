@@ -53,7 +53,7 @@ namespace OpenCppCoverage.VSPackage
                     startInfo.FileName = fileName;
                     startInfo.Arguments = arguments;
                     startInfo.UseShellExecute = false;
-                    startInfo.CreateNoWindow = false;
+                    startInfo.CreateNoWindow = !settings.DisplayProgramOutput;
 
                     var environmentVariables = startInfo.EnvironmentVariables;
                     foreach (var environment in basicSettings.EnvironmentVariables)

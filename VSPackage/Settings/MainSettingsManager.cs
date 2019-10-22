@@ -43,7 +43,9 @@ namespace OpenCppCoverage.VSPackage.Settings
         }
 
         //---------------------------------------------------------------------
-        SettingToolWindow ConfigureSettingsWindows(ProjectSelectionKind kind)
+        SettingToolWindow ConfigureSettingsWindows(
+            ProjectSelectionKind kind,
+            bool displayProgramOutput)
         {
             var window = this.windowFinder.FindToolWindow<SettingToolWindow>();
 
@@ -51,14 +53,14 @@ namespace OpenCppCoverage.VSPackage.Settings
             // available to MainSettingController contructor
             window.Controller.StartUpProjectSettingsBuilder = this.settingsBuilder;
             window.Controller.CoverageRunner = this.coverageRunner;
-            window.Controller.UpdateFields(kind);
+            window.Controller.UpdateFields(kind, displayProgramOutput);
             return window;
         }
 
         //---------------------------------------------------------------------
         public void OpenSettingsWindow(ProjectSelectionKind kind)
         {
-            var window = ConfigureSettingsWindows(kind);
+            var window = ConfigureSettingsWindows(kind, true);
             var frame = (IVsWindowFrame)window.Frame;
 
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
@@ -67,7 +69,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         //---------------------------------------------------------------------
         public void RunCoverage(ProjectSelectionKind kind)
         {
-            var window = ConfigureSettingsWindows(kind);
+            var window = ConfigureSettingsWindows(kind, false);
             window.Controller.RunCoverageCommand.Execute(null);
         }
     }

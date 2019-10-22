@@ -25,6 +25,8 @@ namespace OpenCppCoverage.VSPackage.Settings
         public FilterSettings FilterSettings { get; set; }
         public ImportExportSettings ImportExportSettings { get; set; }
         public MiscellaneousSettings MiscellaneousSettings { get; set; }
+
+        public bool DisplayProgramOutput { get; set; }
     }
 
     //---------------------------------------------------------------------------

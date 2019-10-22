@@ -29,6 +29,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         readonly ISettingsStorage settingsStorage;
         string selectedProjectPath;
         string solutionConfigurationName;
+        bool displayProgramOutput;
 
         //---------------------------------------------------------------------
         public MainSettingController(
@@ -53,11 +54,12 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
 
         //---------------------------------------------------------------------
-        public void UpdateFields(ProjectSelectionKind kind)
+        public void UpdateFields(ProjectSelectionKind kind, bool displayProgramOutput)
         {
             var settings = ComputeStartUpProjectSettings(kind);
             this.UpdateStartUpProject(settings);
             this.selectedProjectPath = settings.ProjectPath;
+            this.displayProgramOutput = displayProgramOutput;
             this.solutionConfigurationName = settings.SolutionConfigurationName;
 
             var uiSettings = this.settingsStorage.TryLoad(this.selectedProjectPath, this.solutionConfigurationName);
@@ -111,6 +113,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 FilterSettings = this.FilterSettingController.GetSettings(),
                 ImportExportSettings = this.ImportExportSettingController.GetSettings(),
                 MiscellaneousSettings = this.MiscellaneousSettingController.GetSettings(),
+                DisplayProgramOutput = this.displayProgramOutput
             };
         }
 

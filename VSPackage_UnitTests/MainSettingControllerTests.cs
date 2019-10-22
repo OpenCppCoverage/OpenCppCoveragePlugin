@@ -43,7 +43,7 @@ namespace VSPackage_UnitTests
                 CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateFields(ProjectSelectionKind.StartUpProject);
+            controller.UpdateFields(ProjectSelectionKind.StartUpProject, true);
 
             var selectableProject = controller.BasicSettingController.SelectableProjects.First();
             selectableProject.IsSelected = false;
@@ -66,7 +66,7 @@ namespace VSPackage_UnitTests
             };
 
             var controller = CreateController(startUpProjectSettings, null);
-            controller.UpdateFields(ProjectSelectionKind.StartUpProject);
+            controller.UpdateFields(ProjectSelectionKind.StartUpProject, true);
 
             controller.BasicSettingController.BasicSettings.OptionalWorkingDirectory = "WorkingDirectory2";
             var settings = controller.GetMainSettings();
