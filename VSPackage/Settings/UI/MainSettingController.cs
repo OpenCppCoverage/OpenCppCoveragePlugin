@@ -92,7 +92,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        public void SaveSettins()
+        public void SaveSettings()
         {
             var uiSettings = new UserInterfaceSettings
             {

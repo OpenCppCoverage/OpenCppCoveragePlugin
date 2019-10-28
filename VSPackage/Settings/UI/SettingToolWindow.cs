@@ -68,13 +68,13 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         // This method is called when closing Visual Studio
         protected override void OnClose()
         {
-            this.Controller.SaveSettins();
+            this.Controller.SaveSettings();
         }
 
         //---------------------------------------------------------------------
         public int OnClose(ref uint pgrfSaveOptions)
         {
-            this.Controller.SaveSettins();
+            this.Controller.SaveSettings();
             return Microsoft.VisualStudio.VSConstants.S_OK;
         }
     }
