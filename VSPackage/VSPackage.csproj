@@ -211,7 +211,7 @@
     <Compile Include="Settings\SettingsStorage.cs" />
     <Compile Include="Settings\IStartUpProjectSettingsBuilder.cs" />
     <Compile Include="Settings\MainSettings.cs" />
-    <Compile Include="Settings\MainSettingsManager.cs" />
+    <Compile Include="Settings\MainWindowsManager.cs" />
     <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\UI\BasicSettingControl.xaml.cs">
       <DependentUpon>BasicSettingControl.xaml</DependentUpon>

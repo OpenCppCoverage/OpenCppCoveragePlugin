@@ -15,14 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using EnvDTE80;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.Settings.UI;
-using System;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
-    class MainSettingsManager
+    class MainWindowsManager
     {
         readonly IWindowFinder windowFinder;
         readonly DTE2 dte;
@@ -30,7 +28,7 @@ namespace OpenCppCoverage.VSPackage.Settings
         readonly StartUpProjectSettingsBuilder settingsBuilder;
 
         //---------------------------------------------------------------------
-        public MainSettingsManager(
+        public MainWindowsManager(
             IWindowFinder windowFinder, 
             DTE2 dte, 
             CoverageRunner coverageRunner, 

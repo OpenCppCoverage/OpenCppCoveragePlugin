@@ -41,16 +41,16 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public void OpenSettingsWindow(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, mainSettingsManager => 
-                mainSettingsManager.OpenSettingsWindow(kind)
+            this.RunCommand(serviceProvider, windowFinder, mainWindowsManager => 
+                mainWindowsManager.OpenSettingsWindow(kind)
             );
         }
 
         //---------------------------------------------------------------------
         public void RunCoverage(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, mainSettingsManager => 
-                mainSettingsManager.RunCoverage(kind)
+            this.RunCommand(serviceProvider, windowFinder, mainWindowsManager => 
+                mainWindowsManager.RunCoverage(kind)
             );
         }
 
@@ -58,7 +58,7 @@ namespace OpenCppCoverage.VSPackage
         void RunCommand(
             IServiceProvider serviceProvider,
             IWindowFinder windowFinder,
-            Action<MainSettingsManager> action)
+            Action<MainWindowsManager> action)
         {
             IVsUIShell uiShell = (IVsUIShell)serviceProvider.GetService(typeof(SVsUIShell));
 
@@ -80,9 +80,9 @@ namespace OpenCppCoverage.VSPackage
 
                 var configurationManager = new ConfigurationManager();
                 var settingsBuilder = new StartUpProjectSettingsBuilder(dte, configurationManager);
-                var mainSettingsManager = new MainSettingsManager(windowFinder, dte, openCppCoverageRunner, settingsBuilder);
+                var mainWindowsManager = new MainWindowsManager(windowFinder, dte, openCppCoverageRunner, settingsBuilder);
 
-                action(mainSettingsManager);
+                action(mainWindowsManager);
             });
         }
 
