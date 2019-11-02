@@ -55,6 +55,7 @@ namespace VSPackage_UnitTests
                 AggregateByFile = true
             };
             mainSettings.MiscellaneousSettings = new MiscellaneousSettings();
+            mainSettings.DisplayProgramOutput = true;
         }
 
         //---------------------------------------------------------------------
