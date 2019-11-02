@@ -50,6 +50,7 @@ namespace VSPackage_UnitTests
 
             var settings = controller.GetMainSettings();
             Assert.AreEqual(project.ModulePath, settings.BasicSettings.ModulePaths.Single());
+            Assert.IsTrue(settings.DisplayProgramOutput);
             CollectionAssert.AreEqual(
                 project.SourcePaths.ToList(),
                 settings.BasicSettings.SourcePaths.ToList());

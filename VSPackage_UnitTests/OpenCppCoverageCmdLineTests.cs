@@ -286,6 +286,18 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
+        [TestMethod]
+        public void DisplayProgramOutput()
+        {
+            foreach (var displayProgramOutput in new List<bool> { true, false })
+            {
+                mainSettings.DisplayProgramOutput = displayProgramOutput;
+                var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+                Assert.AreEqual(displayProgramOutput, cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+            }
+        }
+
+        //---------------------------------------------------------------------
         static List<T> ToList<T>(T value)
         {
             return new List<T> { value };
