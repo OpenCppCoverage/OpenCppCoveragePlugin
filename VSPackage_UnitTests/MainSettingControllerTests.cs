@@ -15,12 +15,12 @@
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Microsoft.VSSDK.Tools.VsIdeTesting;
 using Moq;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace VSPackage_UnitTests
@@ -116,17 +116,124 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
-        MainSettingController CreateController(
-            StartUpProjectSettings settings,
-            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
+        [TestMethod]
+        public void BasicSaveLoad()
         {
+            var settings = new StartUpProjectSettings
+            {
+                CppProjects = new List<StartUpProjectSettings.CppProject>(),
+                ProjectPath = "ProjectPath",
+                SolutionConfigurationName = "SolutionConfigurationName"
+            };
             var settingsStorage = new Mock<ISettingsStorage>();
-            var controller = new MainSettingController(settingsStorage.Object, buildOpenCppCoverageCmdLine);
             var builder = new Mock<IStartUpProjectSettingsBuilder>();
+            builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.SelectedProject)).Returns(settings);
+            var controller = CreateController(settings, null, builder, settingsStorage.Object);
+
+            controller.UpdateFields(ProjectSelectionKind.SelectedProject, true);
+            controller.SaveSettings();
+            settingsStorage.Verify(
+                s => s.Save(
+                    settings.ProjectPath,
+                    settings.SolutionConfigurationName,
+                    It.IsAny<UserInterfaceSettings>()));
+
+            settingsStorage.Verify(s => s.TryLoad(settings.ProjectPath, settings.SolutionConfigurationName));
+            controller.UpdateFields(ProjectSelectionKind.SelectedProject, true);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
+        public void FullSaveLoad()
+        {
+            using (var folder = new TemporayPath())
+            {
+                var settings = new StartUpProjectSettings
+                {
+                    CppProjects = new List<StartUpProjectSettings.CppProject> {
+                        new StartUpProjectSettings.CppProject{ Path = "path"}
+                    },
+                };
+                var settingsStorage = new SettingsStorage(folder.Path);
+                var builder = new Mock<IStartUpProjectSettingsBuilder>();
+
+                var controller = CreateController(settings, null, builder, settingsStorage);
+                controller.UpdateFields(ProjectSelectionKind.StartUpProject, true);
+                FillController(controller);
+                controller.SaveSettings();
+
+                var controller2 = CreateController(settings, null, builder, settingsStorage);
+                controller2.UpdateFields(ProjectSelectionKind.StartUpProject, true);
+
+                CheckRecursiveEqual(controller, controller2, c => c.BasicSettingController);
+                CheckRecursiveEqual(controller, controller2, c => c.ImportExportSettingController);
+                CheckRecursiveEqual(controller, controller2, c => c.MiscellaneousSettingController);
+                CheckRecursiveEqual(controller, controller2, c => c.FilterSettingController);
+            }
+        }
+
+        //---------------------------------------------------------------------
+        static MainSettingController CreateController(
+            StartUpProjectSettings settings,
+            Func<MainSettings, string> buildOpenCppCoverageCmdLine,
+            Mock<IStartUpProjectSettingsBuilder> builder,
+            ISettingsStorage settingsStorage)
+        {
+            var controller = new MainSettingController(settingsStorage, buildOpenCppCoverageCmdLine);
 
             builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.StartUpProject)).Returns(settings);
             controller.StartUpProjectSettingsBuilder = builder.Object;
             return controller;
+        }
+
+        //---------------------------------------------------------------------
+        static MainSettingController CreateController(
+            StartUpProjectSettings settings,
+            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
+        {
+            return CreateController(
+                settings,
+                buildOpenCppCoverageCmdLine,
+                new Mock<IStartUpProjectSettingsBuilder>(),
+                new Mock<ISettingsStorage>().Object);
+        }
+        //---------------------------------------------------------------------
+        static void FillController(MainSettingController controller)
+        {
+            SetPropertiesToNonDefaultValue(controller.BasicSettingController.BasicSettings);
+            foreach (var p in controller.BasicSettingController.SelectableProjects)
+                SetPropertiesToNonDefaultValue(p);
+
+            SetPropertiesToNonDefaultValue(controller.ImportExportSettingController.Settings);
+            SetPropertiesToNonDefaultValue(controller.MiscellaneousSettingController.Settings);
+            SetPropertiesToNonDefaultValue(controller.FilterSettingController.Settings);
+
+            // Make properties consistent as we set settings to a not null value.
+            controller.MiscellaneousSettingController.HasConfigFile = true;
+            controller.BasicSettingController.HasWorkingDirectory = true;
+
+            // Cannnot be set at true because IsCompileBeforeRunningEnabled=false
+            controller.BasicSettingController.BasicSettings.CompileBeforeRunning = false;
+        }
+
+        //---------------------------------------------------------------------
+        static void CheckRecursiveEqual<T>(
+            MainSettingController controller1,
+            MainSettingController controller2,
+            Func<MainSettingController, T> getProperty)
+        {
+            PropertyHelper.CheckPropertiesEqualRecursive(getProperty(controller1), getProperty(controller2));
+        }
+
+        //---------------------------------------------------------------------
+        static void SetPropertiesToNonDefaultValue<T>(T value)
+        {
+            PropertyHelper.SetPropertiesValue(value, new Dictionary<Type, Func<object>>
+            {
+                {typeof(string), () => Path.GetRandomFileName() },
+                {typeof(bool), () => true },
+                {typeof(MiscellaneousSettings.LogType), () => MiscellaneousSettings.LogType.Quiet },
+            });
         }
     }
 }

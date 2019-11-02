@@ -102,6 +102,7 @@
     <Compile Include="ObservableItemCollectionTests.cs" />
     <Compile Include="OpenCppCoverageCmdLineTests.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="PropertyHelper.cs" />
     <Compile Include="RootCoverageTreeNodeTests.cs" />
     <Compile Include="PathHelperTests.cs" />
     <Compile Include="Settings\SettingsStorageTests.cs" />
