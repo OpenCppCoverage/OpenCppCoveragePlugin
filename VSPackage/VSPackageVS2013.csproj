@@ -107,6 +107,9 @@
     <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.Threading, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.VisualStudio.VCProjectEngine, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="PresentationFramework.Aero" />
@@ -148,6 +151,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommandLineBuilder.cs" />
+    <Compile Include="CommandRunner.cs" />
     <Compile Include="ConfigurationManager.cs" />
     <Compile Include="CoverageData\CoverageData.cs" />
     <Compile Include="CoverageData\CoverageDataDeserializer.cs" />
@@ -184,9 +188,11 @@
     <Compile Include="ExtendedProject.cs" />
     <Compile Include="Guids.cs" />
     <Compile Include="IConfigurationManager.cs" />
-    <Compile Include="OpenCppCoverage.cs" />
+    <Compile Include="IWindowFinder.cs" />
     <Compile Include="OpenCppCoverageCmdLine.cs" />
+    <Compile Include="OpenCppCoverageRunner.cs" />
     <Compile Include="OutputWindowWriter.cs" />
+    <Compile Include="PackageInterfaces.cs" />
     <Compile Include="ProjectBuilder.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -194,9 +200,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Settings\ISettingsStorage.cs" />
     <Compile Include="Settings\IStartUpProjectSettingsBuilder.cs" />
     <Compile Include="Settings\MainSettings.cs" />
-    <Compile Include="Settings\MainSettingsManager.cs" />
+    <Compile Include="Settings\MainWindowsManager.cs" />
+    <Compile Include="Settings\SettingsStorage.cs" />
     <Compile Include="Settings\UI\BasicSettingControl.xaml.cs">
       <DependentUpon>BasicSettingControl.xaml</DependentUpon>
     </Compile>
@@ -222,6 +230,7 @@
     <Compile Include="Settings\StartUpProjectSettings.cs" />
     <Compile Include="Settings\StartUpProjectSettingsBuilder.cs" />
     <Compile Include="CoverageTree\CoverageViewManager.cs" />
+    <Compile Include="Settings\UI\UserInterfaceSettings.cs" />
     <Compile Include="Styles\VsBrushes.cs" />
     <Compile Include="Styles\VsColors.cs" />
     <Compile Include="VSPackageException.cs" />
