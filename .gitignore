@@ -26,3 +26,6 @@ Themes.pkgdef
 # Open Cover / ReportGenerator files
 CoverageReport/
 OpenCover.xml
+
+# Ignore the assembly included by source.extension.vsixmanifest
+Newtonsoft.Json.dll
