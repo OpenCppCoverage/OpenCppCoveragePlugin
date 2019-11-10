@@ -126,7 +126,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\VSPackage\VSPackage.csproj">
+    <ProjectReference Include="..\VSPackage\VSPackageVS2013.csproj">
       <Project>{DF742CAB-0446-4867-A437-719390CC028A}</Project>
       <Name>VSPackage</Name>
     </ProjectReference>
