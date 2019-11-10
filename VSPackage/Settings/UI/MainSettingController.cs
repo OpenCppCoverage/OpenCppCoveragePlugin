@@ -30,6 +30,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         string selectedProjectPath;
         string solutionConfigurationName;
         bool displayProgramOutput;
+        ProjectSelectionKind kind;
 
         //---------------------------------------------------------------------
         public MainSettingController(
@@ -43,7 +44,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(
-                () => UpdateStartUpProject(ComputeStartUpProjectSettings(ProjectSelectionKind.StartUpProject)));
+                () => UpdateStartUpProject(ComputeStartUpProjectSettings(kind)));
             this.BasicSettingController = new BasicSettingController();
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
@@ -61,6 +62,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.selectedProjectPath = settings.ProjectPath;
             this.displayProgramOutput = displayProgramOutput;
             this.solutionConfigurationName = settings.SolutionConfigurationName;
+            this.kind = kind;
 
             var uiSettings = this.settingsStorage.TryLoad(this.selectedProjectPath, this.solutionConfigurationName);
 
