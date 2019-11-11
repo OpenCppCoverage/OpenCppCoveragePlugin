@@ -91,8 +91,7 @@ namespace OpenCppCoverage.VSPackage
         {
             var componentModel = (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
             var exporterProvider = componentModel.DefaultExportProvider;
-            var listeners = exporterProvider.GetExportedValues<IWpfTextViewCreationListener>();
-            var listener = listeners.First(l => l is CoverageViewManager);
+            var listener = exporterProvider.GetExportedValue<IWpfTextViewCreationListener>("CoverageViewManager");
 
             return (CoverageViewManager)listener;
         }

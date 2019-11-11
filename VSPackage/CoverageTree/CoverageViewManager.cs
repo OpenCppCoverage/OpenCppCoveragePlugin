@@ -31,7 +31,7 @@ using System.Windows.Shapes;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
-    [Export(typeof(IWpfTextViewCreationListener))]
+    [Export("CoverageViewManager", typeof(IWpfTextViewCreationListener))]
     [ContentType("C/C++")]
     [TextViewRole(PredefinedTextViewRoles.Document)]
     sealed class CoverageViewManager : IWpfTextViewCreationListener, ICoverageViewManager
