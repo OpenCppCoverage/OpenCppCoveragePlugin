@@ -20,7 +20,7 @@ using System.Linq;
 namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
 {
     //-------------------------------------------------------------------------
-    class BaseCoverage
+    public class BaseCoverage
     {
         protected BaseCoverage() {}
         public int CoverLineCount { get; protected set; }
@@ -28,7 +28,7 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
     }
 
     //-------------------------------------------------------------------------
-    class HierarchicalCoverage<T> : BaseCoverage where T : BaseCoverage
+    public class HierarchicalCoverage<T> : BaseCoverage where T : BaseCoverage
     {
         readonly List<T> children;
 
@@ -61,7 +61,7 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
     }
 
     //-------------------------------------------------------------------------
-    class LineCoverage
+    public class LineCoverage
     {
         public LineCoverage(int lineNumber, bool hasBeenExecuted)
         {
@@ -72,9 +72,9 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
         public int LineNumber { get;  }
         public bool HasBeenExecuted { get; }
     }
-    
+
     //-------------------------------------------------------------------------
-    class FileCoverage : BaseCoverage
+    public class FileCoverage : BaseCoverage
     {
         //---------------------------------------------------------------------
         public FileCoverage(string path, List<LineCoverage> lineCoverages )
@@ -93,13 +93,13 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
     }
 
     //-------------------------------------------------------------------------
-    class ModuleCoverage : HierarchicalCoverage<FileCoverage>
+    public class ModuleCoverage : HierarchicalCoverage<FileCoverage>
     {
         public ModuleCoverage(string name) : base(name) { }
     }
 
     //-------------------------------------------------------------------------
-    class CoverageRate : HierarchicalCoverage<ModuleCoverage>
+    public class CoverageRate : HierarchicalCoverage<ModuleCoverage>
     {
         public CoverageRate(string name, int exitCode) 
             : base(name)

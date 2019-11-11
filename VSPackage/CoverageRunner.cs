@@ -38,7 +38,7 @@ namespace OpenCppCoverage.VSPackage
         readonly ProjectBuilder projectBuilder;
         readonly OutputWindowWriter outputWindowWriter;
         readonly CoverageTreeManager coverageTreeManager;
-        readonly CoverageViewManager coverageViewManager;
+        readonly ICoverageViewManager coverageViewManager;
         readonly CoverageDataDeserializer coverageDataDeserializer;
         readonly ErrorHandler errorHandler;
 
@@ -48,7 +48,7 @@ namespace OpenCppCoverage.VSPackage
             OutputWindowWriter outputWindowWriter,
             CoverageTreeManager coverageTreeManager,
             ProjectBuilder projectBuilder,
-            CoverageViewManager coverageViewManager,
+            ICoverageViewManager coverageViewManager,
             CoverageDataDeserializer coverageDataDeserializer,
             ErrorHandler errorHandler)
         {

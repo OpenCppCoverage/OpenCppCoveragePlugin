@@ -18,7 +18,7 @@ using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 
 namespace OpenCppCoverage.VSPackage.CoverageTree
 {
-    interface ICoverageViewManager
+    public interface ICoverageViewManager
     {
         CoverageRate CoverageRate { set; }
         bool ShowCoverage { set; }
