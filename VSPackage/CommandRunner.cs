@@ -74,13 +74,16 @@ namespace OpenCppCoverage.VSPackage
                 var coverageTreeManager = new CoverageTreeManager(windowFinder, dte, coverageViewManager);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var deserializer = new CoverageDataDeserializer();
-                var openCppCoverageRunner = new CoverageRunner(
+                var openCppCoverageCmdLine = new OpenCppCoverageCmdLine();
+                var openCppCoverageRunner = new OpenCppCoverageRunner(outputWriter, openCppCoverageCmdLine);
+
+                var coverageRunner = new CoverageRunner(
                     dte, outputWriter, coverageTreeManager, projectBuilder,
-                    coverageViewManager, deserializer, errorHandler);
+                    coverageViewManager, deserializer, errorHandler, openCppCoverageRunner);
 
                 var configurationManager = new ConfigurationManager();
                 var settingsBuilder = new StartUpProjectSettingsBuilder(dte, configurationManager);
-                var mainWindowsManager = new MainWindowsManager(windowFinder, dte, openCppCoverageRunner, settingsBuilder);
+                var mainWindowsManager = new MainWindowsManager(windowFinder, dte, coverageRunner, settingsBuilder, openCppCoverageCmdLine);
 
                 action(mainWindowsManager);
             });

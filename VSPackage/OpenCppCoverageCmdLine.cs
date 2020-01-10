@@ -43,7 +43,13 @@ namespace OpenCppCoverage.VSPackage
         public static readonly string PluginFlag = "--plugin";
 
         //---------------------------------------------------------------------
-        public static string Build(MainSettings settings, string lineSeparator = " ")
+        public OpenCppCoverageCmdLine()
+        {
+
+        }
+
+        //---------------------------------------------------------------------
+        public string Build(MainSettings settings, string lineSeparator = " ")
         {
             var builder = new CommandLineBuilder();
 

@@ -26,11 +26,15 @@ namespace OpenCppCoverage.VSPackage
     class OpenCppCoverageRunner
     {
         readonly OutputWindowWriter outputWindowWriter;
+        readonly OpenCppCoverageCmdLine openCppCoverageCmdLine;
 
         //---------------------------------------------------------------------
-        public OpenCppCoverageRunner(OutputWindowWriter outputWindowWriter)
+        public OpenCppCoverageRunner(
+            OutputWindowWriter outputWindowWriter, 
+            OpenCppCoverageCmdLine openCppCoverageCmdLine)
         {
             this.outputWindowWriter = outputWindowWriter;
+            this.openCppCoverageCmdLine = openCppCoverageCmdLine;
         }
 
         //---------------------------------------------------------------------
@@ -38,7 +42,7 @@ namespace OpenCppCoverage.VSPackage
         {
             var basicSettings = settings.BasicSettings;
             var fileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
-            var arguments = OpenCppCoverageCmdLine.Build(settings);
+            var arguments = this.openCppCoverageCmdLine.Build(settings);
 
             this.outputWindowWriter.WriteLine("Run:");
             this.outputWindowWriter.WriteLine(string.Format(@"""{0}"" {1}",

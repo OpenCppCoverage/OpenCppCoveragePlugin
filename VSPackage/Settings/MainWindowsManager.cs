@@ -17,6 +17,7 @@
 using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.Settings.UI;
+using System;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
@@ -26,18 +27,21 @@ namespace OpenCppCoverage.VSPackage.Settings
         readonly DTE2 dte;
         readonly CoverageRunner coverageRunner;
         readonly StartUpProjectSettingsBuilder settingsBuilder;
+        readonly OpenCppCoverageCmdLine openCppCoverageCmdLine;
 
         //---------------------------------------------------------------------
         public MainWindowsManager(
             IWindowFinder windowFinder, 
             DTE2 dte, 
             CoverageRunner coverageRunner, 
-            StartUpProjectSettingsBuilder settingsBuilder)
+            StartUpProjectSettingsBuilder settingsBuilder,
+            OpenCppCoverageCmdLine openCppCoverageCmdLine)
         {
             this.windowFinder = windowFinder;
             this.dte = dte;
             this.coverageRunner = coverageRunner;
             this.settingsBuilder = settingsBuilder;
+            this.openCppCoverageCmdLine = openCppCoverageCmdLine;
         }
 
         //---------------------------------------------------------------------
@@ -47,8 +51,13 @@ namespace OpenCppCoverage.VSPackage.Settings
         {
             var window = this.windowFinder.FindToolWindow<SettingToolWindow>();
 
+            var controller = new MainSettingController(
+                new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
+                (settings) => openCppCoverageCmdLine.Build(settings, "\n"));
+
+            window.Init(controller);
             // Inject via properties because these objects require DTE which is not
-            // available to MainSettingController contructor
+            // available to MainSettingController constructor
             window.Controller.StartUpProjectSettingsBuilder = this.settingsBuilder;
             window.Controller.CoverageRunner = this.coverageRunner;
             window.Controller.UpdateFields(kind, displayProgramOutput);

@@ -24,6 +24,8 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     [Guid("1305E50A-2B2B-4168-83A7-0D57ED1EF76A")]
     class SettingToolWindow : ToolWindowPane, IVsExtensibleObject, IVsWindowFrameNotify2
     {
+        readonly MainSettingControl mainSettingControl;
+
         //---------------------------------------------------------------------
         public static readonly string WindowCaption = "Settings";
 
@@ -31,24 +33,29 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         public SettingToolWindow() : base(null)
         {
             this.Caption = WindowCaption;
-            var control = new MainSettingControl();
-
-            this.Controller = new MainSettingController(
-                new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
-                (settings) => OpenCppCoverageCmdLine.Build(settings, "\n"));
-            control.DataContext = this.Controller;
-            this.Controller.CloseWindowEvent += (o, e) => Close();
+            this.mainSettingControl = new MainSettingControl();
 
             // This is the user control hosted by the tool window; 
             // Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. 
             // This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.            
-            this.Content = control;
+            this.Content = this.mainSettingControl;
         }
 
         //---------------------------------------------------------------------
-        public MainSettingController Controller { get; }
+        public void Init(MainSettingController controller)
+        {
+            if (this.Controller != null)
+                this.Controller.CloseWindowEvent -= Close;
+
+            this.Controller = controller;
+            this.mainSettingControl.DataContext = this.Controller;
+            this.Controller.CloseWindowEvent += Close;
+        }
+
+        //---------------------------------------------------------------------
+        public MainSettingController Controller { get; private set; }
 
         //---------------------------------------------------------------------
         public int GetAutomationObject(string pszPropName, out object ppDisp)
@@ -58,7 +65,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         }
 
         //---------------------------------------------------------------------
-        void Close()
+        void Close(object sender, EventArgs e)
         {
             var frame = (IVsWindowFrame)this.Frame;
             frame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);

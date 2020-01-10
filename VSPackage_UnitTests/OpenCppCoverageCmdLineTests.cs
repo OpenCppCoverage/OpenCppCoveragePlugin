@@ -27,6 +27,7 @@ namespace VSPackage_UnitTests
     public class OpenCppCoverageCmdLineTests
     {        
         readonly MainSettings mainSettings = new MainSettings();
+        OpenCppCoverageCmdLine openCppCoverageCmdLine;
 
         //---------------------------------------------------------------------
         [TestInitialize]
@@ -56,6 +57,8 @@ namespace VSPackage_UnitTests
             };
             mainSettings.MiscellaneousSettings = new MiscellaneousSettings();
             mainSettings.DisplayProgramOutput = true;
+
+            openCppCoverageCmdLine = new OpenCppCoverageCmdLine();
         }
 
         //---------------------------------------------------------------------
@@ -226,7 +229,7 @@ namespace VSPackage_UnitTests
             mainSettings.BasicSettings.ProgramToRun = "program";
             mainSettings.BasicSettings.Arguments = "arguments";
 
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
 
             Assert.IsTrue(cmdLine.EndsWith(@"""program"" arguments"));
         }
@@ -240,7 +243,7 @@ namespace VSPackage_UnitTests
             basicSettings.ModulePaths = new List<string> { string.Empty };
             basicSettings.SourcePaths = new List<string> { " " };
 
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
         }
 
@@ -257,7 +260,7 @@ namespace VSPackage_UnitTests
             filterSettings.UnifiedDiffs = new List<FilterSettings.UnifiedDiff>
                 { new FilterSettings.UnifiedDiff() };
 
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
         }
 
@@ -271,7 +274,7 @@ namespace VSPackage_UnitTests
             importExportSettings.Exports = new List<ImportExportSettings.Export>
                 { new ImportExportSettings.Export() };
 
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
         }
 
@@ -281,7 +284,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.MiscellaneousSettings.OptionalConfigFile = "   ";
 
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
         }
 
@@ -292,7 +295,7 @@ namespace VSPackage_UnitTests
             foreach (var displayProgramOutput in new List<bool> { true, false })
             {
                 mainSettings.DisplayProgramOutput = displayProgramOutput;
-                var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+                var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
                 Assert.AreEqual(displayProgramOutput, cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
             }
         }
@@ -306,7 +309,7 @@ namespace VSPackage_UnitTests
         //---------------------------------------------------------------------
         void Check(string expectedArguments, MainSettings mainSettings)
         {
-            var cmdLine = OpenCppCoverageCmdLine.Build(mainSettings);
+            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.StartsWith(expectedArguments),
                 string.Format("{0}\ndoes not start with\n{1}", cmdLine, expectedArguments));
         }

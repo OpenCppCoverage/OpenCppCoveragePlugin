@@ -41,6 +41,7 @@ namespace OpenCppCoverage.VSPackage
         readonly ICoverageViewManager coverageViewManager;
         readonly CoverageDataDeserializer coverageDataDeserializer;
         readonly ErrorHandler errorHandler;
+        readonly OpenCppCoverageRunner openCppCoverageRunner;
 
         //---------------------------------------------------------------------
         public CoverageRunner(
@@ -50,7 +51,8 @@ namespace OpenCppCoverage.VSPackage
             ProjectBuilder projectBuilder,
             ICoverageViewManager coverageViewManager,
             CoverageDataDeserializer coverageDataDeserializer,
-            ErrorHandler errorHandler)
+            ErrorHandler errorHandler,
+            OpenCppCoverageRunner openCppCoverageRunner)
         {
             this.outputWindowWriter = outputWindowWriter;
             this.coverageTreeManager = coverageTreeManager;
@@ -58,6 +60,7 @@ namespace OpenCppCoverage.VSPackage
             this.coverageViewManager = coverageViewManager;
             this.coverageDataDeserializer = coverageDataDeserializer;
             this.errorHandler = errorHandler;
+            this.openCppCoverageRunner = openCppCoverageRunner;
         }
 
         //---------------------------------------------------------------------
@@ -97,8 +100,7 @@ namespace OpenCppCoverage.VSPackage
             }
 
             var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
-            var openCppCoverage = new OpenCppCoverageRunner(outputWindowWriter);
-            var onCoverageFinished = openCppCoverage.RunCodeCoverageAsync(settings);
+            var onCoverageFinished = openCppCoverageRunner.RunCodeCoverageAsync(settings);
 
             onCoverageFinished.ContinueWith(task => 
                 OnCoverageFinishedAsync(task, coveragePath, onCoverageFinished).Wait());
