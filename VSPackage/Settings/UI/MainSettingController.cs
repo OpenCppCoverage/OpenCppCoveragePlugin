@@ -25,7 +25,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
     //-------------------------------------------------------------------------
     class MainSettingController: PropertyChangedNotifier
     {
-        readonly Func<MainSettings, string> buildOpenCppCoverageCmdLine;
+        readonly IOpenCppCoverageCmdLine openCppCoverageCmdLine;
         readonly ISettingsStorage settingsStorage;
         string selectedProjectPath;
         string solutionConfigurationName;
@@ -35,10 +35,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public MainSettingController(
             ISettingsStorage settingsStorage,
-            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
+            IOpenCppCoverageCmdLine openCppCoverageCmdLine)
         {
             this.settingsStorage = settingsStorage;
-            this.buildOpenCppCoverageCmdLine = buildOpenCppCoverageCmdLine;
+            this.openCppCoverageCmdLine = openCppCoverageCmdLine;
             this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
             this.CloseCommand = new RelayCommand(() => {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
@@ -141,7 +141,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             set
             {
                 if (value != null && (string)value.Header == CommandLineHeader)
-                    this.CommandLineText = this.buildOpenCppCoverageCmdLine(this.GetMainSettings());
+                    this.CommandLineText = this.openCppCoverageCmdLine.Build(this.GetMainSettings(), "\n");
             }
         }
         //---------------------------------------------------------------------

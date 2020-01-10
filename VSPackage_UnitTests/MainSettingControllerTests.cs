@@ -16,6 +16,7 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.Settings;
 using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
@@ -39,8 +40,10 @@ namespace VSPackage_UnitTests
                 Path = "Path"
             };
 
-            var startUpProjectSettings = new StartUpProjectSettings {
-                CppProjects = new List<StartUpProjectSettings.CppProject> { project, project}};
+            var startUpProjectSettings = new StartUpProjectSettings
+            {
+                CppProjects = new List<StartUpProjectSettings.CppProject> { project, project }
+            };
 
             var controller = CreateController(startUpProjectSettings, null);
             controller.UpdateFields(ProjectSelectionKind.StartUpProject, true);
@@ -93,14 +96,18 @@ namespace VSPackage_UnitTests
                 CppProjects = new List<StartUpProjectSettings.CppProject>()
             };
 
-            var controller = CreateController(startUpProjectSettings, settings => { return commandLine; });
+            var openCppCoverageCmdLine = new Mock<IOpenCppCoverageCmdLine>();
+            openCppCoverageCmdLine.Setup(o => o.Build(
+                It.IsAny<MainSettings>(), It.IsAny<string>())).Returns(commandLine);
+
+            var controller = CreateController(startUpProjectSettings, openCppCoverageCmdLine.Object);
             Assert.IsNull(controller.CommandLineText);
 
             controller.SelectedTab = new System.Windows.Controls.TabItem();
             Assert.IsNull(controller.CommandLineText);
 
             controller.SelectedTab = new System.Windows.Controls.TabItem()
-                { Header = MainSettingController.CommandLineHeader };
+            { Header = MainSettingController.CommandLineHeader };
             Assert.AreEqual(commandLine, controller.CommandLineText);
         }
 
@@ -176,11 +183,11 @@ namespace VSPackage_UnitTests
         //---------------------------------------------------------------------
         static MainSettingController CreateController(
             StartUpProjectSettings settings,
-            Func<MainSettings, string> buildOpenCppCoverageCmdLine,
+            IOpenCppCoverageCmdLine openCppCoverageCmdLine,
             Mock<IStartUpProjectSettingsBuilder> builder,
             ISettingsStorage settingsStorage)
         {
-            var controller = new MainSettingController(settingsStorage, buildOpenCppCoverageCmdLine);
+            var controller = new MainSettingController(settingsStorage, openCppCoverageCmdLine);
 
             builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.StartUpProject)).Returns(settings);
             controller.StartUpProjectSettingsBuilder = builder.Object;
@@ -190,11 +197,11 @@ namespace VSPackage_UnitTests
         //---------------------------------------------------------------------
         static MainSettingController CreateController(
             StartUpProjectSettings settings,
-            Func<MainSettings, string> buildOpenCppCoverageCmdLine)
+            IOpenCppCoverageCmdLine openCppCoverageCmdLine)
         {
             return CreateController(
                 settings,
-                buildOpenCppCoverageCmdLine,
+                openCppCoverageCmdLine,
                 new Mock<IStartUpProjectSettingsBuilder>(),
                 new Mock<ISettingsStorage>().Object);
         }

@@ -197,6 +197,7 @@
     <Compile Include="Guids.cs" />
     <Compile Include="IConfigurationManager.cs" />
     <Compile Include="IWindowFinder.cs" />
+    <Compile Include="IOpenCppCoverageCmdLine.cs" />
     <Compile Include="OpenCppCoverageRunner.cs" />
     <Compile Include="OpenCppCoverageCmdLine.cs" />
     <Compile Include="OutputWindowWriter.cs" />

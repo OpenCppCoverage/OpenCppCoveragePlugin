@@ -20,7 +20,7 @@ using System.Linq;
 
 namespace OpenCppCoverage.VSPackage
 {
-    class OpenCppCoverageCmdLine
+    class OpenCppCoverageCmdLine: IOpenCppCoverageCmdLine
     {
         //---------------------------------------------------------------------
         public static readonly string SourcesFlag = "--sources";

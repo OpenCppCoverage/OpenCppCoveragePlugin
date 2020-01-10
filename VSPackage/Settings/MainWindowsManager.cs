@@ -31,9 +31,9 @@ namespace OpenCppCoverage.VSPackage.Settings
 
         //---------------------------------------------------------------------
         public MainWindowsManager(
-            IWindowFinder windowFinder, 
-            DTE2 dte, 
-            CoverageRunner coverageRunner, 
+            IWindowFinder windowFinder,
+            DTE2 dte,
+            CoverageRunner coverageRunner,
             StartUpProjectSettingsBuilder settingsBuilder,
             OpenCppCoverageCmdLine openCppCoverageCmdLine)
         {
@@ -53,7 +53,8 @@ namespace OpenCppCoverage.VSPackage.Settings
 
             var controller = new MainSettingController(
                 new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
-                (settings) => openCppCoverageCmdLine.Build(settings, "\n"));
+                this.openCppCoverageCmdLine);
+
 
             window.Init(controller);
             // Inject via properties because these objects require DTE which is not
