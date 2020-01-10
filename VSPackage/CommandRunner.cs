@@ -17,12 +17,11 @@
 using EnvDTE80;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text.Editor;
 using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
+using OpenCppCoverage.VSPackage.Settings.UI;
 using System;
-using System.Linq;
 
 namespace OpenCppCoverage.VSPackage
 {
@@ -41,7 +40,7 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public void OpenSettingsWindow(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, mainWindowsManager => 
+            this.RunCommand(mainWindowsManager =>
                 mainWindowsManager.OpenSettingsWindow(kind)
             );
         }
@@ -49,15 +48,13 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public void RunCoverage(ProjectSelectionKind kind)
         {
-            this.RunCommand(serviceProvider, windowFinder, mainWindowsManager => 
+            this.RunCommand(mainWindowsManager =>
                 mainWindowsManager.RunCoverage(kind)
             );
         }
 
         //---------------------------------------------------------------------
         void RunCommand(
-            IServiceProvider serviceProvider,
-            IWindowFinder windowFinder,
             Action<MainWindowsManager> action)
         {
             IVsUIShell uiShell = (IVsUIShell)serviceProvider.GetService(typeof(SVsUIShell));
@@ -83,7 +80,13 @@ namespace OpenCppCoverage.VSPackage
 
                 var configurationManager = new ConfigurationManager();
                 var settingsBuilder = new StartUpProjectSettingsBuilder(dte, configurationManager);
-                var mainWindowsManager = new MainWindowsManager(windowFinder, dte, coverageRunner, settingsBuilder, openCppCoverageCmdLine);
+                var mainSettingController = new MainSettingController(
+                    new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
+                    openCppCoverageCmdLine,
+                    settingsBuilder,
+                    coverageRunner);
+
+                var mainWindowsManager = new MainWindowsManager(windowFinder, mainSettingController);
 
                 action(mainWindowsManager);
             });

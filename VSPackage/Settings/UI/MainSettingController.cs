@@ -23,10 +23,13 @@ using System.Windows.Input;
 namespace OpenCppCoverage.VSPackage.Settings.UI
 {
     //-------------------------------------------------------------------------
-    class MainSettingController: PropertyChangedNotifier
+    class MainSettingController : PropertyChangedNotifier
     {
         readonly IOpenCppCoverageCmdLine openCppCoverageCmdLine;
         readonly ISettingsStorage settingsStorage;
+        readonly CoverageRunner coverageRunner;
+        readonly IStartUpProjectSettingsBuilder startUpProjectSettingsBuilder;
+
         string selectedProjectPath;
         string solutionConfigurationName;
         bool displayProgramOutput;
@@ -35,12 +38,15 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         public MainSettingController(
             ISettingsStorage settingsStorage,
-            IOpenCppCoverageCmdLine openCppCoverageCmdLine)
+            IOpenCppCoverageCmdLine openCppCoverageCmdLine,
+            IStartUpProjectSettingsBuilder startUpProjectSettingsBuilder,
+            CoverageRunner coverageRunner)
         {
             this.settingsStorage = settingsStorage;
             this.openCppCoverageCmdLine = openCppCoverageCmdLine;
             this.RunCoverageCommand = new RelayCommand(() => OnRunCoverageCommand());
-            this.CloseCommand = new RelayCommand(() => {
+            this.CloseCommand = new RelayCommand(() =>
+            {
                 this.CloseWindowEvent?.Invoke(this, EventArgs.Empty);
             });
             this.ResetToDefaultCommand = new RelayCommand(
@@ -49,10 +55,10 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             this.FilterSettingController = new FilterSettingController();
             this.ImportExportSettingController = new ImportExportSettingController();
             this.MiscellaneousSettingController = new MiscellaneousSettingController();
-        }
 
-        public CoverageRunner CoverageRunner { get; set; }
-        public IStartUpProjectSettingsBuilder StartUpProjectSettingsBuilder { get; set; }
+            this.coverageRunner = coverageRunner;
+            this.startUpProjectSettingsBuilder = startUpProjectSettingsBuilder;
+        }
 
         //---------------------------------------------------------------------
         public void UpdateFields(ProjectSelectionKind kind, bool displayProgramOutput)
@@ -78,10 +84,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         StartUpProjectSettings ComputeStartUpProjectSettings(ProjectSelectionKind kind)
         {
-            if (this.StartUpProjectSettingsBuilder == null)
-                throw new InvalidOperationException("StartUpProjectSettingsBuilder should be set.");
-
-            return this.StartUpProjectSettingsBuilder.ComputeSettings(kind);
+            return this.startUpProjectSettingsBuilder.ComputeSettings(kind);
         }
 
         //---------------------------------------------------------------------
@@ -147,7 +150,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
         //---------------------------------------------------------------------
         void OnRunCoverageCommand()
         {
-            this.CoverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
+            this.coverageRunner.RunCoverageOnStartupProject(this.GetMainSettings());
         }
 
         //---------------------------------------------------------------------

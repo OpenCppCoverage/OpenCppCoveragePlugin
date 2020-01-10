@@ -187,10 +187,9 @@ namespace VSPackage_UnitTests
             Mock<IStartUpProjectSettingsBuilder> builder,
             ISettingsStorage settingsStorage)
         {
-            var controller = new MainSettingController(settingsStorage, openCppCoverageCmdLine);
+            var controller = new MainSettingController(settingsStorage, openCppCoverageCmdLine, builder.Object, null);
 
             builder.Setup(b => b.ComputeSettings(ProjectSelectionKind.StartUpProject)).Returns(settings);
-            controller.StartUpProjectSettingsBuilder = builder.Object;
             return controller;
         }
 

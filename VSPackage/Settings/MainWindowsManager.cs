@@ -14,34 +14,21 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-using EnvDTE80;
 using Microsoft.VisualStudio.Shell.Interop;
 using OpenCppCoverage.VSPackage.Settings.UI;
-using System;
 
 namespace OpenCppCoverage.VSPackage.Settings
 {
     class MainWindowsManager
     {
         readonly IWindowFinder windowFinder;
-        readonly DTE2 dte;
-        readonly CoverageRunner coverageRunner;
-        readonly StartUpProjectSettingsBuilder settingsBuilder;
-        readonly OpenCppCoverageCmdLine openCppCoverageCmdLine;
+        readonly MainSettingController mainSettingController;
 
         //---------------------------------------------------------------------
-        public MainWindowsManager(
-            IWindowFinder windowFinder,
-            DTE2 dte,
-            CoverageRunner coverageRunner,
-            StartUpProjectSettingsBuilder settingsBuilder,
-            OpenCppCoverageCmdLine openCppCoverageCmdLine)
+        public MainWindowsManager(IWindowFinder windowFinder, MainSettingController mainSettingController)
         {
             this.windowFinder = windowFinder;
-            this.dte = dte;
-            this.coverageRunner = coverageRunner;
-            this.settingsBuilder = settingsBuilder;
-            this.openCppCoverageCmdLine = openCppCoverageCmdLine;
+            this.mainSettingController = mainSettingController;
         }
 
         //---------------------------------------------------------------------
@@ -49,19 +36,10 @@ namespace OpenCppCoverage.VSPackage.Settings
             ProjectSelectionKind kind,
             bool displayProgramOutput)
         {
+            this.mainSettingController.UpdateFields(kind, displayProgramOutput);
             var window = this.windowFinder.FindToolWindow<SettingToolWindow>();
+            window.Init(this.mainSettingController);
 
-            var controller = new MainSettingController(
-                new SettingsStorage(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)),
-                this.openCppCoverageCmdLine);
-
-
-            window.Init(controller);
-            // Inject via properties because these objects require DTE which is not
-            // available to MainSettingController constructor
-            window.Controller.StartUpProjectSettingsBuilder = this.settingsBuilder;
-            window.Controller.CoverageRunner = this.coverageRunner;
-            window.Controller.UpdateFields(kind, displayProgramOutput);
             return window;
         }
 
