@@ -25,16 +25,18 @@ using System;
 
 namespace OpenCppCoverage.VSPackage
 {
-    class CommandRunner
+    sealed class CommandRunner: IDisposable
     {
         readonly IServiceProvider serviceProvider;
         readonly IWindowFinder windowFinder;
+        readonly TemporaryFile configFile;
 
         //---------------------------------------------------------------------
         public CommandRunner(IServiceProvider serviceProvider, IWindowFinder windowFinder)
         {
             this.serviceProvider = serviceProvider;
             this.windowFinder = windowFinder;
+            this.configFile = new TemporaryFile();
         }
 
         //---------------------------------------------------------------------
@@ -71,7 +73,7 @@ namespace OpenCppCoverage.VSPackage
                 var coverageTreeManager = new CoverageTreeManager(windowFinder, dte, coverageViewManager);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var deserializer = new CoverageDataDeserializer();
-                var openCppCoverageCmdLine = new OpenCppCoverageCmdLine();
+                var openCppCoverageCmdLine = new OpenCppCoverageCmdLine(this.configFile);
                 var openCppCoverageRunner = new OpenCppCoverageRunner(outputWriter, openCppCoverageCmdLine);
 
                 var coverageRunner = new CoverageRunner(
@@ -98,6 +100,12 @@ namespace OpenCppCoverage.VSPackage
             var componentModel = (IComponentModel)serviceProvider.GetService(typeof(SComponentModel));
             var exporterProvider = componentModel.DefaultExportProvider;
             return exporterProvider.GetExportedValue<ICoverageViewManager>();
+        }
+
+        //---------------------------------------------------------------------
+        public void Dispose()
+        {
+            this.configFile.Dispose();
         }
     }
 }

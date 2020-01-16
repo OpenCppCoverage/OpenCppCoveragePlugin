@@ -31,15 +31,6 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        public CommandLineBuilder AppendArgumentCollection(
-                        string argumentName, IEnumerable<string> values)
-        {
-            foreach (var value in values)
-                AppendArgument(argumentName, value);
-            return this;
-        }
-
-        //---------------------------------------------------------------------
         public CommandLineBuilder AppendArgument(
             string argumentName,
             string optionalArgumentValue)
@@ -59,7 +50,7 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
-        static public string EscapeValue(string str)
+        public static string EscapeValue(string str)
         {
             var builder = new StringBuilder();
             int consecutiveBackSlashCount = 0;

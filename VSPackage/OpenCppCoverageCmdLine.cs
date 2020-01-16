@@ -16,101 +16,113 @@
 
 using OpenCppCoverage.VSPackage.Settings;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 
 namespace OpenCppCoverage.VSPackage
 {
     class OpenCppCoverageCmdLine: IOpenCppCoverageCmdLine
     {
+        readonly TemporaryFile configFile;
+
         //---------------------------------------------------------------------
-        public static readonly string SourcesFlag = "--sources";
-        public static readonly string ModulesFlag = "--modules";
-        public static readonly string WorkingDirFlag = "--working_dir";
-        public static readonly string ExcludedSourcesFlag = "--excluded_sources";
-        public static readonly string ExcludedModulesFlag = "--excluded_modules";
-        public static readonly string UnifiedDiffFlag = "--unified_diff";
+        public static readonly string SourcesFlag = "sources";
+        public static readonly string ModulesFlag = "modules";
+        public static readonly string WorkingDirFlag = "working_dir";
+        public static readonly string ExcludedSourcesFlag = "excluded_sources";
+        public static readonly string ExcludedModulesFlag = "excluded_modules";
+        public static readonly string UnifiedDiffFlag = "unified_diff";
         public static readonly string UnifiedDiffSeparator = "?";
-        public static readonly string InputCoverageFlag = "--input_coverage";
-        public static readonly string ExportTypeFlag = "--export_type";
+        public static readonly string InputCoverageFlag = "input_coverage";
+        public static readonly string ExportTypeFlag = "export_type";
         public static readonly string ExportTypeSeparator = ":";
-        public static readonly string CoverChildrenFlag = "--cover_children";
-        public static readonly string NoAggregateByFileFlag = "--no_aggregate_by_file";
+        public static readonly string CoverChildrenFlag = "cover_children";
+        public static readonly string NoAggregateByFileFlag = "no_aggregate_by_file";
         public static readonly string ConfigFileFlag = "--config_file";
         public static readonly string QuietFlag = "--quiet";
         public static readonly string VerboseFlag = "--verbose";
-        public static readonly string ContinueAfterCppExceptionFlag = "--continue_after_cpp_exception";
-        public static readonly string OptimizedBuildFlag = "--optimized_build";
-        public static readonly string PluginFlag = "--plugin";
+        public static readonly string ContinueAfterCppExceptionFlag = "continue_after_cpp_exception";
+        public static readonly string OptimizedBuildFlag = "optimized_build";
+        public static readonly string PluginFlag = "plugin";
+        public static readonly string OptionValueSeparator = "=";
+        public static readonly string OptionWithoutValue = "true";
 
         //---------------------------------------------------------------------
-        public OpenCppCoverageCmdLine()
+        public OpenCppCoverageCmdLine(TemporaryFile configFile)
         {
-
+            this.configFile = configFile;
         }
 
         //---------------------------------------------------------------------
         public string Build(MainSettings settings, string lineSeparator = " ")
         {
-            var builder = new CommandLineBuilder();
+            var configPath = this.configFile.Path;
+            using (var writer = new StreamWriter(configPath))
+            {
+                var builder = new CommandLineBuilder();
 
-            AppendFilterSettings(builder, settings.FilterSettings);
-            AppendImportExportSettings(builder, settings.ImportExportSettings);
-            AppendMiscellaneousSettings(builder, settings.MiscellaneousSettings);
+                AppendFilterSettings(writer, settings.FilterSettings);
+                AppendImportExportSettings(writer, settings.ImportExportSettings);
+                AppendMiscellaneousSettings(writer, builder, settings.MiscellaneousSettings);
 
-            // Should be last settings for program to run.
-            AppendBasicSettings(builder, settings.BasicSettings, settings.DisplayProgramOutput);
+                // Should be last settings for program to run.
+                AppendBasicSettings(writer, configPath,  builder, settings.BasicSettings, settings.DisplayProgramOutput);
 
-            return builder.GetCommandLine(lineSeparator);
+                return builder.GetCommandLine(lineSeparator);
+            }
         }
 
         //---------------------------------------------------------------------
         static void AppendBasicSettings(
+            StreamWriter writer,
+            string configPath,
             CommandLineBuilder builder,
             BasicSettings settings,
             bool waitAfterExit)
         {
-            AppendArgumentCollection(builder, SourcesFlag, settings.SourcePaths);
-            AppendArgumentCollection(builder, ModulesFlag, settings.ModulePaths);
+            AppendArgumentCollection(writer, SourcesFlag, settings.SourcePaths);
+            AppendArgumentCollection(writer, ModulesFlag, settings.ModulePaths);
 
             if (!string.IsNullOrWhiteSpace(settings.WorkingDirectory))
-                builder.AppendArgument(WorkingDirFlag, settings.WorkingDirectory);
+                AppendArgument(writer, WorkingDirFlag, settings.WorkingDirectory);
             if (settings.IsOptimizedBuildEnabled)
-                builder.AppendArgument(OptimizedBuildFlag, null);
+                AppendArgument(writer, OptimizedBuildFlag, null);
 
             if (waitAfterExit)
-                builder.Append(" " + PluginFlag + " ");
+                AppendArgument(writer, PluginFlag, null);
+
+            builder.AppendArgument(ConfigFileFlag, configPath);
             builder.AppendArgument("--", settings.ProgramToRun);
             builder.Append(settings.Arguments);
         }
 
         //---------------------------------------------------------------------
         static void AppendFilterSettings(
-            CommandLineBuilder builder,
+            StreamWriter writer,
             FilterSettings settings)
         {
-            AppendArgumentCollection(builder, SourcesFlag, settings.AdditionalSourcePaths);
-            AppendArgumentCollection(builder, ModulesFlag, settings.AdditionalModulePaths);
-            AppendArgumentCollection(builder, ExcludedSourcesFlag, settings.ExcludedSourcePaths);
-            AppendArgumentCollection(builder, ExcludedModulesFlag, settings.ExcludedModulePaths);
+            AppendArgumentCollection(writer, SourcesFlag, settings.AdditionalSourcePaths);
+            AppendArgumentCollection(writer, ModulesFlag, settings.AdditionalModulePaths);
+            AppendArgumentCollection(writer, ExcludedSourcesFlag, settings.ExcludedSourcePaths);
+            AppendArgumentCollection(writer, ExcludedModulesFlag, settings.ExcludedModulePaths);
 
             foreach (var unifiedDiff in settings.UnifiedDiffs)
-            {                
+            {
                 var argumentValue = unifiedDiff.UnifiedDiffPath;
                 if (!string.IsNullOrWhiteSpace(argumentValue))
                 {
                     if (!string.IsNullOrWhiteSpace(unifiedDiff.OptionalRootFolder))
                         argumentValue = argumentValue + UnifiedDiffSeparator + unifiedDiff.OptionalRootFolder;
-                    builder.AppendArgument(UnifiedDiffFlag, argumentValue);
+                    AppendArgument(writer, UnifiedDiffFlag, argumentValue);
                 }
             }
         }
 
         //---------------------------------------------------------------------
         static void AppendImportExportSettings(
-            CommandLineBuilder builder,
+            StreamWriter writer,
             ImportExportSettings settings)
         {
-            AppendArgumentCollection(builder, InputCoverageFlag, settings.InputCoverages);
+            AppendArgumentCollection(writer, InputCoverageFlag, settings.InputCoverages);
 
             foreach (var export in settings.Exports)
             {
@@ -118,24 +130,37 @@ namespace OpenCppCoverage.VSPackage
                 if (!string.IsNullOrWhiteSpace(path))
                 {
                     var type = export.Type.ToString().ToLowerInvariant();
-                    builder.AppendArgument(ExportTypeFlag,
+                    AppendArgument(writer, ExportTypeFlag,
                          type + ExportTypeSeparator + path);
                 }
             }
 
             if (settings.CoverChildrenProcesses)
-                builder.AppendArgument(CoverChildrenFlag, null);
+                AppendArgument(writer, CoverChildrenFlag, null);
             if (!settings.AggregateByFile)
-                builder.AppendArgument(NoAggregateByFileFlag, null);
+                AppendArgument(writer, NoAggregateByFileFlag, null);
         }
 
         //---------------------------------------------------------------------
-        static void AppendMiscellaneousSettings(
+        void AppendMiscellaneousSettings(
+            StreamWriter writer,
             CommandLineBuilder builder,
             MiscellaneousSettings settings)
         {
             if (!string.IsNullOrWhiteSpace(settings.OptionalConfigFile))
-                builder.AppendArgument(ConfigFileFlag, settings.OptionalConfigFile);
+            {
+                try
+                {
+                    var lines = File.ReadAllLines(settings.OptionalConfigFile);
+                    foreach (var line in lines)
+                        writer.WriteLine(line);
+                } 
+                catch (FileNotFoundException)
+                {
+                    string message = $"Cannot find the config file defined in Miscellanous tab: {settings.OptionalConfigFile}";
+                    throw new VSPackageException(message);
+                }
+            }
 
             switch (settings.LogTypeValue)
             {
@@ -149,17 +174,31 @@ namespace OpenCppCoverage.VSPackage
             }
 
             if (settings.ContinueAfterCppExceptions)
-                builder.AppendArgument(ContinueAfterCppExceptionFlag, null);
+                AppendArgument(writer, ContinueAfterCppExceptionFlag, null);
         }
 
         //---------------------------------------------------------------------
         static void AppendArgumentCollection(
-            CommandLineBuilder builder,
-            string argumentName, 
+            StreamWriter writer,
+            string argumentName,
             IEnumerable<string> values)
         {
-            builder.AppendArgumentCollection(argumentName,
-                values.Where(v => !string.IsNullOrWhiteSpace(v)));
+            foreach (var value in values)
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                    AppendArgument(writer, argumentName, value);
+            }
+        }
+
+        //---------------------------------------------------------------------
+        static void AppendArgument(
+            StreamWriter writer,
+            string argumentName,
+            string value)
+        {
+            if (value == null)
+                value = OptionWithoutValue;
+            writer.WriteLine($"{argumentName}{OptionValueSeparator}{value}");
         }
     }
 }

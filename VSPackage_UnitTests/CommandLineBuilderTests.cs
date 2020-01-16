@@ -38,16 +38,6 @@ namespace VSPackage_UnitTests
 
         //---------------------------------------------------------------------
         [TestMethod]
-        public void AppendArgumentCollection()
-        {
-            var builder = new CommandLineBuilder();
-            builder.AppendArgumentCollection("argument", new List<string> { "value1", "value2" });
-
-            Assert.AreEqual(@"argument ""value1"" argument ""value2""", builder.GetCommandLine());
-        }
-        
-        //---------------------------------------------------------------------
-        [TestMethod]
         public void EscapeValue()
         {
             foreach (var value in new List<string> {

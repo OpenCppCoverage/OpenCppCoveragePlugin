@@ -19,15 +19,17 @@ using OpenCppCoverage.VSPackage;
 using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace VSPackage_UnitTests
 {
     [TestClass]
     public class OpenCppCoverageCmdLineTests
-    {        
+    {
         readonly MainSettings mainSettings = new MainSettings();
         OpenCppCoverageCmdLine openCppCoverageCmdLine;
+        TemporaryFile configFile;
 
         //---------------------------------------------------------------------
         [TestInitialize]
@@ -58,7 +60,15 @@ namespace VSPackage_UnitTests
             mainSettings.MiscellaneousSettings = new MiscellaneousSettings();
             mainSettings.DisplayProgramOutput = true;
 
-            openCppCoverageCmdLine = new OpenCppCoverageCmdLine();
+            configFile = new TemporaryFile();
+            openCppCoverageCmdLine = new OpenCppCoverageCmdLine(configFile);
+        }
+
+        //---------------------------------------------------------------------
+        [TestCleanup]
+        public void Cleanup()
+        {
+            configFile.Dispose();
         }
 
         //---------------------------------------------------------------------
@@ -68,8 +78,7 @@ namespace VSPackage_UnitTests
             mainSettings.BasicSettings.SourcePaths = new List<string> { "path3", "path4" };
             mainSettings.FilterSettings.AdditionalSourcePaths = new List<string> { "path1", "path2" };
 
-            Check(string.Format(@"{0} ""path1"" {0} ""path2"" {0} ""path3"" {0} ""path4""",
-                OpenCppCoverageCmdLine.SourcesFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.SourcesFlag, "path1", "path2", "path3", "path4");
         }
 
         //---------------------------------------------------------------------
@@ -79,8 +88,7 @@ namespace VSPackage_UnitTests
             mainSettings.BasicSettings.ModulePaths = ToList("mod2");
             mainSettings.FilterSettings.AdditionalModulePaths = ToList("mod1");
 
-            Check(string.Format(@"{0} ""mod1"" {0} ""mod2""",
-                OpenCppCoverageCmdLine.ModulesFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.ModulesFlag, "mod1", "mod2");
         }
 
         //---------------------------------------------------------------------
@@ -89,8 +97,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.BasicSettings.WorkingDirectory = "WorkingDirectory";
 
-            Check(string.Format(@"{0} ""WorkingDirectory""",
-                OpenCppCoverageCmdLine.WorkingDirFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.WorkingDirFlag, "WorkingDirectory");
         }
 
         //---------------------------------------------------------------------
@@ -99,8 +106,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.FilterSettings.ExcludedModulePaths = ToList("module");
 
-            Check(string.Format(@"{0} ""module""",
-                OpenCppCoverageCmdLine.ExcludedModulesFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.ExcludedModulesFlag, "module");
         }
 
         //---------------------------------------------------------------------
@@ -109,8 +115,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.FilterSettings.ExcludedSourcePaths = ToList("src");
 
-            Check(string.Format(@"{0} ""src""",
-                OpenCppCoverageCmdLine.ExcludedSourcesFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.ExcludedSourcesFlag, "src");
         }
 
         //---------------------------------------------------------------------
@@ -124,12 +129,12 @@ namespace VSPackage_UnitTests
             };
             var unifiedDiff = new FilterSettings.UnifiedDiff { UnifiedDiffPath = "path2" };
 
-            mainSettings.FilterSettings.UnifiedDiffs = 
+            mainSettings.FilterSettings.UnifiedDiffs =
                     new List<FilterSettings.UnifiedDiff> { unifiedDiffWithRoot, unifiedDiff };
-            
-            Check(string.Format(@"{0} ""path1{1}root"" {0} ""path2""",
-                OpenCppCoverageCmdLine.UnifiedDiffFlag,
-                OpenCppCoverageCmdLine.UnifiedDiffSeparator), mainSettings);
+
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.UnifiedDiffFlag,
+                $"path1{OpenCppCoverageCmdLine.UnifiedDiffSeparator}root",
+                "path2");
         }
 
         //---------------------------------------------------------------------
@@ -138,8 +143,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.ImportExportSettings.InputCoverages = ToList("input");
 
-            Check(string.Format(@"{0} ""input""",
-                OpenCppCoverageCmdLine.InputCoverageFlag), mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.InputCoverageFlag, "input");
         }
 
         //---------------------------------------------------------------------
@@ -158,10 +162,8 @@ namespace VSPackage_UnitTests
 
                 mainSettings.ImportExportSettings.Exports = ToList(export);
 
-                Check(string.Format(@"{0} ""{1}{2}path""",
-                    OpenCppCoverageCmdLine.ExportTypeFlag,
-                    exportType.ToString().ToLowerInvariant(),
-                    OpenCppCoverageCmdLine.ExportTypeSeparator), mainSettings);
+                BuildAndCheckConfig(OpenCppCoverageCmdLine.ExportTypeFlag,
+                    $"{exportType.ToString().ToLowerInvariant()}{OpenCppCoverageCmdLine.ExportTypeSeparator}path");
             }
         }
 
@@ -171,7 +173,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.ImportExportSettings.CoverChildrenProcesses = true;
 
-            Check(OpenCppCoverageCmdLine.CoverChildrenFlag, mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.CoverChildrenFlag);
         }
 
         //---------------------------------------------------------------------
@@ -180,17 +182,20 @@ namespace VSPackage_UnitTests
         {
             mainSettings.ImportExportSettings.AggregateByFile = false;
 
-            Check(OpenCppCoverageCmdLine.NoAggregateByFileFlag, mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.NoAggregateByFileFlag);
         }
 
         //---------------------------------------------------------------------
         [TestMethod]
         public void ConfigFileFlag()
         {
-            mainSettings.MiscellaneousSettings.OptionalConfigFile = "file";
+            using (var config = new TemporaryFile())
+            {
+                File.WriteAllText(config.Path, "argument=value1\nargument=value2");
+                mainSettings.MiscellaneousSettings.OptionalConfigFile = config.Path;
 
-            Check(string.Format(@"{0} ""file""",
-                OpenCppCoverageCmdLine.ConfigFileFlag), mainSettings);
+                BuildAndCheckConfig("argument", "value1", "value2");
+            }
         }
 
         //---------------------------------------------------------------------
@@ -200,17 +205,17 @@ namespace VSPackage_UnitTests
             mainSettings.MiscellaneousSettings.LogTypeValue =
                 MiscellaneousSettings.LogType.Quiet;
 
-            Check(OpenCppCoverageCmdLine.QuietFlag, mainSettings);
+            BuildAndCheckCommandLine(OpenCppCoverageCmdLine.QuietFlag);
         }
 
         //---------------------------------------------------------------------
         [TestMethod]
         public void Verbose()
         {
-            mainSettings.MiscellaneousSettings.LogTypeValue = 
+            mainSettings.MiscellaneousSettings.LogTypeValue =
                 MiscellaneousSettings.LogType.Verbose;
 
-            Check(OpenCppCoverageCmdLine.VerboseFlag, mainSettings);
+            BuildAndCheckCommandLine(OpenCppCoverageCmdLine.VerboseFlag);
         }
 
         //---------------------------------------------------------------------
@@ -219,7 +224,7 @@ namespace VSPackage_UnitTests
         {
             mainSettings.MiscellaneousSettings.ContinueAfterCppExceptions = true;
 
-            Check(OpenCppCoverageCmdLine.ContinueAfterCppExceptionFlag, mainSettings);
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.ContinueAfterCppExceptionFlag);
         }
 
         //---------------------------------------------------------------------
@@ -243,8 +248,7 @@ namespace VSPackage_UnitTests
             basicSettings.ModulePaths = new List<string> { string.Empty };
             basicSettings.SourcePaths = new List<string> { " " };
 
-            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
-            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+            BuildAndCheckEmpyConfig();
         }
 
         //---------------------------------------------------------------------
@@ -252,7 +256,7 @@ namespace VSPackage_UnitTests
         public void WhiteSpaceAndEmptyFilterSettings()
         {
             var filterSettings = mainSettings.FilterSettings;
-        
+
             filterSettings.AdditionalModulePaths = new List<string> { string.Empty };
             filterSettings.AdditionalSourcePaths = new List<string> { string.Empty };
             filterSettings.ExcludedModulePaths = new List<string> { " " };
@@ -260,8 +264,7 @@ namespace VSPackage_UnitTests
             filterSettings.UnifiedDiffs = new List<FilterSettings.UnifiedDiff>
                 { new FilterSettings.UnifiedDiff() };
 
-            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
-            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+            BuildAndCheckEmpyConfig();
         }
 
         //---------------------------------------------------------------------
@@ -274,8 +277,7 @@ namespace VSPackage_UnitTests
             importExportSettings.Exports = new List<ImportExportSettings.Export>
                 { new ImportExportSettings.Export() };
 
-            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
-            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+            BuildAndCheckEmpyConfig();
         }
 
         //---------------------------------------------------------------------
@@ -284,20 +286,19 @@ namespace VSPackage_UnitTests
         {
             mainSettings.MiscellaneousSettings.OptionalConfigFile = "   ";
 
-            var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
-            Assert.IsTrue(cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
+            BuildAndCheckEmpyConfig();
         }
 
         //---------------------------------------------------------------------
         [TestMethod]
         public void DisplayProgramOutput()
         {
-            foreach (var displayProgramOutput in new List<bool> { true, false })
-            {
-                mainSettings.DisplayProgramOutput = displayProgramOutput;
-                var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
-                Assert.AreEqual(displayProgramOutput, cmdLine.TrimStart().StartsWith(OpenCppCoverageCmdLine.PluginFlag));
-            }
+            mainSettings.DisplayProgramOutput = true;
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.PluginFlag);
+
+            mainSettings.DisplayProgramOutput = false;
+            var lines = BuildConfig();
+            Assert.IsTrue(lines.Count == 0);
         }
 
         //---------------------------------------------------------------------
@@ -307,11 +308,45 @@ namespace VSPackage_UnitTests
         }
 
         //---------------------------------------------------------------------
-        void Check(string expectedArguments, MainSettings mainSettings)
+        void BuildAndCheckEmpyConfig()
+        {
+            var lines = BuildConfig();
+            Assert.AreEqual(1, lines.Count);
+            Assert.IsTrue(lines.Contains(OpenCppCoverageCmdLine.PluginFlag +
+                OpenCppCoverageCmdLine.OptionValueSeparator +
+                OpenCppCoverageCmdLine.OptionWithoutValue));
+        }
+
+        //---------------------------------------------------------------------
+        void BuildAndCheckConfig(string name, params string[] values)
+        {
+            var lines = BuildConfig();
+
+            if (values.Length == 0)
+                values = new[] { OpenCppCoverageCmdLine.OptionWithoutValue };
+
+            foreach (var value in values)
+            {
+                var expectedLine = $"{name}{OpenCppCoverageCmdLine.OptionValueSeparator}{value}";
+                var found = lines.Contains(expectedLine);
+                Assert.IsTrue(found,
+                    $"Cannot find the line {expectedLine} in\n{string.Join("\n", lines)}");
+            }
+        }
+
+        //---------------------------------------------------------------------
+        HashSet<string> BuildConfig()
+        {
+            openCppCoverageCmdLine.Build(mainSettings);
+            return File.ReadAllLines(configFile.Path).ToHashSet();
+        }
+
+        //---------------------------------------------------------------------
+        void BuildAndCheckCommandLine(string expectedArguments)
         {
             var cmdLine = openCppCoverageCmdLine.Build(mainSettings);
             Assert.IsTrue(cmdLine.StartsWith(expectedArguments),
-                string.Format("{0}\ndoes not start with\n{1}", cmdLine, expectedArguments));
+                $"{cmdLine}\ndoes not start with\n{expectedArguments}");
         }
     }
 }

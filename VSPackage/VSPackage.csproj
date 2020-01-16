@@ -242,6 +242,7 @@
     <Compile Include="Settings\UI\UserInterfaceSettings.cs" />
     <Compile Include="Styles\VsBrushes.cs" />
     <Compile Include="Styles\VsColors.cs" />
+    <Compile Include="TemporaryFile.cs" />
     <Compile Include="VSPackageException.cs" />
     <Compile Include="OpenCppCoveragePackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

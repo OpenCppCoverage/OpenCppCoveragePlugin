@@ -113,6 +113,13 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+            this.commandRunner.Dispose();
+        }
+
+        //---------------------------------------------------------------------
         void AddCommand(uint commandId, EventHandler eventHandler, OleMenuCommandService mcs)
         {
             var menuCommandID = new CommandID(GuidList.guidVSPackageCmdSet, (int)commandId);
