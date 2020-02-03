@@ -20,6 +20,7 @@ using OpenCppCoverage.VSPackage.CoverageData;
 using OpenCppCoverage.VSPackage.CoverageRateBuilder;
 using OpenCppCoverage.VSPackage.CoverageTree;
 using OpenCppCoverage.VSPackage.Settings;
+using System;
 using System.IO;
 using System.Linq;
 
@@ -99,8 +100,18 @@ namespace OpenCppCoverage.VSPackage
                     string.Format(InvalidProgramToRunMsg, settings.BasicSettings.ProgramToRun));
             }
 
-            var coveragePath = AddBinaryOutput(settings.ImportExportSettings);
-            var onCoverageFinished = openCppCoverageRunner.RunCodeCoverageAsync(settings);
+            System.Threading.Tasks.Task onCoverageFinished;
+            var coveragePath = new TemporaryFile();
+            try
+            {
+                AddBinaryOutput(settings.ImportExportSettings, coveragePath);
+                onCoverageFinished = openCppCoverageRunner.RunCodeCoverageAsync(settings);
+            }
+            catch (Exception)
+            {
+                coveragePath.Dispose();
+                throw;
+            }
 
             onCoverageFinished.ContinueWith(task => 
                 OnCoverageFinishedAsync(task, coveragePath, onCoverageFinished).Wait());
@@ -109,27 +120,23 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         System.Threading.Tasks.Task OnCoverageFinishedAsync(
             System.Threading.Tasks.Task onCoverageFinished,
-            string coveragePath,
+            TemporaryFile coveragePath,
             System.Threading.Tasks.Task avoidGCCollect)
         {
             return errorHandler.ExecuteAsync(async () =>
             {
-                try
+                using (coveragePath)
                 {
                     var exception = onCoverageFinished.Exception?.InnerExceptions.FirstOrDefault();
                     if (exception != null)
                         throw exception;
 
                     CoverageRate coverageRate = null;
-                    if (File.Exists(coveragePath))
-                        coverageRate = BuildCoverageRate(coveragePath);
+                    if (File.Exists(coveragePath.Path))
+                        coverageRate = BuildCoverageRate(coveragePath.Path);
 
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-                    OnCoverageRateBuilt(coverageRate, coveragePath);
-                }
-                finally
-                {
-                    File.Delete(coveragePath);
+                    OnCoverageRateBuilt(coverageRate, coveragePath.Path);
                 }
             });
         }
@@ -151,18 +158,17 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------        
-        string AddBinaryOutput(ImportExportSettings importExportSettings)
+        void AddBinaryOutput(
+            ImportExportSettings importExportSettings, 
+            TemporaryFile coveragePath)
         {
-            var coveragePath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-
             var exports = importExportSettings.Exports.ToList();
             exports.Add(new ImportExportSettings.Export
             {
                 Type = ImportExportSettings.Type.Binary,
-                Path = coveragePath
+                Path = coveragePath.Path
             });
             importExportSettings.Exports = exports;
-            return coveragePath;
         }
 
         //---------------------------------------------------------------------        
