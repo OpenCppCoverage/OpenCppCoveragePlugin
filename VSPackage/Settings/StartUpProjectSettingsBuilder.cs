@@ -163,7 +163,7 @@ namespace OpenCppCoverage.VSPackage.Settings
 
                 try
                 {
-                    if (projectObject.Kind == "VCProject")
+                    if (projectObject != null && projectObject.Kind == "VCProject")
                         projects.Add(new ExtendedProject(project, new DynamicVCProject(projectObject)));
                 }
                 catch (RuntimeBinderException)
