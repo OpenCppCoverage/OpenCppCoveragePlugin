@@ -187,6 +187,15 @@ namespace VSPackage_UnitTests
 
         //---------------------------------------------------------------------
         [TestMethod]
+        public void IsOptimizedBuildEnabled()
+        {
+            mainSettings.BasicSettings.IsOptimizedBuildEnabled = true;
+
+            BuildAndCheckConfig(OpenCppCoverageCmdLine.OptimizedBuildFlag);
+        }
+
+        //---------------------------------------------------------------------
+        [TestMethod]
         public void ConfigFileFlag()
         {
             using (var config = new TemporaryFile())
@@ -196,6 +205,9 @@ namespace VSPackage_UnitTests
 
                 BuildAndCheckConfig("argument", "value1", "value2");
             }
+
+            mainSettings.MiscellaneousSettings.OptionalConfigFile = "Missing file";
+            TestHelper.AssertThrows<VSPackageException>(() => BuildConfig());
         }
 
         //---------------------------------------------------------------------

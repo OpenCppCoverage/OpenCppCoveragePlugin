@@ -115,15 +115,10 @@ namespace VSPackage_UnitTests.Settings
             Assert.IsNotNull(settingsStorage.TryLoad(null, null));
 
             File.AppendAllText(fullPath, "InvalidJson");
-            try
-            {
+            TestHelper.AssertThrows<VSPackageException>(() => {
                 settingsStorage.TryLoad(null, null);
                 Assert.Fail();
-            } 
-            catch (VSPackageException)
-            {
-                // Test OK
-            }
+            });
         }
 
         //---------------------------------------------------------------------

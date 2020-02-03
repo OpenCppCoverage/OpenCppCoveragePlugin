@@ -14,6 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Microsoft.VSSDK.Tools.VsIdeTesting;
 using System;
 
@@ -29,6 +30,23 @@ namespace VSPackage_UnitTests
                 UIThreadInvoker.Invoke(action);
             else
                 action();
+        }
+
+        //---------------------------------------------------------------------
+        public static void AssertThrows<T>(Action action) where T : Exception
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception e)
+            {
+                if (e.GetType() == typeof(T))
+                    return;
+                Assert.Fail($"Expect to throw {typeof(T)} but throws {e}");
+            }
+
+            Assert.Fail($"Expect to throw {typeof(T)} but throws nothing");
         }
     }
 }
