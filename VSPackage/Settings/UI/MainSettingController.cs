@@ -144,7 +144,16 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
             set
             {
                 if (value != null && (string)value.Header == CommandLineHeader)
-                    this.CommandLineText = this.openCppCoverageCmdLine.Build(this.GetMainSettings(), "\n");
+                {
+                    try
+                    {
+                        this.CommandLineText = this.openCppCoverageCmdLine.Build(this.GetMainSettings(), "\n");
+                    } 
+                    catch (Exception e)
+                    {
+                        this.CommandLineText = e.Message;
+                    }
+                }
             }
         }
         //---------------------------------------------------------------------
