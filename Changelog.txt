@@ -1,3 +1,7 @@
+Version 0.9.7.1
+	- Fix `System.ArgumentNullException` when using GIT-compare: https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/issues/33 
+	- Fix `The filename or extension is too long` when running OpenCppCoveragePlugin on a lot of projects: https://github.com/OpenCppCoverage/OpenCppCoverage/issues/103
+
 Version 0.9.7.0
 	- All settings are saved by project.
 	- There are two commands:
