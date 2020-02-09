@@ -258,7 +258,7 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
             if (lineChanged != 0)
             {
                 var optionalFilePath = GetOptionalFilePath(textView);
-                if (this.coverageByFile.Remove(optionalFilePath))
+                if (optionalFilePath != null && this.coverageByFile.Remove(optionalFilePath))
                     RemoveHighlight(textView);
             }
         }
