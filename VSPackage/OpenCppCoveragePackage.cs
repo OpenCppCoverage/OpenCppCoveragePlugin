@@ -109,6 +109,10 @@ namespace OpenCppCoverage.VSPackage
                     PkgCmdIDList.RunOpenCppCoverageFromSelectedProjectSettingsCommand,
                     (s, o) => this.commandRunner.OpenSettingsWindow(ProjectSelectionKind.SelectedProject),
                     mcs);
+                this.AddCommand(
+                    PkgCmdIDList.ShowCoverageTree,
+                    (s, o) => this.commandRunner.ShowCoverageTree(),
+                    mcs);
             }
         }
 

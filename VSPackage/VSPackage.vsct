@@ -92,6 +92,14 @@
           <ButtonText>OpenCppCoverage Settings</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidVSPackageCmdSet" id="ShowCoverageTree" priority="0x1000" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Show Coverage Window</ButtonText>
+        </Strings>
+      </Button>
       
     </Buttons>
    
@@ -128,6 +136,8 @@
       
       <IDSymbol name="RunOpenCppCoverageFromSelectedProjectCommand" value="0x0200" />
       <IDSymbol name="RunOpenCppCoverageFromSelectedProjectSettingsCommand" value="0x0201" />
+
+      <IDSymbol name="ShowCoverageTree" value="0x0300"/>
     </GuidSymbol>
     
     

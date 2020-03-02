@@ -56,6 +56,13 @@ namespace OpenCppCoverage.VSPackage
         }
 
         //---------------------------------------------------------------------
+        public void ShowCoverageTree()
+        {
+            var coverageTreeManager = new CoverageTreeManager(windowFinder);
+            coverageTreeManager.ShowTreeCoverage();
+        }
+
+        //---------------------------------------------------------------------
         void RunCommand(
             Action<MainWindowsManager> action)
         {
@@ -70,7 +77,7 @@ namespace OpenCppCoverage.VSPackage
 
                 errorHandler.OutputWriter = outputWriter;
                 var coverageViewManager = GetCoverageViewManager(serviceProvider);
-                var coverageTreeManager = new CoverageTreeManager(windowFinder, dte, coverageViewManager);
+                var coverageTreeManager = new CoverageTreeManager(windowFinder);
                 var projectBuilder = new ProjectBuilder(dte, errorHandler, outputWriter);
                 var deserializer = new CoverageDataDeserializer();
                 var openCppCoverageCmdLine = new OpenCppCoverageCmdLine(this.configFile);

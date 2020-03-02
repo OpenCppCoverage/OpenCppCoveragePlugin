@@ -25,28 +25,34 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
     class CoverageTreeManager
     {
         readonly IWindowFinder windowFinder;
-        readonly DTE2 dte;
-        readonly ICoverageViewManager coverageViewManager;
-
         //---------------------------------------------------------------------        
-        public CoverageTreeManager(
-            IWindowFinder windowFinder, 
-            DTE2 dte,
-            ICoverageViewManager coverageViewManager)
+        public CoverageTreeManager(IWindowFinder windowFinder)
         {
             this.windowFinder = windowFinder;
-            this.dte = dte;
-            this.coverageViewManager = coverageViewManager;
         }
 
         //---------------------------------------------------------------------        
-        public void ShowTreeCoverage(CoverageRate coverageRate)
+        public void ShowTreeCoverage(
+            DTE2 dte,
+            ICoverageViewManager coverageViewManager, 
+            CoverageRate coverageRate)
+        {
+            ShowTreeCoverage(window => window.Controller.UpdateCoverageRate(
+                coverageRate, dte, coverageViewManager));
+        }
+
+        //---------------------------------------------------------------------        
+        public void ShowTreeCoverage()
+        {
+            ShowTreeCoverage(windows => {});
+        }
+
+        //---------------------------------------------------------------------        
+        void ShowTreeCoverage(Action<CoverageTreeToolWindow> action)
         {
             var window = this.windowFinder.FindToolWindow<CoverageTreeToolWindow>();
 
-            window.Controller.UpdateCoverageRate(
-                coverageRate, dte, this.coverageViewManager);
-
+            action(window);
             var frame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }

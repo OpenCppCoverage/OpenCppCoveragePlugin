@@ -36,6 +36,7 @@ namespace OpenCppCoverage.VSPackage
             @"File ""{0}"" does not exist. " + InvalidValueForProgramToRun;
 
         //---------------------------------------------------------------------
+        readonly DTE2 dte;
         readonly ProjectBuilder projectBuilder;
         readonly OutputWindowWriter outputWindowWriter;
         readonly CoverageTreeManager coverageTreeManager;
@@ -55,6 +56,7 @@ namespace OpenCppCoverage.VSPackage
             ErrorHandler errorHandler,
             OpenCppCoverageRunner openCppCoverageRunner)
         {
+            this.dte = dte;
             this.outputWindowWriter = outputWindowWriter;
             this.coverageTreeManager = coverageTreeManager;
             this.projectBuilder = projectBuilder;
@@ -153,7 +155,7 @@ namespace OpenCppCoverage.VSPackage
             }
             outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
 
-            coverageTreeManager.ShowTreeCoverage(coverageRate);
+            coverageTreeManager.ShowTreeCoverage(this.dte, this.coverageViewManager, coverageRate);
             this.coverageViewManager.CoverageRate = coverageRate;
         }
 
