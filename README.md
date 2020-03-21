@@ -1,3 +1,4 @@
+![](https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/workflows/Unit%20tests/badge.svg)
 # OpenCppCoveragePlugin
 Official Visual Studio Plugin for OpenCppCoverage
 

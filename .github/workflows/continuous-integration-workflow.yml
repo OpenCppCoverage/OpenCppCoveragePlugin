@@ -1,0 +1,51 @@
+name: Unit tests
+on: [push]
+
+jobs:
+  build:
+    name: Unit tests
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Nuget
+        uses: nuget/setup-nuget@v1
+
+      - name: Nuget restore packages
+        run: nuget restore CppCoveragePlugin.sln
+
+      - name: Download OpenCppCoverage x64
+        run: Invoke-WebRequest -OutFile OpenCppCoverageSetup-x64-0.9.8.0.exe https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.8.0/OpenCppCoverageSetup-x64-0.9.8.0.exe
+
+      - name: Install OpenCppCoverage x64
+        run: ./OpenCppCoverageSetup-x64-0.9.8.0.exe /VERYSILENT /SUPPRESSMSGBOXES /DIR=VSPackage\OpenCppCoverage-x64
+
+      - name: Download OpenCppCoverage x86
+        run: Invoke-WebRequest -OutFile OpenCppCoverageSetup-x86-0.9.8.0.exe https://github.com/OpenCppCoverage/OpenCppCoverage/releases/download/release-0.9.8.0/OpenCppCoverageSetup-x86-0.9.8.0.exe
+
+      - name: Install OpenCppCoverage x86
+        run: ./OpenCppCoverageSetup-x86-0.9.8.0.exe /VERYSILENT /SUPPRESSMSGBOXES /DIR=VSPackage\OpenCppCoverage-x86
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v1.0.0
+ 
+      - name: Copy extra files
+        run: |
+          cp .\packages\Newtonsoft.Json.*\lib\net45\Newtonsoft.Json.dll VSPackage
+          cp C:\Windows\System32\msvcp140.dll     VSPackage\OpenCppCoverage-x64
+          cp C:\Windows\System32\vcruntime140.dll VSPackage\OpenCppCoverage-x64
+          cp C:\Windows\SysWOW64\msvcp140.dll     VSPackage\OpenCppCoverage-x86
+          cp C:\Windows\SysWOW64\vcruntime140.dll VSPackage\OpenCppCoverage-x86
+
+      - name: Build VSPackage
+        run: msbuild CppCoveragePlugin.sln /target:VSPackage /p:Platform="Any CPU"
+
+      - name: Build VSPackage_UnitTests
+        run: msbuild CppCoveragePlugin.sln /target:VSPackage_UnitTests /p:Platform="Any CPU"
+
+      - name: Setup VSTest
+        uses: darenm/Setup-VSTest@v1
+
+      - name: Run unit tests
+        run: VSTest.Console.exe VSPackage_UnitTests\\bin\\Debug\\VSPackage_UnitTests.exe
