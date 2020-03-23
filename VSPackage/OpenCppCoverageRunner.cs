@@ -18,7 +18,6 @@ using OpenCppCoverage.VSPackage.Settings;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
 namespace OpenCppCoverage.VSPackage
@@ -44,9 +43,9 @@ namespace OpenCppCoverage.VSPackage
             var fileName = GetOpenCppCoveragePath(basicSettings.ProgramToRun);
             var arguments = this.openCppCoverageCmdLine.Build(settings);
 
-            this.outputWindowWriter.WriteLine("Run:");
-            this.outputWindowWriter.WriteLine(string.Format(@"""{0}"" {1}",
-                fileName, arguments));
+            OutputWindowWriter.WriteLine("COVERAGE: Computing started\u0006");
+            OutputWindowWriter.WriteLine(" File name = " + fileName);
+            OutputWindowWriter.WriteLine(" Arguments = " + arguments);
 
             // Run in a new thread to not block UI thread.
             return Task.Run(() =>

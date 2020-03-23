@@ -74,7 +74,10 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
                 if (fileCoverage != null)
                 {
                     if (this.dte == null)
+                    {
+                        //outputWindowWriter.WriteLine("ERROR: UpdateCoverageRate should be call first.");
                         throw new InvalidOperationException("UpdateCoverageRate should be call first.");
+                    }
                     this.dte.ItemOperations.OpenFile(fileCoverage.Path, Constants.vsViewKindCode);
                 }
             }

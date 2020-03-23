@@ -39,8 +39,9 @@ namespace OpenCppCoverage.VSPackage
             {
                 File.Delete(this.Path);
             } 
-            catch (FileNotFoundException)
+            catch (FileNotFoundException e)
             {
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
             }
         }
     }

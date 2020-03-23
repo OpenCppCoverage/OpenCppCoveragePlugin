@@ -155,9 +155,10 @@ namespace OpenCppCoverage.VSPackage
                     foreach (var line in lines)
                         writer.WriteLine(line);
                 } 
-                catch (FileNotFoundException)
+                catch (FileNotFoundException e)
                 {
                     string message = $"Cannot find the config file defined in Miscellanous tab: {settings.OptionalConfigFile}";
+                    OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                     throw new VSPackageException(message);
                 }
             }

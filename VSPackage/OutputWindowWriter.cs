@@ -46,16 +46,16 @@ namespace OpenCppCoverage.VSPackage
         //---------------------------------------------------------------------
         public void ActivatePane()
         {
-            outputWindowPane_.Activate();
+            //outputWindowPane_.Activate();
         }
 
         //---------------------------------------------------------------------
-        public bool WriteLine(string message)
+        public static bool WriteLine(string message)
         {
             return Microsoft.VisualStudio.ErrorHandler.Succeeded(outputWindowPane_.OutputString(message + "\n"));
         }
-        
-        readonly IVsOutputWindowPane outputWindowPane_;
+
+        private static IVsOutputWindowPane outputWindowPane_ = null;
         public readonly static Guid OpenCppCoverageOutputPaneGuid = new Guid("CB47C727-5E45-467B-A4CD-4A025986A8A0");
     }
 }

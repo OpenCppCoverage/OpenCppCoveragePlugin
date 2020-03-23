@@ -152,6 +152,7 @@ namespace OpenCppCoverage.VSPackage.Settings.UI
                     catch (Exception e)
                     {
                         this.CommandLineText = e.Message;
+                        OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                     }
                 }
             }

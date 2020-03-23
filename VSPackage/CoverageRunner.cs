@@ -94,7 +94,6 @@ namespace OpenCppCoverage.VSPackage
         void RunCoverage(MainSettings settings)
         {
             outputWindowWriter.ActivatePane();
-            outputWindowWriter.WriteLine("Start computing code coverage...");
 
             if (!File.Exists(settings.BasicSettings.ProgramToRun))
             {
@@ -109,9 +108,10 @@ namespace OpenCppCoverage.VSPackage
                 AddBinaryOutput(settings.ImportExportSettings, coveragePath);
                 onCoverageFinished = openCppCoverageRunner.RunCodeCoverageAsync(settings);
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 coveragePath.Dispose();
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                 throw;
             }
 
@@ -148,12 +148,12 @@ namespace OpenCppCoverage.VSPackage
         {
             if (coverageRate == null)
             {
-                outputWindowWriter.WriteLine("The execution of the previous line failed." +
-                    " Please execute the previous line in a promt" + 
-                    " command to have more information about the issue.");
+                OutputWindowWriter.WriteLine("ERROR: The execution of the previous line failed.");
+                OutputWindowWriter.WriteLine(" Please execute the previous line in a promt command to have more information about the issue.");
                 throw new VSPackageException("Cannot generate coverage. See output pane for more information");                
             }
-            outputWindowWriter.WriteLine("Coverage written in " + coveragePath);
+            OutputWindowWriter.WriteLine("COVERAGE: Computing finished\u0006");
+            OutputWindowWriter.WriteLine(" Result written in \"" + coveragePath + "\"");
 
             coverageTreeManager.ShowTreeCoverage(this.dte, this.coverageViewManager, coverageRate);
             this.coverageViewManager.CoverageRate = coverageRate;

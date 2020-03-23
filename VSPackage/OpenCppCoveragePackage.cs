@@ -44,11 +44,11 @@ namespace OpenCppCoverage.VSPackage
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)]
     // This attribute is needed to let the shell know that this package exposes some menus.
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(CoverageTreeToolWindow),
-        Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
-        MultiInstances = false,
-        Transient = true,
-        Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
+    //[ProvideToolWindow(typeof(CoverageTreeToolWindow),
+    //    Style = Microsoft.VisualStudio.Shell.VsDockStyle.Tabbed,
+    //    MultiInstances = false,
+    //    Transient = true,
+    //    Window = Microsoft.VisualStudio.Shell.Interop.ToolWindowGuids.Outputwindow)]
     [ProvideToolWindow(typeof(SettingToolWindow),
         Style = Microsoft.VisualStudio.Shell.VsDockStyle.Float,
         MultiInstances = false,
