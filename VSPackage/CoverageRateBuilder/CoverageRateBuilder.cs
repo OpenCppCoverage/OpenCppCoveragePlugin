@@ -37,6 +37,7 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
                 foreach (var protoFile in protoModule.FilesList)
                     module.AddChild(BuildFileCoverage(protoFile));
                 coverageRate.AddChild(module);
+                Update(module);
             }
 
             return coverageRate;
@@ -51,6 +52,24 @@ namespace OpenCppCoverage.VSPackage.CoverageRateBuilder
                 protoFile.Path,
                 lines.Select(l => new LineCoverage(
                     (int)l.LineNumber, l.HasBeenExecuted)).ToList());
+        }
+
+        private static void Update(ModuleCoverage module)
+        {
+            OutputWindowWriter.WriteLine("PROJECT: \"" + module.Name + "\"\u0004 // <Lines: " + module.CoverLineCount.ToString() + " / " + module.TotalLineCount.ToString() + "> " + GetProgress(module.CoverLineCount, module.TotalLineCount));
+            foreach (FileCoverage current in module.Children)
+            {
+                OutputWindowWriter.WriteLine(" FILE: \"" + current.Path + "\" // <Lines: " + current.CoverLineCount.ToString() + " / " + current.TotalLineCount.ToString() + "> " + GetProgress(current.CoverLineCount, current.TotalLineCount));
+            }
+        }
+
+        private static string GetProgress(int current, int total)
+        {
+            if (total > 0)
+            {
+                return ((current * 100) / total).ToString() + "%";
+            }
+            return "100%";
         }
     }
 }

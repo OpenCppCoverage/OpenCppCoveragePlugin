@@ -277,9 +277,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Newtonsoft.Json.dll">
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
     <Content Include="OpenCppCoverage-x64\boost_date_time-vc141-mt-x64-1_69.dll">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>

@@ -50,11 +50,11 @@ namespace OpenCppCoverage.VSPackage.CoverageTree
         //---------------------------------------------------------------------        
         void ShowTreeCoverage(Action<CoverageTreeToolWindow> action)
         {
-            var window = this.windowFinder.FindToolWindow<CoverageTreeToolWindow>();
+            //var window = this.windowFinder.FindToolWindow<CoverageTreeToolWindow>();
 
-            action(window);
-            var frame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
+            //action(window);
+            //var frame = (IVsWindowFrame)window.Frame;
+            //Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(frame.Show());
         }
     }
 }

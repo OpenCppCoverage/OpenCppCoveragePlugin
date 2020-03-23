@@ -53,12 +53,14 @@ namespace OpenCppCoverage.VSPackage.Settings
             {
                 json = File.ReadAllText(configPath);
             }
-            catch (FileNotFoundException)
+            catch (FileNotFoundException e)
             {
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                 return null;
             }
-            catch (DirectoryNotFoundException)
+            catch (DirectoryNotFoundException e)
             {
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                 return null;
             }
 
@@ -70,6 +72,7 @@ namespace OpenCppCoverage.VSPackage.Settings
             {
                 var error = string.Format(
                     $"Error when deserializing {configPath} : {e.Message}\nRemoving {configPath} should fix this issue.");
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
                 throw new VSPackageException(error);
             }
         }

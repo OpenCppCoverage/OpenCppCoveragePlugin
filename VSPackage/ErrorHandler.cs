@@ -38,18 +38,19 @@ namespace OpenCppCoverage.VSPackage
             {
                 await action();
             }
-            catch (VSPackageException exception)
+            catch (VSPackageException e)
             {
                 if (OutputWriter != null)
-                    OutputWriter.WriteLine(exception.Message);
-                ShowMessage(exception.Message);
+                    OutputWindowWriter.WriteLine("ERROR: " + e.Message);
+                ShowMessage(e.Message);
             }
-            catch (Exception exception)
+            catch (Exception e)
             {
-                if (OutputWriter != null && OutputWriter.WriteLine(exception.ToString()))             
+                if (OutputWriter != null && OutputWindowWriter.WriteLine("ERROR: " + e.ToString()))             
                     ShowMessage("Unknow error. Please see the output console for more information.");
                 else
-                    ShowMessage(exception.ToString());
+                    ShowMessage(e.ToString());
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
             }
         }
 

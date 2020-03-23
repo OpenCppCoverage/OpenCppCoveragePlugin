@@ -50,10 +50,6 @@ namespace OpenCppCoverage.VSPackage
 
             // buildEvents need to be a member to avoid a garbage collector issue.
             this.buildEvents.OnBuildProjConfigDone += buildHandler;
-            
-            this.outputWindowWriter.WriteLine(
-                "Start building " + projectName 
-                + " " + solutionConfigurationName);
 
             var output = dte.Windows.Item(EnvDTE.Constants.vsWindowKindOutput);
             if (output != null)
@@ -67,9 +63,10 @@ namespace OpenCppCoverage.VSPackage
             }
             catch (COMException e)
             {
-                throw new VSPackageException(
-                    string.Format("Error when building {0} with configuration {1}: {2}",
-                        projectName, solutionConfigurationName, e.Message));
+                OutputWindowWriter.WriteLine("ERROR: " + e.Message);
+                OutputWindowWriter.WriteLine("  Project = " + projectName);
+                OutputWindowWriter.WriteLine("  Configuration = " + solutionConfigurationName);
+                throw;
             }
         }
 
