@@ -38,8 +38,6 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="envdte" />
-    <Reference Include="envdte80" />
     <Reference Include="ICSharpCode.TreeView">
       <HintPath>..\Externals\ICSharpCode.TreeView.dll</HintPath>
     </Reference>
@@ -96,6 +94,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.VisualStudio.SDK">
+      <Version>17.3.32804.24</Version>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json">
       <Version>12.0.3</Version>
     </PackageReference>
