@@ -2,7 +2,7 @@
 # OpenCppCoveragePlugin
 Official Visual Studio Plugin for OpenCppCoverage
 
-**OpenCppCoverage** is an open source code coverage tool for C++ under Windows. You can find more information about this project [here](https://opencppcoverage.codeplex.com/).
+**OpenCppCoverage** is an open source code coverage tool for C++ under Windows. You can find more information about this project [here](https://github.com/OpenCppCoverage/OpenCppCoverage/wiki).
 
 This repository contains only the Visual Studio plugin sources.
 
@@ -13,8 +13,8 @@ You can also install the NuGet package **OpenCppCoverage Plugin**.
 
 **Documentation is available [here](https://github.com/OpenCppCoverage/OpenCppCoveragePlugin/wiki)**.
 
-For questions, you can create a discussion [here](https://opencppcoverage.codeplex.com/discussions).
-If you find a bug, you can create an issue [here](https://opencppcoverage.codeplex.com/workitem/list/basic).
+For archived questions and discussions [look here](https://web.archive.org/web/20160529042234/http://opencppcoverage.codeplex.com/discussions).
+For archived bugs and suggestsions [look here](https://web.archive.org/web/20160529040042/http://opencppcoverage.codeplex.com/workitem/list/basic) and [here](https://github.com/OpenCppCoverage/OpenCppCoverage/issues?q=is%3Aissue%20state%3Aclosed).
 
 ## Development
 
@@ -34,7 +34,7 @@ This is the default solution file and it requires only Visual Studio 2017.
 This solution should be used only to generate a plugin compatible with Visual Studio 2013, 2015 and 2017.
 
 #### OpenCppCoverage
-You should install the latest version of [OpenCppCoverage](https://github.com/OpenCppCoverage/OpenCppCoverage/releases/tag/release-0.9.7.0):
+You should install the last version of [OpenCppCoverage](https://github.com/OpenCppCoverage/OpenCppCoverage/releases/tag/release-0.9.9.0):
 * *OpenCppCoverageSetup-x64-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x64* 
 * *OpenCppCoverageSetup-x86-X.X.X.exe*: into *VSPackage\OpenCppCoverage-x86*
 
