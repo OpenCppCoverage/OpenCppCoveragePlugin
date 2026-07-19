@@ -6,6 +6,55 @@ Official Visual Studio Plugin for OpenCppCoverage
 
 This repository contains only the Visual Studio plugin sources.
 
+---------------------
+## Project status: archived and no longer maintained
+
+This project is no longer actively maintained.
+
+I stopped active development and maintenance approximately seven years ago after moving away from C++ in my professional work. At first, I expected this to be temporary, but I am now formally retiring the project.
+
+The existing source code and releases will remain available for historical use. However:
+
+* no further releases, bug fixes, or compatibility updates are planned;
+* issues and pull requests will not be reviewed;
+* support questions may not receive a response;
+* security fixes should not be expected;
+* users should evaluate the software carefully before continuing to depend on it.
+
+Forks and independent continuation of the project are welcome, subject to the existing licence.
+
+### Community-maintained forks
+
+**There is currently no designated successor or recommended fork.**
+
+If you actively maintain a fork of this project and would like it to be considered for inclusion here, please contact me through OpenCppCoverage@gmail.com.
+
+I intend to link from this page to the most active community-maintained fork I am aware of. The selected fork may change over time as development activity changes.
+
+Any fork listed here is maintained independently. Its inclusion does not constitute a transfer of ownership, and I cannot provide support or guarantees for it.
+
+### Existing issues and pull requests
+
+Existing issues and pull requests have been closed as part of retiring the project.
+
+Their closure does not necessarily mean that an issue was resolved, that a proposed change was rejected, or that the contribution lacked value. It only means that the original repository is no longer being maintained.
+
+The history and discussion will remain available for reference.
+
+### Licence
+
+The project remains available under the terms described in the [LICENSE](LICENSE) file.
+
+Archiving the project does not change its licence. You may use, modify, fork, and redistribute the code according to those terms.
+
+### Thank you
+
+Thank you to everyone who used the project, reported issues, contributed code or documentation, reviewed changes, answered questions, or otherwise helped improve it.
+
+Maintaining this project and working with its community was a valuable experience. I am grateful for all the time and effort contributed over the years.
+
+---------------------
+
 ## Usage
 
 To install and use this plugin, please see the [Visual Studio Gallery page](https://visualstudiogallery.msdn.microsoft.com/f45b8e13-f847-4b3b-92df-984df633b60e).
